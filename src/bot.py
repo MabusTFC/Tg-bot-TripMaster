@@ -12,6 +12,7 @@ from handlers import (
     auth_handler,
     manual_handler,
     support_handler,
+    trip_handler,
 
 )
 
@@ -37,6 +38,7 @@ async def main():
     dp.include_router(auth_handler.router)
     dp.include_router(manual_handler.router)
     dp.include_router(support_handler.router)
+    dp.include_router(trip_handler.router)
     dp.startup.register(on_startup)
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(
