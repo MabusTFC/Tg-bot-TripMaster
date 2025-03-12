@@ -9,11 +9,9 @@ from aiogram.webhook.aiohttp_server import (
 )
 
 from handlers import (
-    ###
-    #
-    # Подключение хендлеров
-    #
-    # ###
+    auth_handler,
+    manual_handler,
+    support_handler,
 
 )
 
@@ -36,12 +34,9 @@ async def main():
     #await init_db()
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
-    ###
-    #регистрация хендлеров
-    # dp.include_router(Название хендлера.router)
-    #
-    #
-    # ###
+    dp.include_router(auth_handler.router)
+    dp.include_router(manual_handler.router)
+    dp.include_router(support_handler.router)
     dp.startup.register(on_startup)
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(
