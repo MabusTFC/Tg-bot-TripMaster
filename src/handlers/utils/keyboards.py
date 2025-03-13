@@ -72,3 +72,36 @@ async def get_calendar_keyboard(year: int = None, month: int = None) -> InlineKe
 
     keyboard.row(InlineKeyboardButton(text="Вернуться в Меню", callback_data="menu"))
     return keyboard.as_markup(resize_keyboard=True, one_time_keyboard=True)
+
+
+async def get_selection_keyboard():
+    inline_kb_list = [
+        [InlineKeyboardButton(text="Выгодный по стоимости вариант", callback_data="benefit_cost")],
+        [InlineKeyboardButton(text="Оптимальный по времени вариант", callback_data="benefit_time")],
+        [InlineKeyboardButton(text="Ввести вручную промежуточные города", callback_data="hands_input")],
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
+
+
+async def get_list_sity_keyboard(route: list, page: int = 0):
+    cities_per_page = 5
+    total_pages = (len(route) - 1) // cities_per_page + 1
+
+    start_idx = page * cities_per_page
+    end_idx = start_idx + cities_per_page
+    cities_on_page = route[start_idx:end_idx]
+
+    buttons = [[InlineKeyboardButton(text=city, callback_data=f"city_{start_idx + i}")] for i, city in
+               enumerate(cities_on_page)]
+
+    nav_buttons = []
+    if page > 0:
+        nav_buttons.append(InlineKeyboardButton(text="⬅ Назад", callback_data=f"page_{page - 1}"))
+    if page < total_pages - 1:
+        nav_buttons.append(InlineKeyboardButton(text="Вперед ➡", callback_data=f"page_{page + 1}"))
+
+    if nav_buttons:
+        buttons.append(nav_buttons)
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
