@@ -1,5 +1,5 @@
 import requests
-from config import *
+from .config import *
 from googletrans import Translator
 
 
@@ -58,7 +58,7 @@ def getTicket(origin_city_name, destination_city_name, departure_date):
                 if ticket['depart_date'] == departure_date:
                     filtered_tickets.append(ticket)
                     # Ограничиваем количество билетов до 10
-                    if len(filtered_tickets) >= 10:
+                    if len(filtered_tickets) >= 1:
                         break
 
             tickets_list = []
