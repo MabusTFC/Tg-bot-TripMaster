@@ -3,8 +3,15 @@ from aiogram.fsm import state
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-from handlers.utils.state_machine import RoutStates
-from handlers.utils.keyboards import get_selection_keyboard
+from handlers.utils.state_machine import (
+    DateSelection,
+    RoutStates,
+)
+
+from handlers.utils.keyboards import (
+    get_selection_keyboard,
+    get_calendar_keyboard
+)
 
 router = Router()
 
@@ -27,5 +34,6 @@ async def process_city_input(message: types.Message, state: FSMContext):
         await message.answer(f"Начальный город: {message.text} \nТеперь введите конечный город.")
     else:
         await message.answer(f"Маршрут сохранен!\nГорода маршрута: {' → '.join(route)}",
-                             reply_markup=await get_selection_keyboard()
+                             reply_markup=await get_calendar_keyboard()
                              )
+        await state.set_state(DateSelection.START_DATE)

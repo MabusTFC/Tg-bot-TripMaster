@@ -11,7 +11,7 @@ router = Router()
 async def auth_handler(message: types.Message):
     user_name = message.from_user.first_name
     await message.answer_photo(
-        photo = FSInputFile("img/zaglushka.jpg"),
+        photo = FSInputFile("img/logoTrip.png"),
         caption=GREETING_MESSAGE.format(user_name=user_name),
         parse_mode="Markdown",
         reply_markup=await get_greetings_keyboard(),

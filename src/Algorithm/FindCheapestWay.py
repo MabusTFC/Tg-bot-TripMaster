@@ -1,5 +1,8 @@
 from itertools import permutations
-from datetime import datetime, timedelta
+from datetime import (
+    datetime,
+    timedelta,
+)
 from .GenerateFlights import generate_flights
 
 

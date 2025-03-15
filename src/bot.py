@@ -14,7 +14,7 @@ from handlers import (
     support_handler,
     trip_handler,
     hands_input_handler,
-    change_page_handler
+    calendar_handler,
 
 )
 
@@ -42,7 +42,7 @@ async def main():
     dp.include_router(support_handler.router)
     dp.include_router(trip_handler.router)
     dp.include_router(hands_input_handler.router)
-    dp.include_router(change_page_handler.router)
+    dp.include_router(calendar_handler.router)
     dp.startup.register(on_startup)
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(
