@@ -1,6 +1,5 @@
 import requests
-from .config import *
-from googletrans import Translator
+from config import *
 
 
 # Метод по извлечению билетов с авиаселса с учетом городов и даты.
@@ -8,9 +7,8 @@ from googletrans import Translator
 # {1:[ПАРАМЕТРЫ БИЛЕТА],
 # 2:[ПАРАМЕТРЫ БИЛЕТА],
 # 3:[ПАРАМЕТРЫ БИЛЕТА]}
-def getTicket(origin_city_name, destination_city_name, departure_date):
+def getTicket_Avi(origin_city_name, destination_city_name, departure_date):
     response_air = requests.get(BASE_URL_AIRPORTS)
-    print(city_code_to_name)
     if response_air.status_code == 200:
         airports = response_air.json()
 
@@ -25,7 +23,7 @@ def getTicket(origin_city_name, destination_city_name, departure_date):
 
         origin_city_code = None
         destination_city_code = None
-        for code, name in city_code_to_name.items():
+        for code, name in city_code_to_name_avi.items():
             if name.lower() == origin_city_name.lower():
                 origin_city_code = code
             if name.lower() == destination_city_name.lower():
@@ -44,10 +42,10 @@ def getTicket(origin_city_name, destination_city_name, departure_date):
         if not destination_airports:
             return f"Не найдено аэропортов для города: {destination_city_name}"
 
-        params['origin'] = origin_city_code
-        params['destination'] = destination_city_code
+        params_avi['origin'] = origin_city_code
+        params_avi['destination'] = destination_city_code
 
-        response = requests.get(BASE_URL, params=params)
+        response = requests.get(BASE_URL, params=params_avi)
 
         if response.status_code == 200:
             data = response.json()
@@ -58,27 +56,35 @@ def getTicket(origin_city_name, destination_city_name, departure_date):
                 if ticket['depart_date'] == departure_date:
                     filtered_tickets.append(ticket)
                     # Ограничиваем количество билетов до 10
-                    if len(filtered_tickets) >= 1:
+                    if len(filtered_tickets) >= 10:
                         break
 
             tickets_list = []
+            count = 0
             if filtered_tickets:
                 for ticket in filtered_tickets:
                     origin_code = ticket['origin']
                     destination_code = ticket['destination']
                     departure_date = ticket['depart_date']
                     price = ticket['value']
+                    departure_time = ticket.get('departure_time', 'Не указано')  # Время вылета
+                    arrival_time = ticket.get('arrival_time', 'Не указано')  # Время прилета
 
                     origin_airport = airport_dict.get(origin_code, {'name': origin_code})
                     destination_airport = airport_dict.get(destination_code, {'name': destination_code})
-
-                    ticket_info = [
-                        f"Из города: {origin_city_name.capitalize()} (Аэропорт: {origin_airport['name']})",
-                        f"В город: {destination_city_name.capitalize()} (Аэропорт: {destination_airport['name']})",
-                        f"Дата вылета: {departure_date}",
-                        f"Цена: {price} руб."
-                    ]
-                    tickets_list.append(ticket_info)
+                    if count == 0:
+                        ticket_info = [
+                            f"Из города: {origin_city_name.capitalize()} (Аэропорт: {origin_airport['name']})",
+                            f"В город: {destination_city_name.capitalize()} (Аэропорт: {destination_airport['name']})",
+                            f"Дата вылета: {departure_date}",
+                            f"Время вылета: {departure_time}",  # Добавлено время вылета
+                            f"Время прилета: {arrival_time}",  # Добавлено время прилета
+                            f"Цена: {price} руб."
+                        ]
+                        tickets_list.append(ticket_info)
+                        count += 1
+                    else:
+                        break
 
                 return tickets_list
             else:
@@ -87,3 +93,56 @@ def getTicket(origin_city_name, destination_city_name, departure_date):
             return f'Ошибка при запросе данных: {response.status_code}'
     else:
         return f'Ошибка при запросе данных об аэропортах: {response_air.status_code}'
+
+def getTicket_Train(origin_city_name, destination_city_name, departure_date):
+    # Поиск кодов городов по названиям
+    origin_city_code = None
+    destination_city_code = None
+    for code, name in city_code_to_name_train.items():
+        if name.lower() == origin_city_name.lower():
+            origin_city_code = code
+        if name.lower() == destination_city_name.lower():
+            destination_city_code = code
+
+    # Проверка, найдены ли коды городов
+    if not origin_city_code:
+        return f"Не найден код города для: {origin_city_name}"
+    if not destination_city_code:
+        return f"Не найден код города для: {destination_city_name}"
+    params_train['from'] = origin_city_code
+    params_train['to'] = destination_city_code
+    params_train['date'] = departure_date
+
+    # Выполнение запроса
+    response = requests.get(BASE_URL_TRAIN, params=params_train)
+    print(response.status_code)
+    print(response.text)
+    # Обработка ответа
+    if response.status_code == 200:
+        schedule = response.json()
+
+        # Проверка наличия данных
+        if 'segments' not in schedule or not schedule['segments']:
+            return f"Нет доступных поездов из {origin_city_name.capitalize()} в {destination_city_name.capitalize()} на дату {departure_date}."
+
+        # Формирование списка билетов с ценами
+        for segment in schedule['segments']:
+            if 'tickets_info' in segment and segment['tickets_info']['places']:
+                price = segment['tickets_info']['places'][0]['price']
+            else:
+                price = 'Не указана'  # Если цена не указана
+
+            # Формируем информацию о билете в виде списка строк
+            ticket_info = [
+                f"Поезд: {segment['thread']['title']}",
+                f"Отправление: {segment['departure']}",
+                f"Прибытие: {segment['arrival']}",
+                f"Дистанция: {segment['duration']}",
+                f"Цена: {price} руб."
+            ]
+
+            return [ticket_info]  # Возвращаем первый найденный билет
+
+        return ["Нет доступных билетов с указанной ценой."]
+    else:
+        return [f"Ошибка при запросе данных: {response.status_code}"]
