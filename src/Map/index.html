@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта маршрутов</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            right: 10px; /* Переместили в правый верхний угол */
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            max-width: 300px; /* Ограничим ширину для удобства */
+        }
+        #controls select {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 100%;
+        }
+        #route-info {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .dimmed {
+            opacity: 0.3;
+        }
+        #filters {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        #filters h4 {
+            margin-bottom: 10px;
+        }
+        #filters button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        #filters div {
+            margin-bottom: 10px;
+        }
+        #filters input {
+            padding: 5px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="controls">
+    <div>
+        <label for="route-select">Выберите маршрут:</label>
+        <select id="route-select"></select>
+    </div>
+    <div id="route-info"></div>
+    <div id="filters">
+        <h4>Фильтры</h4>
+        <button id="cheapest-route">Самый дешевый маршрут</button>
+        <button id="shortest-route">Самый короткий маршрут</button>
+        <div>
+            <label for="max-price">Максимальная цена:</label>
+            <input type="number" id="max-price" placeholder="Например, 5000">
+        </div>
+        <div>
+            <label for="max-date">Максимальная дата завершения:</label>
+            <input type="date" id="max-date">
+        </div>
+        <button id="apply-filters">Применить фильтры</button>
+    </div>
+</div>
+<div id="map"></div>
+
+
+
+<script type="module" src="script.js"></script>
+<script type="module" src="config.js"></script>
+
+</body>
+</html>

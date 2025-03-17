@@ -1,0 +1,68 @@
+[
+    {
+        "route": ["Москва", "Казань", "Новгород", "Санкт-Петербург"],
+        "full_path": [
+            {
+                "origin": "Москва",
+                "destination": "Казань",
+                "departure_datetime": "2025-04-01T08:00:00",
+                "arrival_datetime": "2025-04-01T12:00:00",
+                "flight_number": "SU123",
+                "price": 1500.0
+            },
+            {
+                "origin": "Казань",
+                "destination": "Новгород",
+                "departure_datetime": "2025-04-02T14:00:00",
+                "arrival_datetime": "2025-04-02T18:00:00",
+                "flight_number": "UT456",
+                "price": 2000.0
+            },
+            {
+                "origin": "Новгород",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-04-03T10:00:00",
+                "arrival_datetime": "2025-04-03T12:00:00",
+                "flight_number": "DP789",
+                "price": 1000.0
+            }
+        ],
+        "total_price": 4500.0,
+        "start_date": "2025-04-01T08:00:00",
+        "end_date": "2025-04-03T12:00:00",
+        "duration": 52
+    },
+    {
+        "route": ["Москва", "Самара", "Екатеринбург", "Новосибирск"],
+        "full_path": [
+            {
+                "origin": "Москва",
+                "destination": "Самара",
+                "departure_datetime": "2025-04-01T09:00:00",
+                "arrival_datetime": "2025-04-01T11:00:00",
+                "flight_number": "SU456",
+                "price": 1800.0
+            },
+            {
+                "origin": "Самара",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-04-02T13:00:00",
+                "arrival_datetime": "2025-04-02T16:00:00",
+                "flight_number": "UT789",
+                "price": 2200.0
+            },
+            {
+                "origin": "Екатеринбург",
+                "destination": "Новосибирск",
+                "departure_datetime": "2025-04-03T08:00:00",
+                "arrival_datetime": "2025-04-03T12:00:00",
+                "flight_number": "DP101",
+                "price": 2500.0
+            }
+        ],
+        "total_price": 6500.0,
+        "start_date": "2025-04-01T09:00:00",
+        "end_date": "2025-04-03T12:00:00",
+        "duration": 51
+    }
+]
