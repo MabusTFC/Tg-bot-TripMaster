@@ -1,5 +1,5 @@
 import requests
-from config import *
+from src.avi.config import *
 
 
 # Метод по извлечению билетов с авиаселса с учетом городов и даты.
@@ -73,14 +73,16 @@ def getTicket_Avi(origin_city_name, destination_city_name, departure_date):
                     origin_airport = airport_dict.get(origin_code, {'name': origin_code})
                     destination_airport = airport_dict.get(destination_code, {'name': destination_code})
                     if count == 0:
-                        ticket_info = [
-                            f"Из города: {origin_city_name.capitalize()} (Аэропорт: {origin_airport['name']})",
-                            f"В город: {destination_city_name.capitalize()} (Аэропорт: {destination_airport['name']})",
-                            f"Дата вылета: {departure_date}",
-                            f"Время вылета: {departure_time}",  # Добавлено время вылета
-                            f"Время прилета: {arrival_time}",  # Добавлено время прилета
-                            f"Цена: {price} руб."
-                        ]
+                        ticket_info = {
+                            "origin_city": origin_city_name.capitalize(),
+                            "origin_airport": origin_airport['name'],
+                            "destination_city": destination_city_name.capitalize(),
+                            "destination_airport": destination_airport['name'],
+                            "departure_date": departure_date,
+                            "departure_time": departure_time,
+                            "arrival_time": arrival_time,
+                            "price": price  # Теперь цена — это число
+                        }
                         tickets_list.append(ticket_info)
                         count += 1
                     else:
@@ -115,8 +117,8 @@ def getTicket_Train(origin_city_name, destination_city_name, departure_date):
 
     # Выполнение запроса
     response = requests.get(BASE_URL_TRAIN, params=params_train)
-    print(response.status_code)
-    print(response.text)
+    #print(response.status_code)
+    #print(response.text)
     # Обработка ответа
     if response.status_code == 200:
         schedule = response.json()
@@ -133,13 +135,14 @@ def getTicket_Train(origin_city_name, destination_city_name, departure_date):
                 price = 'Не указана'  # Если цена не указана
 
             # Формируем информацию о билете в виде списка строк
-            ticket_info = [
-                f"Поезд: {segment['thread']['title']}",
-                f"Отправление: {segment['departure']}",
-                f"Прибытие: {segment['arrival']}",
-                f"Дистанция: {segment['duration']}",
-                f"Цена: {price} руб."
-            ]
+            ticket_info = {
+                "type": "train",
+                "title": segment["thread"]["title"],  # Название поезда
+                "departure": segment["departure"],  # Время отправления
+                "arrival": segment["arrival"],  # Время прибытия
+                "duration": segment["duration"],  # Продолжительность поездки
+                "price": price  # Цена билета
+            }
 
             return [ticket_info]  # Возвращаем первый найденный билет
 
