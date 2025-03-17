@@ -83,7 +83,7 @@ async def get_selection_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
 
-async def get_list_sity_keyboard(route: list, page: int = 0):
+async def get_list_sity_keyboard(route: list, user_days: dict, page: int = 0):
     cities_per_page = 5
     total_pages = (len(route) - 1) // cities_per_page + 1
 
@@ -91,8 +91,12 @@ async def get_list_sity_keyboard(route: list, page: int = 0):
     end_idx = start_idx + cities_per_page
     cities_on_page = route[start_idx:end_idx]
 
-    buttons = [[InlineKeyboardButton(text=city, callback_data=f"city_{start_idx + i}")] for i, city in
-               enumerate(cities_on_page)]
+    buttons = []
+    for i, city in enumerate(cities_on_page):
+        city_index = start_idx + i
+        days = user_days.get(city, None)
+        text = f"{city} ({days}д)" if days else city
+        buttons.append([InlineKeyboardButton(text=text, callback_data=f"select_{city_index}")])
 
     nav_buttons = []
     if page > 0:
@@ -103,5 +107,26 @@ async def get_list_sity_keyboard(route: list, page: int = 0):
     if nav_buttons:
         buttons.append(nav_buttons)
 
+    buttons.append([InlineKeyboardButton(text="✅ Готово", callback_data="finish_selection")])
+
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
+async def get_days_keyboard(city: str, days: int):
+    buttons = [
+        [InlineKeyboardButton(text="➖", callback_data=f"decrease_{city}"),
+         InlineKeyboardButton(text=f"{days} дн", callback_data="current_days"),
+         InlineKeyboardButton(text="➕", callback_data=f"increase_{city}")],
+        [InlineKeyboardButton(text="✅ Готово", callback_data="back_to_cities")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+async def get_number_keyboard(city: str, current_days: int):
+
+    buttons = [
+        [InlineKeyboardButton(text=str(i), callback_data=f"choose_number_{city}_{i}") for i in range(1, 31)]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
 
