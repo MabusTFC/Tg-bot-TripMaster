@@ -8,6 +8,7 @@ from handlers.utils.keyboards import (
     get_list_sity_keyboard,
 )
 
+from handlers.utils.state_machine import RoutStates
 
 router = Router()
 
@@ -64,4 +65,20 @@ async def back_to_cities(callback_query: CallbackQuery, state: FSMContext):
         "Выберите город из списка:",
         reply_markup=await get_list_sity_keyboard(route, user_days)
     )
+    await callback_query.answer()
+
+
+@router.callback_query(lambda c: c.data == "finish_selection")
+async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
+    user_data = await state.get_data()
+    route = user_data.get("route", [])
+    user_days = user_data.get("user_days", {})
+
+
+    final_selection = [(city, user_days.get(city, 1)) for city in route]
+
+    await state.update_data(final_selection=final_selection)
+    await state.set_state(RoutStates.FINAL_ROUTE)
+
+    await callback_query.message.edit_text("Маршрут сохранен! Вы можете перейти к следующему шагу.")
     await callback_query.answer()
