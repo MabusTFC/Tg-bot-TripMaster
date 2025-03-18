@@ -1,68 +1,104 @@
 [
     {
-        "route": ["Москва", "Казань", "Новгород", "Санкт-Петербург"],
+        "route": [
+            "Москва",
+            "Санкт-Петербург",
+            "Екатеринбург",
+            "Сочи",
+            "Владивосток"
+        ],
+        "total_price": 12200.0,
+        "total_duration": 58.0,
         "full_path": [
             {
                 "origin": "Москва",
-                "destination": "Казань",
-                "departure_datetime": "2025-04-01T08:00:00",
-                "arrival_datetime": "2025-04-01T12:00:00",
-                "flight_number": "SU123",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-04-26T20:00:00",
+                "arrival_datetime": "2025-04-27T08:00:00",
+                "flight_number": "",
+                "train_number": "TR201",
                 "price": 1500.0
             },
             {
-                "origin": "Казань",
-                "destination": "Новгород",
-                "departure_datetime": "2025-04-02T14:00:00",
-                "arrival_datetime": "2025-04-02T18:00:00",
-                "flight_number": "UT456",
-                "price": 2000.0
+                "origin": "Санкт-Петербург",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-04-30T20:00:00",
+                "arrival_datetime": "2025-05-01T12:00:00",
+                "flight_number": "",
+                "train_number": "TR401",
+                "price": 2200.0
             },
             {
-                "origin": "Новгород",
-                "destination": "Санкт-Петербург",
-                "departure_datetime": "2025-04-03T10:00:00",
-                "arrival_datetime": "2025-04-03T12:00:00",
-                "flight_number": "DP789",
-                "price": 1000.0
+                "origin": "Екатеринбург",
+                "destination": "Сочи",
+                "departure_datetime": "2025-05-03T18:00:00",
+                "arrival_datetime": "2025-05-04T12:00:00",
+                "flight_number": "",
+                "train_number": "TR551",
+                "price": 2500.0
+            },
+            {
+                "origin": "Сочи",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-05-07T06:00:00",
+                "arrival_datetime": "2025-05-07T18:00:00",
+                "flight_number": "AV701",
+                "train_number": "",
+                "price": 6000.0
             }
         ],
-        "total_price": 4500.0,
-        "start_date": "2025-04-01T08:00:00",
-        "end_date": "2025-04-03T12:00:00",
-        "duration": 52
+        "start_date": "2025-04-26T20:00:00",
+        "end_date": "2025-05-07T18:00:00"
     },
     {
-        "route": ["Москва", "Самара", "Екатеринбург", "Новосибирск"],
+        "route": [
+            "Москва",
+            "Санкт-Петербург",
+            "Екатеринбург",
+            "Новосибирск",
+            "Владивосток"
+        ],
+        "total_price": 10500.0,
+        "total_duration": 64.0,
         "full_path": [
             {
                 "origin": "Москва",
-                "destination": "Самара",
-                "departure_datetime": "2025-04-01T09:00:00",
-                "arrival_datetime": "2025-04-01T11:00:00",
-                "flight_number": "SU456",
-                "price": 1800.0
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-04-26T20:00:00",
+                "arrival_datetime": "2025-04-27T08:00:00",
+                "flight_number": "",
+                "train_number": "TR201",
+                "price": 1500.0
             },
             {
-                "origin": "Самара",
+                "origin": "Санкт-Петербург",
                 "destination": "Екатеринбург",
-                "departure_datetime": "2025-04-02T13:00:00",
-                "arrival_datetime": "2025-04-02T16:00:00",
-                "flight_number": "UT789",
+                "departure_datetime": "2025-04-30T20:00:00",
+                "arrival_datetime": "2025-05-01T12:00:00",
+                "flight_number": "",
+                "train_number": "TR401",
                 "price": 2200.0
             },
             {
                 "origin": "Екатеринбург",
                 "destination": "Новосибирск",
-                "departure_datetime": "2025-04-03T08:00:00",
-                "arrival_datetime": "2025-04-03T12:00:00",
-                "flight_number": "DP101",
-                "price": 2500.0
+                "departure_datetime": "2025-05-03T18:00:00",
+                "arrival_datetime": "2025-05-04T12:00:00",
+                "flight_number": "",
+                "train_number": "TR601",
+                "price": 2800.0
+            },
+            {
+                "origin": "Новосибирск",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-05-06T18:00:00",
+                "arrival_datetime": "2025-05-07T12:00:00",
+                "flight_number": "",
+                "train_number": "TR801",
+                "price": 4000.0
             }
         ],
-        "total_price": 6500.0,
-        "start_date": "2025-04-01T09:00:00",
-        "end_date": "2025-04-03T12:00:00",
-        "duration": 51
+        "start_date": "2025-04-26T20:00:00",
+        "end_date": "2025-05-07T12:00:00"
     }
 ]

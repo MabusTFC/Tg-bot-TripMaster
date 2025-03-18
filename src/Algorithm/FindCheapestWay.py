@@ -1,5 +1,5 @@
 from itertools import product
-from src.avi.ticket import getTicket_Avi, getTicket_Train
+from .GenerateFlights import getTicket_Train, getTicket_Avi
 import datetime
 
 
@@ -52,6 +52,7 @@ def get_routes(start_city, end_city, departure_date, segments):
                 "departure_datetime": best_ticket.get("departure"),
                 "arrival_datetime": best_ticket.get("arrival"),
                 "flight_number": best_ticket.get("flight_number", ""),  # Номер рейса
+                "train_number":best_ticket.get("train_number", ""),
                 "price": float(best_ticket.get("price", 0)) if best_ticket.get("price") and best_ticket.get("price") != "Не указана" else 0
             }
             route_info["full_path"].append(segment_info)
