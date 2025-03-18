@@ -121,12 +121,17 @@ async def get_days_keyboard(city: str, days: int):
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
-async def get_number_keyboard(city: str, current_days: int):
+
+async def get_number_keyboard(city: str, current_days: int, max_days: int):
 
     buttons = [
-        [InlineKeyboardButton(text=str(i), callback_data=f"choose_number_{city}_{i}") for i in range(1, 31)]
+        InlineKeyboardButton(text=f"{i}дн", callback_data=f"choose_number_{city}_{i}") for i in range(1, max_days + 1)
     ]
-    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
+    rows = [buttons[i:i + 7] for i in range(0, len(buttons), 7)]
+
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 
