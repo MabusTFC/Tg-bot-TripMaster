@@ -56,10 +56,14 @@ async def process_end_date(callback_query: CallbackQuery, state: FSMContext):
 
     start_date = user_data.get("start_date")
 
+    start_date_obj = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    end_date_obj = datetime.datetime.strptime(selected_date, "%Y-%m-%d")
 
     if datetime.datetime.strptime(selected_date, "%Y-%m-%d") < datetime.datetime.strptime(start_date, "%Y-%m-%d"):
         await callback_query.answer("❌ Дата возвращения не может быть раньше даты отправления!")
         return
+
+    total_days = (end_date_obj - start_date_obj).days
 
     await state.update_data(end_date=selected_date)
 
@@ -68,6 +72,7 @@ async def process_end_date(callback_query: CallbackQuery, state: FSMContext):
         f"📍 Города: {' → '.join(user_data.get('route', []))}\n"
         f"📆 Дата отправления: {start_date}\n"
         f"📆 Дата возвращения: {selected_date}\n\n"
+        f"⏳ Длительность поездки: {total_days} дней\n\n"
         f"Выберите следующий шаг:",
         reply_markup=await get_selection_keyboard()
     )

@@ -4,19 +4,21 @@ BASE_URL = 'http://api.travelpayouts.com/v2/prices/latest'
 BASE_URL_AIRPORTS = 'http://api.travelpayouts.com/data/airports.json'
 BASE_URL_TRAIN = 'https://api.rasp.yandex.net/v3.0/search/'
 params_train = {
-        "apikey": API_KEY_TRN,
-        "format": "json",
-        "from": None,
-        "to": None,
-        "date": None,
-        "transport_types": "train"
-    }
+    "apikey": API_KEY_TRN,
+    "format": "json",
+    "from": None,
+    "to": None,
+    "date": None,
+    "transport_types": "train",
+    "show_to_affiliates": "true"  # Добавьте этот параметр
+}
 
 params_avi = {
     'currency': 'rub',  # Валюта
     'period_type': 'year',  # Период
     'page': 1,  # Страница
-    'limit': 100,  # Лимит результатов
+    'limit': 1000,  # Лимит результатов
+    'one_way': 'true', #
     'show_to_affiliates': 'true',  # Показывать партнерские билеты
     'sorting': 'price',  # Сортировка по цене
     'trip_class': 0,  # Класс перелета
