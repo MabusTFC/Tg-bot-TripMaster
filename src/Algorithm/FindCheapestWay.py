@@ -1,7 +1,9 @@
 from itertools import product
-from .GenerateFlights import getTicket_Train, getTicket_Avi
+from .MyParser import fetch_prices  # Импортируем функцию fetch_prices
+from .ParseTrain import fetch_train_prices
 import datetime
 
+# Словарь для преобразования названий городов в IATA-коды
 
 def get_routes(start_city, end_city, departure_date, segments):
     all_routes = []
@@ -23,21 +25,23 @@ def get_routes(start_city, end_city, departure_date, segments):
             origin, destination = route[i][0], route[i + 1][0]
             stay_duration = route[i + 1][1]  # Время пребывания в следующем городе
 
-            # Получаем билеты
-            avi_tickets = getTicket_Avi(origin, destination, current_date)
-            train_tickets = getTicket_Train(origin, destination, current_date)
+            # Получаем билеты через API
+            # Получаем билеты через API
+            response_avia = fetch_prices(origin, destination, current_date)  # Авиабилеты
+            response_train = fetch_train_prices(origin, destination, current_date)
 
+            # Преобразуем данные в список билетов
             all_tickets = []
-            if isinstance(avi_tickets, list) and all(isinstance(t, dict) for t in avi_tickets):
-                all_tickets.extend(avi_tickets)
-            if isinstance(train_tickets, list) and all(isinstance(t, dict) for t in train_tickets):
-                all_tickets.extend(train_tickets)
+            if response_avia and "data" in response_avia:
+                all_tickets.extend(response_avia["data"])
+            if response_train:
+                all_tickets.extend(response_train)
 
             if not all_tickets:
                 print(f"Нет билетов из {origin} в {destination} на {current_date.strftime('%Y-%m-%d')}")
                 break  # Этот маршрут невозможен
 
-            # Выбираем самый дешевый билет (учитываем, что цена может отсутствовать)
+            # Выбираем самый дешевый билет
             best_ticket = min(
                 all_tickets,
                 key=lambda t: float(t.get("price", float("inf")))
@@ -46,37 +50,54 @@ def get_routes(start_city, end_city, departure_date, segments):
             )
 
             # Обновляем маршрутную информацию
+            departure_time = best_ticket.get("departure_at")
+            duration = best_ticket.get("duration", 0)  # Длительность полета в часах
+
+            # Вычисляем время прибытия
+            if departure_time:
+                try:
+                    departure_datetime = datetime.datetime.fromisoformat(departure_time.replace("Z", "+00:00"))
+                    arrival_datetime = departure_datetime + datetime.timedelta(minutes=duration)
+                except ValueError:
+                    print(f"Некорректный формат времени отправления: {departure_time}")
+                    continue
+            else:
+                print(f"Отсутствует время отправления для рейса из {origin} в {destination}")
+                break
+
+            base_url = "https://www.aviasales.ru"
+            flight_link = best_ticket.get("link", "")
+            full_link = base_url + flight_link if flight_link else "N/A"
+
             segment_info = {
                 "origin": origin,
                 "destination": destination,
-                "departure_datetime": best_ticket.get("departure"),
-                "arrival_datetime": best_ticket.get("arrival"),
+                "departure_datetime": departure_time,
+                "arrival_datetime": arrival_datetime.isoformat(),  # Вычисленное время прибытия
                 "flight_number": best_ticket.get("flight_number", ""),  # Номер рейса
-                "train_number":best_ticket.get("train_number", ""),
-                "price": float(best_ticket.get("price", 0)) if best_ticket.get("price") and best_ticket.get("price") != "Не указана" else 0
+                "train_number": best_ticket.get("train_number", ""),
+                "price": float(best_ticket.get("price", 0)) if best_ticket.get("price") and best_ticket.get(
+                    "price") != "Не указана" else 0,
+                "duration_hours": duration / 60,  # Длительность полета в часах
+                "booking_link": full_link  # Полная ссылка на бронирование билета
             }
             route_info["full_path"].append(segment_info)
 
             route_info["total_price"] += segment_info["price"]
+            route_info["total_duration"] += duration/60  # Добавляем длительность полета в общую продолжительность
 
-            # Обновляем дату отправления (добавляем время перелёта + пребывание в городе)
-            arrival_time = best_ticket.get("arrival")
-            if arrival_time:
-                try:
-                    arrival_date = datetime.datetime.fromisoformat(arrival_time)
-                    if route_info["start_date"] is None:
-                        route_info["start_date"] = best_ticket.get("departure")  # Сохраняем дату начала маршрута
-                    route_info["end_date"] = arrival_time  # Обновляем дату окончания маршрута
+            # Обновляем дату отправления для следующего сегмента
+            current_date = arrival_datetime.date()  # Устанавливаем дату прибытия
+            if stay_duration > 0:
+                current_date += datetime.timedelta(days=stay_duration)  # Добавляем время пребывания в городе
 
-                    # Добавляем время перелёта к общей продолжительности
-                    duration = best_ticket.get("duration", 0)
-                    route_info["total_duration"] += duration
+            # Если это первый сегмент, сохраняем дату начала маршрута
+            if route_info["start_date"] is None:
+                route_info["start_date"] = departure_time
 
-                    # Обновляем текущую дату для следующего сегмента
-                    current_date = arrival_date.date() + datetime.timedelta(days=stay_duration)
-                except ValueError:
-                    print(f"Некорректный формат времени прибытия: {arrival_time}")
-                    continue
+            # Обновляем дату окончания маршрута
+            route_info["end_date"] = arrival_datetime.isoformat()
+
         else:
             # Если прошли весь маршрут, добавляем его в список
             all_routes.append(route_info)
