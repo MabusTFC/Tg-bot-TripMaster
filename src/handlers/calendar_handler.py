@@ -65,7 +65,8 @@ async def process_end_date(callback_query: CallbackQuery, state: FSMContext):
 
     total_days = (end_date_obj - start_date_obj).days
 
-    await state.update_data(end_date=selected_date)
+
+    await state.update_data(end_date=selected_date, total_days=total_days)
 
     await callback_query.message.edit_text(
         f"✅ Выбранный маршрут:\n"
@@ -76,5 +77,5 @@ async def process_end_date(callback_query: CallbackQuery, state: FSMContext):
         f"Выберите следующий шаг:",
         reply_markup=await get_selection_keyboard()
     )
-    await state.clear()
+
     await callback_query.answer()
