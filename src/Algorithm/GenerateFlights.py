@@ -1,6 +1,4 @@
 #import json
-from datetime import datetime, timedelta
-
 from datetime import datetime
 
 def getTicket_Avi(origin, destination, departure_date):

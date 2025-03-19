@@ -2,7 +2,6 @@ from itertools import product
 from .MyParser import fetch_prices  # Импортируем функцию fetch_prices
 from .ParseTrain import fetch_train_prices
 import datetime
-
 # Словарь для преобразования названий городов в IATA-коды
 
 def get_routes(start_city, end_city, departure_date, segments):
@@ -28,6 +27,7 @@ def get_routes(start_city, end_city, departure_date, segments):
             # Получаем билеты через API
             # Получаем билеты через API
             response_avia = fetch_prices(origin, destination, current_date)  # Авиабилеты
+            #ВЕРНИ ТОЧКИ
             response_train = fetch_train_prices(origin, destination, current_date)
 
             # Преобразуем данные в список билетов
@@ -103,3 +103,4 @@ def get_routes(start_city, end_city, departure_date, segments):
             all_routes.append(route_info)
 
     return all_routes
+
