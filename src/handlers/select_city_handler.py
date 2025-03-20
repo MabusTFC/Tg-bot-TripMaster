@@ -16,6 +16,8 @@ router = Router()
 async def select_city(callback_query: CallbackQuery, state: FSMContext):
     city_index = int(callback_query.data.split("_")[1])
     user_data = await state.get_data()
+    total_days = user_data.get("total_days")
+    max_days = user_data.get("max_days", total_days)
     route = user_data.get("route", [])
     user_days = user_data.get("user_days", {})
 
@@ -29,7 +31,7 @@ async def select_city(callback_query: CallbackQuery, state: FSMContext):
     await state.update_data(selected_city=city)
     await callback_query.message.edit_text(
         f"Вы выбрали город: {city}\nВыберите количество дней пребывания:",
-        reply_markup=await get_days_keyboard(city, days)
+        reply_markup=await get_days_keyboard(city, days, max_days)
     )
     await callback_query.answer()
 

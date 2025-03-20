@@ -112,13 +112,19 @@ async def get_list_sity_keyboard(route: list, user_days: dict, page: int = 0):
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
-async def get_days_keyboard(city: str, days: int):
+async def get_days_keyboard(city: str, days: int, max_days: int):
+    increase_button = InlineKeyboardButton(
+        text="➕" if days < max_days else "🔒",
+        callback_data=f"increase_{city}" if days < max_days else "lock"
+    )
+
     buttons = [
         [InlineKeyboardButton(text="➖", callback_data=f"decrease_{city}"),
          InlineKeyboardButton(text=f"{days} дн", callback_data="current_days"),
-         InlineKeyboardButton(text="➕", callback_data=f"increase_{city}")],
+         increase_button],
         [InlineKeyboardButton(text="✅ Готово", callback_data="back_to_cities")]
     ]
+
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
@@ -127,7 +133,6 @@ async def get_number_keyboard(city: str, current_days: int, max_days: int):
     buttons = [
         InlineKeyboardButton(text=f"{i}дн", callback_data=f"choose_number_{city}_{i}") for i in range(1, max_days + 1)
     ]
-
 
     rows = [buttons[i:i + 7] for i in range(0, len(buttons), 7)]
 

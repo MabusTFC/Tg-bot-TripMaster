@@ -17,7 +17,7 @@ from handlers import (
     calendar_handler,
     select_city_handler,
     change_days_handler,
-    #chose_days_handler,
+    chose_days_handler,
 
 )
 
@@ -27,7 +27,7 @@ from config import (
     WEB_HOOK_PATH,
     WEB_SERVER_HOST
 )
-
+from database.database import init_db
 
 logging.basicConfig(level=logging.INFO)
 
@@ -48,7 +48,7 @@ async def main():
     dp.include_router(calendar_handler.router)
     dp.include_router(select_city_handler.router)
     dp.include_router(change_days_handler.router)
-    #dp.include_router(chose_days_handler.router)
+    dp.include_router(chose_days_handler.router)
     dp.startup.register(on_startup)
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(

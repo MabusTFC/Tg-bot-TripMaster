@@ -43,7 +43,7 @@ async def change_days(callback_query: CallbackQuery, state: FSMContext):
         f"DEBUG: City: {city}, Action: {action}, max_days: {max_days}, current_days: {current_days}, user_days: {user_days}"
     )
 
-    await callback_query.message.edit_reply_markup(reply_markup=await get_days_keyboard(city, current_days))
+    await callback_query.message.edit_reply_markup(reply_markup=await get_days_keyboard(city, current_days, max_days))
     await callback_query.answer()
 
 
