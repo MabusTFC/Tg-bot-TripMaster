@@ -1,6 +1,7 @@
 from itertools import product
 from .MyParser import fetch_prices  # Импортируем функцию fetch_prices
 from .ParseTrain import fetch_train_prices
+from src.Algorithm.BDCache.fetch_cached_tickets import fetch_cached_ticket
 import datetime
 # Словарь для преобразования названий городов в IATA-коды
 
@@ -24,11 +25,13 @@ def get_routes(start_city, end_city, departure_date, segments):
             origin, destination = route[i][0], route[i + 1][0]
             stay_duration = route[i + 1][1]  # Время пребывания в следующем городе
 
-            # Получаем билеты через API
-            # Получаем билеты через API
-            # Получаем билеты через API
-            #response_avia = fetch_prices(origin, destination, current_date)  # Авиабилеты
-            response_train = fetch_train_prices(origin, destination, current_date)  # Железнодорожные билеты
+            # Старый код:
+            #response_avia = fetch_prices(origin, destination, current_date)
+            #response_train = fetch_train_prices(origin, destination, current_date)
+
+            # Новый код:
+            #response_avia = fetch_cached_ticket(origin, destination, current_date, "avia")
+            response_train = fetch_cached_ticket(origin, destination, current_date, "train")
 
             # Преобразуем данные в список билетов
             all_tickets = []
