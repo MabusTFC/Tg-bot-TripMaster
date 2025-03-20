@@ -6,7 +6,7 @@ import json
 cites = ["Москва", "Владивосток"]
 start_city = cites[0],0
 end_city = cites[1],0
-departure_date = datetime.date(2025, 4, 26)
+departure_date = datetime.date(2025, 3, 25)
 
 segments = [
     [("Челябинск", 5), ("Санкт-Петербург", 3)],

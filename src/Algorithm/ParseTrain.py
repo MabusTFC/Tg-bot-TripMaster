@@ -1,73 +1,74 @@
 import os
-import sys
-import yaml
-import os
-import sys
-import yaml
-import requests
-from .config import API_KEY_TRN, city_name_to_code_train
+
+from src.Algorithm.config import API_KEY_TRN
 from datetime import datetime
+
 import json
 
-def fetch_train_prices(origin, destination, departure_date):
-    """
-    Выполняет запрос к API Яндекс Расписания и возвращает данные о билетах на поезда.
-    """
-    origin_code = city_name_to_code_train.get(origin)
-    destination_code = city_name_to_code_train.get(destination)
+import requests
+from datetime import datetime
 
-    if not origin_code or not destination_code:
-        print(f"Не найден код для города: {origin} или {destination}")
-        return {"data": [], "currency": "rub"}
 
+def fetch_train_prices(origin, destination, current_date):
+    """
+    Выполняет запрос к API Яндекс.Расписаний для получения данных о железнодорожных рейсах.
+    """
+    # URL API Яндекс.Расписаний
     endpoint = "https://api.rasp.yandex.net/v3.0/search/"
+    # Получаем путь к директории, где находится текущий файл
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Формируем путь к файлу city_to_yandex_code.json
+    file_path = os.path.join(script_dir, "city_to_yandex_code.json")
+
+    # Открываем файл
+    with open(file_path, "r", encoding="utf-8") as file:
+        city_to_yandex_code = json.load(file)
+
+    origin_code = city_to_yandex_code.get(origin)
+    destination_code = city_to_yandex_code.get(destination)
+    # Параметры запроса
     params = {
-        "apikey": API_KEY_TRN,
+        "apikey": API_KEY_TRN,  # Ваш API-ключ от Яндекс.Расписаний
         "format": "json",
-        "from": origin_code,
-        "to": destination_code,
-        "date": departure_date.strftime("%Y-%m-%d"),
-        "transport_types": "train",
-        "et_marker": 'true',
-        "limit": 10
+        "from": city_to_yandex_code.get(origin),  # Код станции отправления (например, Yandex код)
+        "to": city_to_yandex_code.get(destination),  # Код станции назначения
+        "lang": "ru_RU",
+        "date": current_date.strftime("%Y-%m-%d"),  # Дата отправления
+        "transport_types": "train",  # Тип транспорта: поезд
     }
 
     try:
         response = requests.get(endpoint, params=params)
-        response.raise_for_status()
+        response.raise_for_status()  # Проверка на успешный статус запроса
         data = response.json()
 
+        # Преобразуем данные в удобный формат
         trains = []
         for segment in data.get("segments", []):
-            price_info = segment.get("price", {})
-            train = {
-                "origin": origin_code,
-                "destination": destination_code,
-                "departure_station": segment.get("from", {}).get("title", "N/A"),
-                "arrival_station": segment.get("to", {}).get("title", "N/A"),
-                "price": price_info.get("total") if price_info else None,
-                "carrier": segment.get("thread", {}).get("carrier", {}).get("title", "N/A"),
-                "train_number": segment.get("thread", {}).get("number", "N/A"),
-                "departure_time": segment.get("departure", "N/A"),
-                "arrival_time": segment.get("arrival", "N/A"),
-                "transfers": 0,
-                "duration": segment.get("duration", "N/A"),
-                "link": f"https://rasp.yandex.ru/train/{segment.get('thread', {}).get('uid', 'N/A')}"
+            train_info = {
+                "origin": segment["from"]["title"],
+                "destination": segment["to"]["title"],
+                "departure_at": segment["departure"],
+                "arrival_at": segment["arrival"],
+                "train_number": segment["thread"]["number"],
+                "price": float(segment.get("price", {}).get("whole", 0)),  # Цена в рублях
+                "duration": segment["duration"]/60,  # Длительность в минутах
+                "booking_link": segment.get("tickets_info", {}).get("buy_ticket_url", "N/A")  # Ссылка на покупку
             }
-            trains.append(train)
+            trains.append(train_info)
 
-        return {"data": trains, "currency": "rub"}
-
-    except requests.exceptions.RequestException as e:
-        print(f"Ошибка при запросе к API: {e}")
-        return {"data": [], "currency": "rub"}
+        return trains
+    except requests.RequestException as e:
+        print("Ошибка при выполнении запроса к API Яндекс.Расписаний:", e)
+        return None
 
 def print_detailed_trains(result, base_url="https://rasp.yandex.ru"):
     """
     Выводит максимально подробный форматированный вывод данных о поездах.
     Для каждого найденного билета выводятся все поля, которые возвращает API.
     """
-    if result and result.get("data"):
+    if result:
         print("Найденные билеты на поезда:")
         for index, train in enumerate(result["data"], start=1):
             print("=" * 50)
@@ -95,7 +96,7 @@ if __name__ == "__main__":
     departure_date = datetime(2025, 3, 25)
 
     result = fetch_train_prices(origin, destination, departure_date)
-    if result.get("data"):
+    if result:
         print("Сырой ответ API:")
         print(json.dumps(result, indent=2, ensure_ascii=False))
         print("\nДетализированный форматированный вывод:\n")
