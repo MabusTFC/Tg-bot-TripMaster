@@ -7,56 +7,108 @@
             "Сочи",
             "Владивосток"
         ],
-        "total_price": 66208.0,
-        "total_duration": 72.0,
+        "total_price": 49377.0,
+        "total_duration": 71.16666666666667,
         "full_path": [
             {
                 "origin": "Москва",
                 "destination": "Челябинск",
-                "departure_datetime": "2025-04-26T23:40:00+03:00",
-                "arrival_datetime": "2025-04-27T02:10:00+03:00",
-                "flight_number": "5569",
+                "departure_datetime": "2025-03-25T23:20:00+03:00",
+                "arrival_datetime": "2025-03-26 01:50:00+03:00",
+                "flight_number": "6567",
                 "train_number": "",
-                "price": 11693.0,
+                "price": 6254.0,
                 "duration_hours": 2.5,
-                "booking_link": "https://www.aviasales.ru/search/MOW2604CEK1?t=DP17457108001745727000000150SVOCEK_5166775e0d2f36c17626b17b30f790da_11760&search_date=19032025&expected_price_uuid=c73cb462-6d49-4161-ae7a-4a18dd76bd02&expected_price_source=share&expected_price_currency=rub&expected_price=11693"
+                "booking_link": "https://www.aviasales.ru/search/MOW2503CEK1?t=DP17429448001742961000000150SVOCEK_7309ed8cae7fa70658a7f68d2187089d_6254&search_date=20032025&expected_price_uuid=7db3c588-bf0c-47db-b383-0db6e71c9700&expected_price_source=share&expected_price_currency=rub&expected_price=6254",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Москва",
+                "destination": "Челябинск",
+                "departure_datetime": "2025-03-25T23:20:00+03:00",
+                "arrival_datetime": "2025-03-26 01:50:00+03:00",
+                "flight_number": "6567",
+                "train_number": "",
+                "price": 6254.0,
+                "duration_hours": 2.5,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503CEK1?t=DP17429448001742961000000150SVOCEK_7309ed8cae7fa70658a7f68d2187089d_6254&search_date=20032025&expected_price_uuid=7db3c588-bf0c-47db-b383-0db6e71c9700&expected_price_source=share&expected_price_currency=rub&expected_price=6254",
+                "transport_type": "avia"
             },
             {
                 "origin": "Челябинск",
                 "destination": "Казань",
-                "departure_datetime": "2025-05-02T05:20:00+05:00",
-                "arrival_datetime": "2025-05-04T00:40:00+05:00",
-                "flight_number": "414",
+                "departure_datetime": "2025-03-31T04:10:00+05:00",
+                "arrival_datetime": "2025-03-31 07:55:00+05:00",
+                "flight_number": "582",
                 "train_number": "",
-                "price": 16416.0,
-                "duration_hours": 43.333333333333336,
-                "booking_link": "https://www.aviasales.ru/search/CEK0205KZN1?t=DP17461632001746312000002600CEKVKOSVOKZN_6573c62c53943f6fc8bb6d6a47c9cccd_16510&search_date=19032025&expected_price_uuid=832e712c-ed64-45d3-8383-05955842b702&expected_price_source=share&expected_price_currency=rub&expected_price=16416"
+                "price": 8207.0,
+                "duration_hours": 3.75,
+                "booking_link": "https://www.aviasales.ru/search/CEK3103KZN1?t=RT17433942001743400500000225CEKKZN_c76851ca3fae4047e267103bb9b0ccb1_8256&search_date=20032025&expected_price_uuid=af09ac7e-217e-4ce4-b2dc-9c29c134d501&expected_price_source=share&expected_price_currency=rub&expected_price=8207",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Челябинск",
+                "destination": "Казань",
+                "departure_datetime": "2025-03-31T04:10:00+05:00",
+                "arrival_datetime": "2025-03-31 07:55:00+05:00",
+                "flight_number": "582",
+                "train_number": "",
+                "price": 8207.0,
+                "duration_hours": 3.75,
+                "booking_link": "https://www.aviasales.ru/search/CEK3103KZN1?t=RT17433942001743400500000225CEKKZN_c76851ca3fae4047e267103bb9b0ccb1_8256&search_date=20032025&expected_price_uuid=af09ac7e-217e-4ce4-b2dc-9c29c134d501&expected_price_source=share&expected_price_currency=rub&expected_price=8207",
+                "transport_type": "avia"
             },
             {
                 "origin": "Казань",
                 "destination": "Сочи",
-                "departure_datetime": "2025-05-08T12:20:00+03:00",
-                "arrival_datetime": "2025-05-08T15:50:00+03:00",
-                "flight_number": "338",
+                "departure_datetime": "2025-04-04T13:25:00+03:00",
+                "arrival_datetime": "2025-04-05 21:45:00+03:00",
+                "flight_number": "769",
                 "train_number": "",
-                "price": 11932.0,
-                "duration_hours": 3.5,
-                "booking_link": "https://www.aviasales.ru/search/KZN0805AER1?t=DP17467068001746719400000210KZNAER_683beac6ca9876ee0d59d867d6ef2aff_11907&search_date=19032025&expected_price_uuid=0b899807-bff9-4d79-9665-a538a0e14b01&expected_price_source=share&expected_price_currency=rub&expected_price=11932"
+                "price": 11584.0,
+                "duration_hours": 32.333333333333336,
+                "booking_link": "https://www.aviasales.ru/search/KZN0404AER1?t=N417437731001743889500001940KZNUFAAER_334ef4225150736db29d5c3d63db297d_11555&search_date=20032025&expected_price_uuid=bfb9667f-7da6-4876-8951-ff5cfa5a2303&expected_price_source=share&expected_price_currency=rub&expected_price=11584",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Казань",
+                "destination": "Сочи",
+                "departure_datetime": "2025-04-04T13:25:00+03:00",
+                "arrival_datetime": "2025-04-05 21:45:00+03:00",
+                "flight_number": "769",
+                "train_number": "",
+                "price": 11584.0,
+                "duration_hours": 32.333333333333336,
+                "booking_link": "https://www.aviasales.ru/search/KZN0404AER1?t=N417437731001743889500001940KZNUFAAER_334ef4225150736db29d5c3d63db297d_11555&search_date=20032025&expected_price_uuid=bfb9667f-7da6-4876-8951-ff5cfa5a2303&expected_price_source=share&expected_price_currency=rub&expected_price=11584",
+                "transport_type": "avia"
             },
             {
                 "origin": "Сочи",
                 "destination": "Владивосток",
-                "departure_datetime": "2025-05-11T14:25:00+03:00",
-                "arrival_datetime": "2025-05-12T13:05:00+03:00",
-                "flight_number": "186",
+                "departure_datetime": "2025-04-08T19:55:00+03:00",
+                "arrival_datetime": "2025-04-10 04:30:00+03:00",
+                "flight_number": "322",
                 "train_number": "",
-                "price": 26167.0,
-                "duration_hours": 22.666666666666668,
-                "booking_link": "https://www.aviasales.ru/search/AER1105VVO1?t=U617469735001747080300001360AERDMEBQSVVO_cb7f0188c1639070e26f5908a2cf41c8_26316&search_date=19032025&expected_price_uuid=9db02cc4-8774-4185-aa2d-61c416453201&expected_price_source=share&expected_price_currency=rub&expected_price=26167"
+                "price": 23332.0,
+                "duration_hours": 32.583333333333336,
+                "booking_link": "https://www.aviasales.ru/search/AER0804VVO1?t=U617441421001744284600001955AERSVXVVO_a7e5245bab1edd83858fd79195e95e73_23327&search_date=19032025&expected_price_uuid=ab71cdca-808c-42a7-9db2-20a408ced502&expected_price_source=share&expected_price_currency=rub&expected_price=23332",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Сочи",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-08T19:55:00+03:00",
+                "arrival_datetime": "2025-04-10 04:30:00+03:00",
+                "flight_number": "322",
+                "train_number": "",
+                "price": 23332.0,
+                "duration_hours": 32.583333333333336,
+                "booking_link": "https://www.aviasales.ru/search/AER0804VVO1?t=U617441421001744284600001955AERSVXVVO_a7e5245bab1edd83858fd79195e95e73_23327&search_date=19032025&expected_price_uuid=ab71cdca-808c-42a7-9db2-20a408ced502&expected_price_source=share&expected_price_currency=rub&expected_price=23332",
+                "transport_type": "avia"
             }
         ],
-        "start_date": "2025-04-26T23:40:00+03:00",
-        "end_date": "2025-05-12T13:05:00+03:00"
+        "start_date": "2025-03-25T23:20:00+03:00",
+        "end_date": "2025-04-10T04:30:00+03:00"
     },
     {
         "route": [
@@ -66,351 +118,663 @@
             "Новосибирск",
             "Владивосток"
         ],
-        "total_price": 62606.0,
-        "total_duration": 57.25,
+        "total_price": 45397.0,
+        "total_duration": 45.66666666666667,
         "full_path": [
             {
                 "origin": "Москва",
                 "destination": "Челябинск",
-                "departure_datetime": "2025-04-26T23:40:00+03:00",
-                "arrival_datetime": "2025-04-27T02:10:00+03:00",
-                "flight_number": "5569",
+                "departure_datetime": "2025-03-25T23:20:00+03:00",
+                "arrival_datetime": "2025-03-26 01:50:00+03:00",
+                "flight_number": "6567",
                 "train_number": "",
-                "price": 11693.0,
+                "price": 6254.0,
                 "duration_hours": 2.5,
-                "booking_link": "https://www.aviasales.ru/search/MOW2604CEK1?t=DP17457108001745727000000150SVOCEK_5166775e0d2f36c17626b17b30f790da_11760&search_date=19032025&expected_price_uuid=c73cb462-6d49-4161-ae7a-4a18dd76bd02&expected_price_source=share&expected_price_currency=rub&expected_price=11693"
+                "booking_link": "https://www.aviasales.ru/search/MOW2503CEK1?t=DP17429448001742961000000150SVOCEK_7309ed8cae7fa70658a7f68d2187089d_6254&search_date=20032025&expected_price_uuid=7db3c588-bf0c-47db-b383-0db6e71c9700&expected_price_source=share&expected_price_currency=rub&expected_price=6254",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Москва",
+                "destination": "Челябинск",
+                "departure_datetime": "2025-03-25T23:20:00+03:00",
+                "arrival_datetime": "2025-03-26 01:50:00+03:00",
+                "flight_number": "6567",
+                "train_number": "",
+                "price": 6254.0,
+                "duration_hours": 2.5,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503CEK1?t=DP17429448001742961000000150SVOCEK_7309ed8cae7fa70658a7f68d2187089d_6254&search_date=20032025&expected_price_uuid=7db3c588-bf0c-47db-b383-0db6e71c9700&expected_price_source=share&expected_price_currency=rub&expected_price=6254",
+                "transport_type": "avia"
             },
             {
                 "origin": "Челябинск",
                 "destination": "Казань",
-                "departure_datetime": "2025-05-02T05:20:00+05:00",
-                "arrival_datetime": "2025-05-04T00:40:00+05:00",
-                "flight_number": "414",
+                "departure_datetime": "2025-03-31T04:10:00+05:00",
+                "arrival_datetime": "2025-03-31 07:55:00+05:00",
+                "flight_number": "582",
                 "train_number": "",
-                "price": 16416.0,
-                "duration_hours": 43.333333333333336,
-                "booking_link": "https://www.aviasales.ru/search/CEK0205KZN1?t=DP17461632001746312000002600CEKVKOSVOKZN_6573c62c53943f6fc8bb6d6a47c9cccd_16510&search_date=19032025&expected_price_uuid=832e712c-ed64-45d3-8383-05955842b702&expected_price_source=share&expected_price_currency=rub&expected_price=16416"
+                "price": 8207.0,
+                "duration_hours": 3.75,
+                "booking_link": "https://www.aviasales.ru/search/CEK3103KZN1?t=RT17433942001743400500000225CEKKZN_c76851ca3fae4047e267103bb9b0ccb1_8256&search_date=20032025&expected_price_uuid=af09ac7e-217e-4ce4-b2dc-9c29c134d501&expected_price_source=share&expected_price_currency=rub&expected_price=8207",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Челябинск",
+                "destination": "Казань",
+                "departure_datetime": "2025-03-31T04:10:00+05:00",
+                "arrival_datetime": "2025-03-31 07:55:00+05:00",
+                "flight_number": "582",
+                "train_number": "",
+                "price": 8207.0,
+                "duration_hours": 3.75,
+                "booking_link": "https://www.aviasales.ru/search/CEK3103KZN1?t=RT17433942001743400500000225CEKKZN_c76851ca3fae4047e267103bb9b0ccb1_8256&search_date=20032025&expected_price_uuid=af09ac7e-217e-4ce4-b2dc-9c29c134d501&expected_price_source=share&expected_price_currency=rub&expected_price=8207",
+                "transport_type": "avia"
             },
             {
                 "origin": "Казань",
                 "destination": "Новосибирск",
-                "departure_datetime": "2025-05-08T06:20:00+03:00",
-                "arrival_datetime": "2025-05-08T12:15:00+03:00",
-                "flight_number": "651",
+                "departure_datetime": "2025-04-04T00:45:00+03:00",
+                "arrival_datetime": "2025-04-04 08:30:00+03:00",
+                "flight_number": "757",
                 "train_number": "",
-                "price": 10884.0,
-                "duration_hours": 5.916666666666667,
-                "booking_link": "https://www.aviasales.ru/search/KZN0805OVB1?t=RT17466852001746720900000355KZNRMZOVB_850074abbe08d938352be4dc380cb600_10624&search_date=19032025&expected_price_uuid=22239274-1bff-4f88-a7c3-7e45b2dd5502&expected_price_source=share&expected_price_currency=rub&expected_price=10884"
+                "price": 9096.0,
+                "duration_hours": 7.75,
+                "booking_link": "https://www.aviasales.ru/search/KZN0404OVB1?t=N417437275001743769800000465KZNBAXOVB_3086012991c1fc74269e63c5ed75b54c_9027&search_date=20032025&expected_price_uuid=9f310aa4-eac5-40f7-9fbc-6a7cfc046200&expected_price_source=share&expected_price_currency=rub&expected_price=9096",
+                "transport_type": "avia"
             },
             {
-                "origin": "Новосибирск",
-                "destination": "Владивосток",
-                "departure_datetime": "2025-05-10T23:20:00+07:00",
-                "arrival_datetime": "2025-05-11T04:50:00+07:00",
-                "flight_number": "5203",
-                "train_number": "",
-                "price": 23613.0,
-                "duration_hours": 5.5,
-                "booking_link": "https://www.aviasales.ru/search/OVB1005VVO1?t=S717469192001746949800000330OVBVVO_938b5f31a67c3f7638ef1d0f8f6d56ac_23613&search_date=19032025&expected_price_uuid=52c62298-f2fc-44a7-b257-8ffe94a2ec03&expected_price_source=share&expected_price_currency=rub&expected_price=23613"
-            }
-        ],
-        "start_date": "2025-04-26T23:40:00+03:00",
-        "end_date": "2025-05-11T04:50:00+07:00"
-    },
-    {
-        "route": [
-            "Москва",
-            "Челябинск",
-            "Екатеринбург",
-            "Сочи",
-            "Владивосток"
-        ],
-        "total_price": 68022.0,
-        "total_duration": 44.416666666666664,
-        "full_path": [
-            {
-                "origin": "Москва",
-                "destination": "Челябинск",
-                "departure_datetime": "2025-04-26T23:40:00+03:00",
-                "arrival_datetime": "2025-04-27T02:10:00+03:00",
-                "flight_number": "5569",
-                "train_number": "",
-                "price": 11693.0,
-                "duration_hours": 2.5,
-                "booking_link": "https://www.aviasales.ru/search/MOW2604CEK1?t=DP17457108001745727000000150SVOCEK_5166775e0d2f36c17626b17b30f790da_11760&search_date=19032025&expected_price_uuid=c73cb462-6d49-4161-ae7a-4a18dd76bd02&expected_price_source=share&expected_price_currency=rub&expected_price=11693"
-            },
-            {
-                "origin": "Челябинск",
-                "destination": "Екатеринбург",
-                "departure_datetime": "2025-05-02T05:20:00+05:00",
-                "arrival_datetime": "2025-05-03T04:10:00+05:00",
-                "flight_number": "414",
-                "train_number": "",
-                "price": 20190.0,
-                "duration_hours": 22.833333333333332,
-                "booking_link": "https://www.aviasales.ru/search/CEK0205SVX1?t=DP17461632001746245400001370CEKVKOSVOSVX_9023fc36ed8eb57740304627b6211b1c_19948&search_date=19032025&expected_price_uuid=7d85df7d-c608-432e-92b8-0f0d88674b02&expected_price_source=share&expected_price_currency=rub&expected_price=20190"
-            },
-            {
-                "origin": "Екатеринбург",
-                "destination": "Сочи",
-                "departure_datetime": "2025-05-05T06:10:00+05:00",
-                "arrival_datetime": "2025-05-05T10:00:00+05:00",
-                "flight_number": "340",
-                "train_number": "",
-                "price": 10735.0,
-                "duration_hours": 3.8333333333333335,
-                "booking_link": "https://www.aviasales.ru/search/SVX0505AER1?t=DP17464254001746432000000230SVXAER_c39f2b90dd12fdb81ab4612eac579ac0_10735&search_date=19032025&expected_price_uuid=f6f83155-421f-4900-bf65-274f1ade3100&expected_price_source=share&expected_price_currency=rub&expected_price=10735"
-            },
-            {
-                "origin": "Сочи",
-                "destination": "Владивосток",
-                "departure_datetime": "2025-05-08T13:15:00+03:00",
-                "arrival_datetime": "2025-05-09T04:30:00+03:00",
-                "flight_number": "220",
-                "train_number": "",
-                "price": 25404.0,
-                "duration_hours": 15.25,
-                "booking_link": "https://www.aviasales.ru/search/AER0805VVO1?t=U617467101001746790200000915AERSVXVVO_2388cc79398317d9097acf39b7335eec_25327&search_date=19032025&expected_price_uuid=d942b075-b146-4b8a-9c03-8489e531d002&expected_price_source=share&expected_price_currency=rub&expected_price=25404"
-            }
-        ],
-        "start_date": "2025-04-26T23:40:00+03:00",
-        "end_date": "2025-05-09T04:30:00+03:00"
-    },
-    {
-        "route": [
-            "Москва",
-            "Челябинск",
-            "Екатеринбург",
-            "Новосибирск",
-            "Владивосток"
-        ],
-        "total_price": 63821.0,
-        "total_duration": 61.08333333333333,
-        "full_path": [
-            {
-                "origin": "Москва",
-                "destination": "Челябинск",
-                "departure_datetime": "2025-04-26T23:40:00+03:00",
-                "arrival_datetime": "2025-04-27T02:10:00+03:00",
-                "flight_number": "5569",
-                "train_number": "",
-                "price": 11693.0,
-                "duration_hours": 2.5,
-                "booking_link": "https://www.aviasales.ru/search/MOW2604CEK1?t=DP17457108001745727000000150SVOCEK_5166775e0d2f36c17626b17b30f790da_11760&search_date=19032025&expected_price_uuid=c73cb462-6d49-4161-ae7a-4a18dd76bd02&expected_price_source=share&expected_price_currency=rub&expected_price=11693"
-            },
-            {
-                "origin": "Челябинск",
-                "destination": "Екатеринбург",
-                "departure_datetime": "2025-05-02T05:20:00+05:00",
-                "arrival_datetime": "2025-05-03T04:10:00+05:00",
-                "flight_number": "414",
-                "train_number": "",
-                "price": 20190.0,
-                "duration_hours": 22.833333333333332,
-                "booking_link": "https://www.aviasales.ru/search/CEK0205SVX1?t=DP17461632001746245400001370CEKVKOSVOSVX_9023fc36ed8eb57740304627b6211b1c_19948&search_date=19032025&expected_price_uuid=7d85df7d-c608-432e-92b8-0f0d88674b02&expected_price_source=share&expected_price_currency=rub&expected_price=20190"
-            },
-            {
-                "origin": "Екатеринбург",
+                "origin": "Казань",
                 "destination": "Новосибирск",
-                "departure_datetime": "2025-05-05T01:30:00+05:00",
-                "arrival_datetime": "2025-05-05T06:45:00+05:00",
-                "flight_number": "1041",
+                "departure_datetime": "2025-04-04T00:45:00+03:00",
+                "arrival_datetime": "2025-04-04 08:30:00+03:00",
+                "flight_number": "757",
                 "train_number": "",
-                "price": 9704.0,
-                "duration_hours": 5.25,
-                "booking_link": "https://www.aviasales.ru/search/SVX0505OVB1?t=WZ17464086001746434700000315SVXKEJOVB_72365583ca54c83c9f3e4b71f6a7fe69_9588&search_date=19032025&expected_price_uuid=38d02583-0bfd-412e-99ff-10d530a83802&expected_price_source=share&expected_price_currency=rub&expected_price=9704"
+                "price": 9096.0,
+                "duration_hours": 7.75,
+                "booking_link": "https://www.aviasales.ru/search/KZN0404OVB1?t=N417437275001743769800000465KZNBAXOVB_3086012991c1fc74269e63c5ed75b54c_9027&search_date=20032025&expected_price_uuid=9f310aa4-eac5-40f7-9fbc-6a7cfc046200&expected_price_source=share&expected_price_currency=rub&expected_price=9096",
+                "transport_type": "avia"
             },
             {
                 "origin": "Новосибирск",
                 "destination": "Владивосток",
-                "departure_datetime": "2025-05-07T09:25:00+07:00",
-                "arrival_datetime": "2025-05-08T15:55:00+07:00",
+                "departure_datetime": "2025-04-06T09:25:00+07:00",
+                "arrival_datetime": "2025-04-07 17:05:00+07:00",
                 "flight_number": "5305",
                 "train_number": "",
-                "price": 22234.0,
-                "duration_hours": 30.5,
-                "booking_link": "https://www.aviasales.ru/search/OVB0705VVO1?t=SU17466099001746730500001830OVBKJABQSVVO_7a1760fe8db10489b3b7ebae418289fa_22234&search_date=19032025&expected_price_uuid=e8aeb18c-1d8b-4113-9729-b423bb3c2101&expected_price_source=share&expected_price_currency=rub&expected_price=22234"
-            }
-        ],
-        "start_date": "2025-04-26T23:40:00+03:00",
-        "end_date": "2025-05-08T15:55:00+07:00"
-    },
-    {
-        "route": [
-            "Москва",
-            "Санкт-Петербург",
-            "Казань",
-            "Сочи",
-            "Владивосток"
-        ],
-        "total_price": 47997.0,
-        "total_duration": 21.916666666666664,
-        "full_path": [
-            {
-                "origin": "Москва",
-                "destination": "Санкт-Петербург",
-                "departure_datetime": "2025-04-26T19:10:00+03:00",
-                "arrival_datetime": "2025-04-26T20:30:00+03:00",
-                "flight_number": "381",
-                "train_number": "",
-                "price": 3745.0,
-                "duration_hours": 1.3333333333333333,
-                "booking_link": "https://www.aviasales.ru/search/MOW2604LED1?t=UT17456946001745699400000080VKOLED_77c589ffabe204a6f79ca97ebb283ef0_3745&search_date=19032025&expected_price_uuid=728016f5-e9c7-4542-8861-7ce705088f03&expected_price_source=share&expected_price_currency=rub&expected_price=3745"
-            },
-            {
-                "origin": "Санкт-Петербург",
-                "destination": "Казань",
-                "departure_datetime": "2025-04-29T09:05:00+03:00",
-                "arrival_datetime": "2025-04-29T11:20:00+03:00",
-                "flight_number": "243",
-                "train_number": "",
-                "price": 6682.0,
-                "duration_hours": 2.25,
-                "booking_link": "https://www.aviasales.ru/search/LED2904KZN1?t=N417459175001745925600000135LEDKZN_ce32650da30f573fbd9ac2e7ae265158_6682&search_date=19032025&expected_price_uuid=bff6ba8c-198c-45ee-a425-6e535f898302&expected_price_source=share&expected_price_currency=rub&expected_price=6682"
-            },
-            {
-                "origin": "Казань",
-                "destination": "Сочи",
-                "departure_datetime": "2025-05-03T13:35:00+03:00",
-                "arrival_datetime": "2025-05-03T16:55:00+03:00",
-                "flight_number": "507",
-                "train_number": "",
-                "price": 12112.0,
-                "duration_hours": 3.3333333333333335,
-                "booking_link": "https://www.aviasales.ru/search/KZN0305AER1?t=U617462793001746291300000200KZNAER_9132ec61a0d37791cbb269ee1e9273bb_12181&search_date=19032025&expected_price_uuid=e0d50f6b-92c4-41af-9078-df605c26cd00&expected_price_source=share&expected_price_currency=rub&expected_price=12112"
-            },
-            {
-                "origin": "Сочи",
-                "destination": "Владивосток",
-                "departure_datetime": "2025-05-06T13:35:00+03:00",
-                "arrival_datetime": "2025-05-07T04:35:00+03:00",
-                "flight_number": "6946",
-                "train_number": "",
-                "price": 25458.0,
-                "duration_hours": 15.0,
-                "booking_link": "https://www.aviasales.ru/search/AER0605VVO1?t=SU17465385001746617700000900AERSVOVVO_036b45a448f7dfa742d6a244bbf8bfcb_25469&search_date=18032025&expected_price_uuid=d7858390-fab4-4114-b73d-11edd6865e01&expected_price_source=share&expected_price_currency=rub&expected_price=25458"
-            }
-        ],
-        "start_date": "2025-04-26T19:10:00+03:00",
-        "end_date": "2025-05-07T04:35:00+03:00"
-    },
-    {
-        "route": [
-            "Москва",
-            "Санкт-Петербург",
-            "Казань",
-            "Новосибирск",
-            "Владивосток"
-        ],
-        "total_price": 45000.0,
-        "total_duration": 25.833333333333336,
-        "full_path": [
-            {
-                "origin": "Москва",
-                "destination": "Санкт-Петербург",
-                "departure_datetime": "2025-04-26T19:10:00+03:00",
-                "arrival_datetime": "2025-04-26T20:30:00+03:00",
-                "flight_number": "381",
-                "train_number": "",
-                "price": 3745.0,
-                "duration_hours": 1.3333333333333333,
-                "booking_link": "https://www.aviasales.ru/search/MOW2604LED1?t=UT17456946001745699400000080VKOLED_77c589ffabe204a6f79ca97ebb283ef0_3745&search_date=19032025&expected_price_uuid=728016f5-e9c7-4542-8861-7ce705088f03&expected_price_source=share&expected_price_currency=rub&expected_price=3745"
-            },
-            {
-                "origin": "Санкт-Петербург",
-                "destination": "Казань",
-                "departure_datetime": "2025-04-29T09:05:00+03:00",
-                "arrival_datetime": "2025-04-29T11:20:00+03:00",
-                "flight_number": "243",
-                "train_number": "",
-                "price": 6682.0,
-                "duration_hours": 2.25,
-                "booking_link": "https://www.aviasales.ru/search/LED2904KZN1?t=N417459175001745925600000135LEDKZN_ce32650da30f573fbd9ac2e7ae265158_6682&search_date=19032025&expected_price_uuid=bff6ba8c-198c-45ee-a425-6e535f898302&expected_price_source=share&expected_price_currency=rub&expected_price=6682"
-            },
-            {
-                "origin": "Казань",
-                "destination": "Новосибирск",
-                "departure_datetime": "2025-05-03T07:20:00+03:00",
-                "arrival_datetime": "2025-05-03T15:15:00+03:00",
-                "flight_number": "453",
-                "train_number": "",
-                "price": 11362.0,
-                "duration_hours": 7.916666666666667,
-                "booking_link": "https://www.aviasales.ru/search/KZN0305OVB1?t=RT17462568001746299700000475KZNRMZOVB_663d4a2d6bd6837c3a1a91c5aea1bf42_11090&search_date=19032025&expected_price_uuid=2a84847f-0f97-47fc-8170-99c78b718a02&expected_price_source=share&expected_price_currency=rub&expected_price=11362"
+                "price": 21840.0,
+                "duration_hours": 31.666666666666668,
+                "booking_link": "https://www.aviasales.ru/search/OVB0604VVO1?t=SU17439315001744056300001900OVBKJABQSVVO_f1a3fd0a0fff748a4be1d4cea222a2b2_21840&search_date=20032025&expected_price_uuid=953a814a-0154-4a51-9745-93a3ad545d01&expected_price_source=share&expected_price_currency=rub&expected_price=21840",
+                "transport_type": "avia"
             },
             {
                 "origin": "Новосибирск",
                 "destination": "Владивосток",
-                "departure_datetime": "2025-05-05T02:45:00+07:00",
-                "arrival_datetime": "2025-05-05T17:05:00+07:00",
-                "flight_number": "5309",
+                "departure_datetime": "2025-04-06T09:25:00+07:00",
+                "arrival_datetime": "2025-04-07 17:05:00+07:00",
+                "flight_number": "5305",
                 "train_number": "",
-                "price": 23211.0,
-                "duration_hours": 14.333333333333334,
-                "booking_link": "https://www.aviasales.ru/search/OVB0505VVO1?t=SU17464131001746475500000860OVBKJABQSVVO_68517a9bcc06d40a8e1d70c24eaeab0d_23211&search_date=19032025&expected_price_uuid=5ad2b298-2898-4d50-9af5-22a93373cb02&expected_price_source=share&expected_price_currency=rub&expected_price=23211"
+                "price": 21840.0,
+                "duration_hours": 31.666666666666668,
+                "booking_link": "https://www.aviasales.ru/search/OVB0604VVO1?t=SU17439315001744056300001900OVBKJABQSVVO_f1a3fd0a0fff748a4be1d4cea222a2b2_21840&search_date=20032025&expected_price_uuid=953a814a-0154-4a51-9745-93a3ad545d01&expected_price_source=share&expected_price_currency=rub&expected_price=21840",
+                "transport_type": "avia"
             }
         ],
-        "start_date": "2025-04-26T19:10:00+03:00",
-        "end_date": "2025-05-05T17:05:00+07:00"
+        "start_date": "2025-03-25T23:20:00+03:00",
+        "end_date": "2025-04-07T17:05:00+07:00"
     },
     {
         "route": [
             "Москва",
-            "Санкт-Петербург",
+            "Челябинск",
             "Екатеринбург",
             "Сочи",
             "Владивосток"
         ],
-        "total_price": 51529.0,
-        "total_duration": 41.166666666666664,
+        "total_price": 52792.0,
+        "total_duration": 51.166666666666664,
         "full_path": [
             {
                 "origin": "Москва",
-                "destination": "Санкт-Петербург",
-                "departure_datetime": "2025-04-26T19:10:00+03:00",
-                "arrival_datetime": "2025-04-26T20:30:00+03:00",
-                "flight_number": "381",
+                "destination": "Челябинск",
+                "departure_datetime": "2025-03-25T23:20:00+03:00",
+                "arrival_datetime": "2025-03-26 01:50:00+03:00",
+                "flight_number": "6567",
                 "train_number": "",
-                "price": 3745.0,
-                "duration_hours": 1.3333333333333333,
-                "booking_link": "https://www.aviasales.ru/search/MOW2604LED1?t=UT17456946001745699400000080VKOLED_77c589ffabe204a6f79ca97ebb283ef0_3745&search_date=19032025&expected_price_uuid=728016f5-e9c7-4542-8861-7ce705088f03&expected_price_source=share&expected_price_currency=rub&expected_price=3745"
+                "price": 6254.0,
+                "duration_hours": 2.5,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503CEK1?t=DP17429448001742961000000150SVOCEK_7309ed8cae7fa70658a7f68d2187089d_6254&search_date=20032025&expected_price_uuid=7db3c588-bf0c-47db-b383-0db6e71c9700&expected_price_source=share&expected_price_currency=rub&expected_price=6254",
+                "transport_type": "avia"
             },
             {
-                "origin": "Санкт-Петербург",
-                "destination": "Екатеринбург",
-                "departure_datetime": "2025-04-29T01:35:00+03:00",
-                "arrival_datetime": "2025-04-29T04:20:00+03:00",
-                "flight_number": "501",
+                "origin": "Москва",
+                "destination": "Челябинск",
+                "departure_datetime": "2025-03-25T23:20:00+03:00",
+                "arrival_datetime": "2025-03-26 01:50:00+03:00",
+                "flight_number": "6567",
                 "train_number": "",
-                "price": 9490.0,
-                "duration_hours": 2.75,
-                "booking_link": "https://www.aviasales.ru/search/LED2904SVX1?t=5N17458905001745907600000165LEDSVX_311a44b4b10e58e33e1ee6b1ec92ca06_9490&search_date=19032025&expected_price_uuid=fefa965a-af2a-40e7-b537-fffae11a5000&expected_price_source=share&expected_price_currency=rub&expected_price=9490"
+                "price": 6254.0,
+                "duration_hours": 2.5,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503CEK1?t=DP17429448001742961000000150SVOCEK_7309ed8cae7fa70658a7f68d2187089d_6254&search_date=20032025&expected_price_uuid=7db3c588-bf0c-47db-b383-0db6e71c9700&expected_price_source=share&expected_price_currency=rub&expected_price=6254",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Челябинск",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-03-31T05:20:00+05:00",
+                "arrival_datetime": "2025-04-01 10:50:00+05:00",
+                "flight_number": "414",
+                "train_number": "",
+                "price": 12673.0,
+                "duration_hours": 29.5,
+                "booking_link": "https://www.aviasales.ru/search/CEK3103SVX1?t=DP17433984001743504600001770CEKVKOSVOSVX_5cb8032adfea5699bfbf8b98a5aaae8d_12749&search_date=20032025&expected_price_uuid=40e02a8e-e5e7-4e08-8f40-97c6bec03100&expected_price_source=share&expected_price_currency=rub&expected_price=12673",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Челябинск",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-03-31T05:20:00+05:00",
+                "arrival_datetime": "2025-04-01 10:50:00+05:00",
+                "flight_number": "414",
+                "train_number": "",
+                "price": 12673.0,
+                "duration_hours": 29.5,
+                "booking_link": "https://www.aviasales.ru/search/CEK3103SVX1?t=DP17433984001743504600001770CEKVKOSVOSVX_5cb8032adfea5699bfbf8b98a5aaae8d_12749&search_date=20032025&expected_price_uuid=40e02a8e-e5e7-4e08-8f40-97c6bec03100&expected_price_source=share&expected_price_currency=rub&expected_price=12673",
+                "transport_type": "avia"
             },
             {
                 "origin": "Екатеринбург",
                 "destination": "Сочи",
-                "departure_datetime": "2025-05-01T21:00:00+05:00",
-                "arrival_datetime": "2025-05-02T18:50:00+05:00",
-                "flight_number": "1025",
+                "departure_datetime": "2025-04-03T17:00:00+05:00",
+                "arrival_datetime": "2025-04-03 20:55:00+05:00",
+                "flight_number": "321",
                 "train_number": "",
-                "price": 12783.0,
-                "duration_hours": 21.833333333333332,
-                "booking_link": "https://www.aviasales.ru/search/SVX0105AER1?t=DP17461332001746204600001310SVXUFAAER_5fc91c20f930b18c9e4b677e59661083_12783&search_date=19032025&expected_price_uuid=fd9708fb-8129-4aa9-af80-dbcefb713b03&expected_price_source=share&expected_price_currency=rub&expected_price=12783"
+                "price": 10440.0,
+                "duration_hours": 3.9166666666666665,
+                "booking_link": "https://www.aviasales.ru/search/SVX0304AER1?t=U617436996001743706500000235SVXAER_34940cd7d5ab298507c7e181b72cc397_10440&search_date=20032025&expected_price_uuid=957c71ae-b520-473b-ba54-2e14d821d402&expected_price_source=share&expected_price_currency=rub&expected_price=10440",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Екатеринбург",
+                "destination": "Сочи",
+                "departure_datetime": "2025-04-03T17:00:00+05:00",
+                "arrival_datetime": "2025-04-03 20:55:00+05:00",
+                "flight_number": "321",
+                "train_number": "",
+                "price": 10440.0,
+                "duration_hours": 3.9166666666666665,
+                "booking_link": "https://www.aviasales.ru/search/SVX0304AER1?t=U617436996001743706500000235SVXAER_34940cd7d5ab298507c7e181b72cc397_10440&search_date=20032025&expected_price_uuid=957c71ae-b520-473b-ba54-2e14d821d402&expected_price_source=share&expected_price_currency=rub&expected_price=10440",
+                "transport_type": "avia"
             },
             {
                 "origin": "Сочи",
                 "destination": "Владивосток",
-                "departure_datetime": "2025-05-05T13:15:00+03:00",
-                "arrival_datetime": "2025-05-06T04:30:00+03:00",
+                "departure_datetime": "2025-04-06T13:15:00+03:00",
+                "arrival_datetime": "2025-04-07 04:30:00+03:00",
                 "flight_number": "220",
                 "train_number": "",
-                "price": 25511.0,
+                "price": 23425.0,
                 "duration_hours": 15.25,
-                "booking_link": "https://www.aviasales.ru/search/AER0505VVO1?t=U617464509001746531000000915AERSVXVVO_c2ad78ccd1427dbc85cd729d8bf93243_25265&search_date=19032025&expected_price_uuid=8b0677fc-acba-4e9d-ad9e-74a83a4b7702&expected_price_source=share&expected_price_currency=rub&expected_price=25511"
+                "booking_link": "https://www.aviasales.ru/search/AER0604VVO1?t=U617439453001744025400000915AERSVXVVO_e6a29f544bbcaf3ae8b1e7ae871d0f57_23383&search_date=20032025&expected_price_uuid=63c0d04d-38b5-42d6-875e-5be9f9e25201&expected_price_source=share&expected_price_currency=rub&expected_price=23425",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Сочи",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-06T13:15:00+03:00",
+                "arrival_datetime": "2025-04-07 04:30:00+03:00",
+                "flight_number": "220",
+                "train_number": "",
+                "price": 23425.0,
+                "duration_hours": 15.25,
+                "booking_link": "https://www.aviasales.ru/search/AER0604VVO1?t=U617439453001744025400000915AERSVXVVO_e6a29f544bbcaf3ae8b1e7ae871d0f57_23383&search_date=20032025&expected_price_uuid=63c0d04d-38b5-42d6-875e-5be9f9e25201&expected_price_source=share&expected_price_currency=rub&expected_price=23425",
+                "transport_type": "avia"
             }
         ],
-        "start_date": "2025-04-26T19:10:00+03:00",
-        "end_date": "2025-05-06T04:30:00+03:00"
+        "start_date": "2025-03-25T23:20:00+03:00",
+        "end_date": "2025-04-07T04:30:00+03:00"
+    },
+    {
+        "route": [
+            "Москва",
+            "Челябинск",
+            "Екатеринбург",
+            "Новосибирск",
+            "Владивосток"
+        ],
+        "total_price": 46036.0,
+        "total_duration": 89.33333333333333,
+        "full_path": [
+            {
+                "origin": "Москва",
+                "destination": "Челябинск",
+                "departure_datetime": "2025-03-25T23:20:00+03:00",
+                "arrival_datetime": "2025-03-26 01:50:00+03:00",
+                "flight_number": "6567",
+                "train_number": "",
+                "price": 6254.0,
+                "duration_hours": 2.5,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503CEK1?t=DP17429448001742961000000150SVOCEK_7309ed8cae7fa70658a7f68d2187089d_6254&search_date=20032025&expected_price_uuid=7db3c588-bf0c-47db-b383-0db6e71c9700&expected_price_source=share&expected_price_currency=rub&expected_price=6254",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Москва",
+                "destination": "Челябинск",
+                "departure_datetime": "2025-03-25T23:20:00+03:00",
+                "arrival_datetime": "2025-03-26 01:50:00+03:00",
+                "flight_number": "6567",
+                "train_number": "",
+                "price": 6254.0,
+                "duration_hours": 2.5,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503CEK1?t=DP17429448001742961000000150SVOCEK_7309ed8cae7fa70658a7f68d2187089d_6254&search_date=20032025&expected_price_uuid=7db3c588-bf0c-47db-b383-0db6e71c9700&expected_price_source=share&expected_price_currency=rub&expected_price=6254",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Челябинск",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-03-31T05:20:00+05:00",
+                "arrival_datetime": "2025-04-01 10:50:00+05:00",
+                "flight_number": "414",
+                "train_number": "",
+                "price": 12673.0,
+                "duration_hours": 29.5,
+                "booking_link": "https://www.aviasales.ru/search/CEK3103SVX1?t=DP17433984001743504600001770CEKVKOSVOSVX_5cb8032adfea5699bfbf8b98a5aaae8d_12749&search_date=20032025&expected_price_uuid=40e02a8e-e5e7-4e08-8f40-97c6bec03100&expected_price_source=share&expected_price_currency=rub&expected_price=12673",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Челябинск",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-03-31T05:20:00+05:00",
+                "arrival_datetime": "2025-04-01 10:50:00+05:00",
+                "flight_number": "414",
+                "train_number": "",
+                "price": 12673.0,
+                "duration_hours": 29.5,
+                "booking_link": "https://www.aviasales.ru/search/CEK3103SVX1?t=DP17433984001743504600001770CEKVKOSVOSVX_5cb8032adfea5699bfbf8b98a5aaae8d_12749&search_date=20032025&expected_price_uuid=40e02a8e-e5e7-4e08-8f40-97c6bec03100&expected_price_source=share&expected_price_currency=rub&expected_price=12673",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Екатеринбург",
+                "destination": "Новосибирск",
+                "departure_datetime": "2025-04-03T19:05:00+05:00",
+                "arrival_datetime": "2025-04-05 17:15:00+05:00",
+                "flight_number": "298",
+                "train_number": "",
+                "price": 8664.0,
+                "duration_hours": 46.166666666666664,
+                "booking_link": "https://www.aviasales.ru/search/SVX0304OVB1?t=RT17437071001743880500002770SVXRMZOVB_37daabc4efb166c3ae9a205ca2ded83a_8642&search_date=20032025&expected_price_uuid=aa6f8e85-c798-4e88-af48-fcb1bce59600&expected_price_source=share&expected_price_currency=rub&expected_price=8664",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Екатеринбург",
+                "destination": "Новосибирск",
+                "departure_datetime": "2025-04-03T19:05:00+05:00",
+                "arrival_datetime": "2025-04-05 17:15:00+05:00",
+                "flight_number": "298",
+                "train_number": "",
+                "price": 8664.0,
+                "duration_hours": 46.166666666666664,
+                "booking_link": "https://www.aviasales.ru/search/SVX0304OVB1?t=RT17437071001743880500002770SVXRMZOVB_37daabc4efb166c3ae9a205ca2ded83a_8642&search_date=20032025&expected_price_uuid=aa6f8e85-c798-4e88-af48-fcb1bce59600&expected_price_source=share&expected_price_currency=rub&expected_price=8664",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Новосибирск",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-07T05:10:00+07:00",
+                "arrival_datetime": "2025-04-07 16:20:00+07:00",
+                "flight_number": "6862",
+                "train_number": "",
+                "price": 18445.0,
+                "duration_hours": 11.166666666666666,
+                "booking_link": "https://www.aviasales.ru/search/OVB0704VVO1?t=SU17440026001744053600000670OVBKJAVVO_a7d452b9c77c53131a54295d1e74c825_18445&search_date=20032025&expected_price_uuid=f30f051b-78ef-4956-a961-62d4b23f4902&expected_price_source=share&expected_price_currency=rub&expected_price=18445",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Новосибирск",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-07T05:10:00+07:00",
+                "arrival_datetime": "2025-04-07 16:20:00+07:00",
+                "flight_number": "6862",
+                "train_number": "",
+                "price": 18445.0,
+                "duration_hours": 11.166666666666666,
+                "booking_link": "https://www.aviasales.ru/search/OVB0704VVO1?t=SU17440026001744053600000670OVBKJAVVO_a7d452b9c77c53131a54295d1e74c825_18445&search_date=20032025&expected_price_uuid=f30f051b-78ef-4956-a961-62d4b23f4902&expected_price_source=share&expected_price_currency=rub&expected_price=18445",
+                "transport_type": "avia"
+            }
+        ],
+        "start_date": "2025-03-25T23:20:00+03:00",
+        "end_date": "2025-04-07T16:20:00+07:00"
+    },
+    {
+        "route": [
+            "Москва",
+            "Санкт-Петербург",
+            "Казань",
+            "Сочи",
+            "Владивосток"
+        ],
+        "total_price": 43963.0,
+        "total_duration": 29.916666666666668,
+        "full_path": [
+            {
+                "origin": "Москва",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-03-25T11:15:00+03:00",
+                "arrival_datetime": "2025-03-25 12:50:00+03:00",
+                "flight_number": "901",
+                "train_number": "",
+                "price": 2554.0,
+                "duration_hours": 1.5833333333333333,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503LED1?t=WZ17429013001742907000000095ZIALED_c03254ed38a599a45e4f80ab7a3af731_2554&search_date=20032025&expected_price_uuid=4cbac5a6-96e7-4d95-bdf6-3750971bbb03&expected_price_source=share&expected_price_currency=rub&expected_price=2554",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Москва",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-03-25T11:15:00+03:00",
+                "arrival_datetime": "2025-03-25 12:50:00+03:00",
+                "flight_number": "901",
+                "train_number": "",
+                "price": 2554.0,
+                "duration_hours": 1.5833333333333333,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503LED1?t=WZ17429013001742907000000095ZIALED_c03254ed38a599a45e4f80ab7a3af731_2554&search_date=20032025&expected_price_uuid=4cbac5a6-96e7-4d95-bdf6-3750971bbb03&expected_price_source=share&expected_price_currency=rub&expected_price=2554",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Санкт-Петербург",
+                "destination": "Казань",
+                "departure_datetime": "2025-03-28T10:40:00+03:00",
+                "arrival_datetime": "2025-03-28 13:00:00+03:00",
+                "flight_number": "243",
+                "train_number": "",
+                "price": 6532.0,
+                "duration_hours": 2.3333333333333335,
+                "booking_link": "https://www.aviasales.ru/search/LED2803KZN1?t=N417431584001743166800000140LEDKZN_dee871f76393dbd46acf8347524a3a1f_6532&search_date=20032025&expected_price_uuid=dc760fec-fa03-4f25-9302-8f29c769ff00&expected_price_source=share&expected_price_currency=rub&expected_price=6532",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Санкт-Петербург",
+                "destination": "Казань",
+                "departure_datetime": "2025-03-28T10:40:00+03:00",
+                "arrival_datetime": "2025-03-28 13:00:00+03:00",
+                "flight_number": "243",
+                "train_number": "",
+                "price": 6532.0,
+                "duration_hours": 2.3333333333333335,
+                "booking_link": "https://www.aviasales.ru/search/LED2803KZN1?t=N417431584001743166800000140LEDKZN_dee871f76393dbd46acf8347524a3a1f_6532&search_date=20032025&expected_price_uuid=dc760fec-fa03-4f25-9302-8f29c769ff00&expected_price_source=share&expected_price_currency=rub&expected_price=6532",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Казань",
+                "destination": "Сочи",
+                "departure_datetime": "2025-04-01T09:40:00+03:00",
+                "arrival_datetime": "2025-04-01 20:25:00+03:00",
+                "flight_number": "6842",
+                "train_number": "",
+                "price": 11573.0,
+                "duration_hours": 10.75,
+                "booking_link": "https://www.aviasales.ru/search/KZN0104AER1?t=DP17435004001743539100000645KZNSVOAER_b819fb06076ecebca733f6b4667cbc29_11544&search_date=20032025&expected_price_uuid=a5704d15-75c2-427e-85f8-f183bf8b1c00&expected_price_source=share&expected_price_currency=rub&expected_price=11573",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Казань",
+                "destination": "Сочи",
+                "departure_datetime": "2025-04-01T09:40:00+03:00",
+                "arrival_datetime": "2025-04-01 20:25:00+03:00",
+                "flight_number": "6842",
+                "train_number": "",
+                "price": 11573.0,
+                "duration_hours": 10.75,
+                "booking_link": "https://www.aviasales.ru/search/KZN0104AER1?t=DP17435004001743539100000645KZNSVOAER_b819fb06076ecebca733f6b4667cbc29_11544&search_date=20032025&expected_price_uuid=a5704d15-75c2-427e-85f8-f183bf8b1c00&expected_price_source=share&expected_price_currency=rub&expected_price=11573",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Сочи",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-04T13:15:00+03:00",
+                "arrival_datetime": "2025-04-05 04:30:00+03:00",
+                "flight_number": "220",
+                "train_number": "",
+                "price": 23304.0,
+                "duration_hours": 15.25,
+                "booking_link": "https://www.aviasales.ru/search/AER0404VVO1?t=U617437725001743852600000915AERSVXVVO_88e18f633f644133b6922d186bc06be5_23263&search_date=20032025&expected_price_uuid=802abd4c-f099-4918-bc27-e62638ba6a02&expected_price_source=share&expected_price_currency=rub&expected_price=23304",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Сочи",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-04T13:15:00+03:00",
+                "arrival_datetime": "2025-04-05 04:30:00+03:00",
+                "flight_number": "220",
+                "train_number": "",
+                "price": 23304.0,
+                "duration_hours": 15.25,
+                "booking_link": "https://www.aviasales.ru/search/AER0404VVO1?t=U617437725001743852600000915AERSVXVVO_88e18f633f644133b6922d186bc06be5_23263&search_date=20032025&expected_price_uuid=802abd4c-f099-4918-bc27-e62638ba6a02&expected_price_source=share&expected_price_currency=rub&expected_price=23304",
+                "transport_type": "avia"
+            }
+        ],
+        "start_date": "2025-03-25T11:15:00+03:00",
+        "end_date": "2025-04-05T04:30:00+03:00"
+    },
+    {
+        "route": [
+            "Москва",
+            "Санкт-Петербург",
+            "Казань",
+            "Новосибирск",
+            "Владивосток"
+        ],
+        "total_price": 35982.0,
+        "total_duration": 38.41666666666667,
+        "full_path": [
+            {
+                "origin": "Москва",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-03-25T11:15:00+03:00",
+                "arrival_datetime": "2025-03-25 12:50:00+03:00",
+                "flight_number": "901",
+                "train_number": "",
+                "price": 2554.0,
+                "duration_hours": 1.5833333333333333,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503LED1?t=WZ17429013001742907000000095ZIALED_c03254ed38a599a45e4f80ab7a3af731_2554&search_date=20032025&expected_price_uuid=4cbac5a6-96e7-4d95-bdf6-3750971bbb03&expected_price_source=share&expected_price_currency=rub&expected_price=2554",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Москва",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-03-25T11:15:00+03:00",
+                "arrival_datetime": "2025-03-25 12:50:00+03:00",
+                "flight_number": "901",
+                "train_number": "",
+                "price": 2554.0,
+                "duration_hours": 1.5833333333333333,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503LED1?t=WZ17429013001742907000000095ZIALED_c03254ed38a599a45e4f80ab7a3af731_2554&search_date=20032025&expected_price_uuid=4cbac5a6-96e7-4d95-bdf6-3750971bbb03&expected_price_source=share&expected_price_currency=rub&expected_price=2554",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Санкт-Петербург",
+                "destination": "Казань",
+                "departure_datetime": "2025-03-28T10:40:00+03:00",
+                "arrival_datetime": "2025-03-28 13:00:00+03:00",
+                "flight_number": "243",
+                "train_number": "",
+                "price": 6532.0,
+                "duration_hours": 2.3333333333333335,
+                "booking_link": "https://www.aviasales.ru/search/LED2803KZN1?t=N417431584001743166800000140LEDKZN_dee871f76393dbd46acf8347524a3a1f_6532&search_date=20032025&expected_price_uuid=dc760fec-fa03-4f25-9302-8f29c769ff00&expected_price_source=share&expected_price_currency=rub&expected_price=6532",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Санкт-Петербург",
+                "destination": "Казань",
+                "departure_datetime": "2025-03-28T10:40:00+03:00",
+                "arrival_datetime": "2025-03-28 13:00:00+03:00",
+                "flight_number": "243",
+                "train_number": "",
+                "price": 6532.0,
+                "duration_hours": 2.3333333333333335,
+                "booking_link": "https://www.aviasales.ru/search/LED2803KZN1?t=N417431584001743166800000140LEDKZN_dee871f76393dbd46acf8347524a3a1f_6532&search_date=20032025&expected_price_uuid=dc760fec-fa03-4f25-9302-8f29c769ff00&expected_price_source=share&expected_price_currency=rub&expected_price=6532",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Казань",
+                "destination": "Новосибирск",
+                "departure_datetime": "2025-04-01T22:55:00+03:00",
+                "arrival_datetime": "2025-04-02 13:55:00+03:00",
+                "flight_number": "751",
+                "train_number": "",
+                "price": 9983.0,
+                "duration_hours": 15.0,
+                "booking_link": "https://www.aviasales.ru/search/KZN0104OVB1?t=N417435481001743616500000900KZNTOFOVB_243d9794c31a52a9123dac4987c64a5b_9878&search_date=20032025&expected_price_uuid=3af70240-2944-41ba-a791-5c4be8ae2902&expected_price_source=share&expected_price_currency=rub&expected_price=9983",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Казань",
+                "destination": "Новосибирск",
+                "departure_datetime": "2025-04-01T22:55:00+03:00",
+                "arrival_datetime": "2025-04-02 13:55:00+03:00",
+                "flight_number": "751",
+                "train_number": "",
+                "price": 9983.0,
+                "duration_hours": 15.0,
+                "booking_link": "https://www.aviasales.ru/search/KZN0104OVB1?t=N417435481001743616500000900KZNTOFOVB_243d9794c31a52a9123dac4987c64a5b_9878&search_date=20032025&expected_price_uuid=3af70240-2944-41ba-a791-5c4be8ae2902&expected_price_source=share&expected_price_currency=rub&expected_price=9983",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Новосибирск",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-04T02:30:00+07:00",
+                "arrival_datetime": "2025-04-04 22:00:00+07:00",
+                "flight_number": "590",
+                "train_number": "",
+                "price": 16913.0,
+                "duration_hours": 19.5,
+                "booking_link": "https://www.aviasales.ru/search/OVB0404VVO1?t=6R17437338001743814800001170OVBMJZVVO_4b63e845366cb48dad8b5236103fe65b_16913&search_date=20032025&expected_price_uuid=e427817b-aa02-4e70-ba4c-d3b5fbd06500&expected_price_source=share&expected_price_currency=rub&expected_price=16913",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Новосибирск",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-04T02:30:00+07:00",
+                "arrival_datetime": "2025-04-04 22:00:00+07:00",
+                "flight_number": "590",
+                "train_number": "",
+                "price": 16913.0,
+                "duration_hours": 19.5,
+                "booking_link": "https://www.aviasales.ru/search/OVB0404VVO1?t=6R17437338001743814800001170OVBMJZVVO_4b63e845366cb48dad8b5236103fe65b_16913&search_date=20032025&expected_price_uuid=e427817b-aa02-4e70-ba4c-d3b5fbd06500&expected_price_source=share&expected_price_currency=rub&expected_price=16913",
+                "transport_type": "avia"
+            }
+        ],
+        "start_date": "2025-03-25T11:15:00+03:00",
+        "end_date": "2025-04-04T22:00:00+07:00"
+    },
+    {
+        "route": [
+            "Москва",
+            "Санкт-Петербург",
+            "Екатеринбург",
+            "Сочи",
+            "Владивосток"
+        ],
+        "total_price": 49662.0,
+        "total_duration": 44.25,
+        "full_path": [
+            {
+                "origin": "Москва",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-03-25T11:15:00+03:00",
+                "arrival_datetime": "2025-03-25 12:50:00+03:00",
+                "flight_number": "901",
+                "train_number": "",
+                "price": 2554.0,
+                "duration_hours": 1.5833333333333333,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503LED1?t=WZ17429013001742907000000095ZIALED_c03254ed38a599a45e4f80ab7a3af731_2554&search_date=20032025&expected_price_uuid=4cbac5a6-96e7-4d95-bdf6-3750971bbb03&expected_price_source=share&expected_price_currency=rub&expected_price=2554",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Москва",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-03-25T11:15:00+03:00",
+                "arrival_datetime": "2025-03-25 12:50:00+03:00",
+                "flight_number": "901",
+                "train_number": "",
+                "price": 2554.0,
+                "duration_hours": 1.5833333333333333,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503LED1?t=WZ17429013001742907000000095ZIALED_c03254ed38a599a45e4f80ab7a3af731_2554&search_date=20032025&expected_price_uuid=4cbac5a6-96e7-4d95-bdf6-3750971bbb03&expected_price_source=share&expected_price_currency=rub&expected_price=2554",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Санкт-Петербург",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-03-28T07:55:00+03:00",
+                "arrival_datetime": "2025-03-29 07:25:00+03:00",
+                "flight_number": "6593",
+                "train_number": "",
+                "price": 11942.0,
+                "duration_hours": 23.5,
+                "booking_link": "https://www.aviasales.ru/search/LED2803SVX1?t=RT17431485001743240300001410LEDKZNSVX_8c9a6fc0970435c497549b06d8bb79ac_11942&search_date=20032025&expected_price_uuid=312cb903-14c1-4ddd-a8e0-1db170854d00&expected_price_source=share&expected_price_currency=rub&expected_price=11942",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Санкт-Петербург",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-03-28T07:55:00+03:00",
+                "arrival_datetime": "2025-03-29 07:25:00+03:00",
+                "flight_number": "6593",
+                "train_number": "",
+                "price": 11942.0,
+                "duration_hours": 23.5,
+                "booking_link": "https://www.aviasales.ru/search/LED2803SVX1?t=RT17431485001743240300001410LEDKZNSVX_8c9a6fc0970435c497549b06d8bb79ac_11942&search_date=20032025&expected_price_uuid=312cb903-14c1-4ddd-a8e0-1db170854d00&expected_price_source=share&expected_price_currency=rub&expected_price=11942",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Екатеринбург",
+                "destination": "Сочи",
+                "departure_datetime": "2025-03-31T17:00:00+05:00",
+                "arrival_datetime": "2025-03-31 20:55:00+05:00",
+                "flight_number": "321",
+                "train_number": "",
+                "price": 11684.0,
+                "duration_hours": 3.9166666666666665,
+                "booking_link": "https://www.aviasales.ru/search/SVX3103AER1?t=U617434404001743447300000235SVXAER_7064181e3d30eefbcc0ad9109accbff1_11684&search_date=20032025&expected_price_uuid=6ee0e985-283b-4bdb-a41f-434e67a49f00&expected_price_source=share&expected_price_currency=rub&expected_price=11684",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Екатеринбург",
+                "destination": "Сочи",
+                "departure_datetime": "2025-03-31T17:00:00+05:00",
+                "arrival_datetime": "2025-03-31 20:55:00+05:00",
+                "flight_number": "321",
+                "train_number": "",
+                "price": 11684.0,
+                "duration_hours": 3.9166666666666665,
+                "booking_link": "https://www.aviasales.ru/search/SVX3103AER1?t=U617434404001743447300000235SVXAER_7064181e3d30eefbcc0ad9109accbff1_11684&search_date=20032025&expected_price_uuid=6ee0e985-283b-4bdb-a41f-434e67a49f00&expected_price_source=share&expected_price_currency=rub&expected_price=11684",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Сочи",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-03T13:15:00+03:00",
+                "arrival_datetime": "2025-04-04 04:30:00+03:00",
+                "flight_number": "220",
+                "train_number": "",
+                "price": 23482.0,
+                "duration_hours": 15.25,
+                "booking_link": "https://www.aviasales.ru/search/AER0304VVO1?t=U617436861001743766200000915AERSVXVVO_405a111e10342e42225aa1e82e6e2708_23440&search_date=20032025&expected_price_uuid=a732a914-e251-455e-8e88-5a7b268a9802&expected_price_source=share&expected_price_currency=rub&expected_price=23482",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Сочи",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-03T13:15:00+03:00",
+                "arrival_datetime": "2025-04-04 04:30:00+03:00",
+                "flight_number": "220",
+                "train_number": "",
+                "price": 23482.0,
+                "duration_hours": 15.25,
+                "booking_link": "https://www.aviasales.ru/search/AER0304VVO1?t=U617436861001743766200000915AERSVXVVO_405a111e10342e42225aa1e82e6e2708_23440&search_date=20032025&expected_price_uuid=a732a914-e251-455e-8e88-5a7b268a9802&expected_price_source=share&expected_price_currency=rub&expected_price=23482",
+                "transport_type": "avia"
+            }
+        ],
+        "start_date": "2025-03-25T11:15:00+03:00",
+        "end_date": "2025-04-04T04:30:00+03:00"
     },
     {
         "route": [
@@ -420,55 +784,107 @@
             "Новосибирск",
             "Владивосток"
         ],
-        "total_price": 46284.0,
-        "total_duration": 64.58333333333333,
+        "total_price": 43341.0,
+        "total_duration": 50.33333333333333,
         "full_path": [
             {
                 "origin": "Москва",
                 "destination": "Санкт-Петербург",
-                "departure_datetime": "2025-04-26T19:10:00+03:00",
-                "arrival_datetime": "2025-04-26T20:30:00+03:00",
-                "flight_number": "381",
+                "departure_datetime": "2025-03-25T11:15:00+03:00",
+                "arrival_datetime": "2025-03-25 12:50:00+03:00",
+                "flight_number": "901",
                 "train_number": "",
-                "price": 3745.0,
-                "duration_hours": 1.3333333333333333,
-                "booking_link": "https://www.aviasales.ru/search/MOW2604LED1?t=UT17456946001745699400000080VKOLED_77c589ffabe204a6f79ca97ebb283ef0_3745&search_date=19032025&expected_price_uuid=728016f5-e9c7-4542-8861-7ce705088f03&expected_price_source=share&expected_price_currency=rub&expected_price=3745"
+                "price": 2554.0,
+                "duration_hours": 1.5833333333333333,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503LED1?t=WZ17429013001742907000000095ZIALED_c03254ed38a599a45e4f80ab7a3af731_2554&search_date=20032025&expected_price_uuid=4cbac5a6-96e7-4d95-bdf6-3750971bbb03&expected_price_source=share&expected_price_currency=rub&expected_price=2554",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Москва",
+                "destination": "Санкт-Петербург",
+                "departure_datetime": "2025-03-25T11:15:00+03:00",
+                "arrival_datetime": "2025-03-25 12:50:00+03:00",
+                "flight_number": "901",
+                "train_number": "",
+                "price": 2554.0,
+                "duration_hours": 1.5833333333333333,
+                "booking_link": "https://www.aviasales.ru/search/MOW2503LED1?t=WZ17429013001742907000000095ZIALED_c03254ed38a599a45e4f80ab7a3af731_2554&search_date=20032025&expected_price_uuid=4cbac5a6-96e7-4d95-bdf6-3750971bbb03&expected_price_source=share&expected_price_currency=rub&expected_price=2554",
+                "transport_type": "avia"
             },
             {
                 "origin": "Санкт-Петербург",
                 "destination": "Екатеринбург",
-                "departure_datetime": "2025-04-29T01:35:00+03:00",
-                "arrival_datetime": "2025-04-29T04:20:00+03:00",
-                "flight_number": "501",
+                "departure_datetime": "2025-03-28T07:55:00+03:00",
+                "arrival_datetime": "2025-03-29 07:25:00+03:00",
+                "flight_number": "6593",
                 "train_number": "",
-                "price": 9490.0,
-                "duration_hours": 2.75,
-                "booking_link": "https://www.aviasales.ru/search/LED2904SVX1?t=5N17458905001745907600000165LEDSVX_311a44b4b10e58e33e1ee6b1ec92ca06_9490&search_date=19032025&expected_price_uuid=fefa965a-af2a-40e7-b537-fffae11a5000&expected_price_source=share&expected_price_currency=rub&expected_price=9490"
+                "price": 11942.0,
+                "duration_hours": 23.5,
+                "booking_link": "https://www.aviasales.ru/search/LED2803SVX1?t=RT17431485001743240300001410LEDKZNSVX_8c9a6fc0970435c497549b06d8bb79ac_11942&search_date=20032025&expected_price_uuid=312cb903-14c1-4ddd-a8e0-1db170854d00&expected_price_source=share&expected_price_currency=rub&expected_price=11942",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Санкт-Петербург",
+                "destination": "Екатеринбург",
+                "departure_datetime": "2025-03-28T07:55:00+03:00",
+                "arrival_datetime": "2025-03-29 07:25:00+03:00",
+                "flight_number": "6593",
+                "train_number": "",
+                "price": 11942.0,
+                "duration_hours": 23.5,
+                "booking_link": "https://www.aviasales.ru/search/LED2803SVX1?t=RT17431485001743240300001410LEDKZNSVX_8c9a6fc0970435c497549b06d8bb79ac_11942&search_date=20032025&expected_price_uuid=312cb903-14c1-4ddd-a8e0-1db170854d00&expected_price_source=share&expected_price_currency=rub&expected_price=11942",
+                "transport_type": "avia"
             },
             {
                 "origin": "Екатеринбург",
                 "destination": "Новосибирск",
-                "departure_datetime": "2025-05-01T19:05:00+05:00",
-                "arrival_datetime": "2025-05-03T17:15:00+05:00",
-                "flight_number": "298",
+                "departure_datetime": "2025-03-31T01:30:00+05:00",
+                "arrival_datetime": "2025-03-31 06:45:00+05:00",
+                "flight_number": "1041",
                 "train_number": "",
-                "price": 9838.0,
-                "duration_hours": 46.166666666666664,
-                "booking_link": "https://www.aviasales.ru/search/SVX0105OVB1?t=RT17461263001746299700002770SVXRMZOVB_ca67f81ff14296c50807214a584397f5_9894&search_date=19032025&expected_price_uuid=ee1e8cf7-3ecf-4d4d-9e2a-a262294a9903&expected_price_source=share&expected_price_currency=rub&expected_price=9838"
+                "price": 10731.0,
+                "duration_hours": 5.25,
+                "booking_link": "https://www.aviasales.ru/search/SVX3103OVB1?t=WZ17433846001743410700000315SVXKEJOVB_a798d798808a0ae04c22cd089eba3735_10712&search_date=20032025&expected_price_uuid=e8706c80-5e57-4bbb-9fc4-69f8189d1000&expected_price_source=share&expected_price_currency=rub&expected_price=10731",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Екатеринбург",
+                "destination": "Новосибирск",
+                "departure_datetime": "2025-03-31T01:30:00+05:00",
+                "arrival_datetime": "2025-03-31 06:45:00+05:00",
+                "flight_number": "1041",
+                "train_number": "",
+                "price": 10731.0,
+                "duration_hours": 5.25,
+                "booking_link": "https://www.aviasales.ru/search/SVX3103OVB1?t=WZ17433846001743410700000315SVXKEJOVB_a798d798808a0ae04c22cd089eba3735_10712&search_date=20032025&expected_price_uuid=e8706c80-5e57-4bbb-9fc4-69f8189d1000&expected_price_source=share&expected_price_currency=rub&expected_price=10731",
+                "transport_type": "avia"
             },
             {
                 "origin": "Новосибирск",
                 "destination": "Владивосток",
-                "departure_datetime": "2025-05-05T02:45:00+07:00",
-                "arrival_datetime": "2025-05-05T17:05:00+07:00",
-                "flight_number": "5309",
+                "departure_datetime": "2025-04-02T16:30:00+07:00",
+                "arrival_datetime": "2025-04-03 12:30:00+07:00",
+                "flight_number": "4525",
                 "train_number": "",
-                "price": 23211.0,
-                "duration_hours": 14.333333333333334,
-                "booking_link": "https://www.aviasales.ru/search/OVB0505VVO1?t=SU17464131001746475500000860OVBKJABQSVVO_68517a9bcc06d40a8e1d70c24eaeab0d_23211&search_date=19032025&expected_price_uuid=5ad2b298-2898-4d50-9af5-22a93373cb02&expected_price_source=share&expected_price_currency=rub&expected_price=23211"
+                "price": 18114.0,
+                "duration_hours": 20.0,
+                "booking_link": "https://www.aviasales.ru/search/OVB0204VVO1?t=SU17436114001743694200001200OVBKJAVVO_4b9774099166ef989f437bd297f76ca5_18114&search_date=20032025&expected_price_uuid=703e9d1f-8f84-4c88-b67e-7f3339ecb901&expected_price_source=share&expected_price_currency=rub&expected_price=18114",
+                "transport_type": "avia"
+            },
+            {
+                "origin": "Новосибирск",
+                "destination": "Владивосток",
+                "departure_datetime": "2025-04-02T16:30:00+07:00",
+                "arrival_datetime": "2025-04-03 12:30:00+07:00",
+                "flight_number": "4525",
+                "train_number": "",
+                "price": 18114.0,
+                "duration_hours": 20.0,
+                "booking_link": "https://www.aviasales.ru/search/OVB0204VVO1?t=SU17436114001743694200001200OVBKJAVVO_4b9774099166ef989f437bd297f76ca5_18114&search_date=20032025&expected_price_uuid=703e9d1f-8f84-4c88-b67e-7f3339ecb901&expected_price_source=share&expected_price_currency=rub&expected_price=18114",
+                "transport_type": "avia"
             }
         ],
-        "start_date": "2025-04-26T19:10:00+03:00",
-        "end_date": "2025-05-05T17:05:00+07:00"
+        "start_date": "2025-03-25T11:15:00+03:00",
+        "end_date": "2025-04-03T12:30:00+07:00"
     }
 ]

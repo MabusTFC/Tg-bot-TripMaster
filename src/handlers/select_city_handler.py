@@ -1,6 +1,10 @@
+import json
+from datetime import datetime
+
 from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from src.Algorithm.FindCheapestWay import get_routes
 import logging
 
 from handlers.utils.keyboards import (
@@ -48,5 +52,34 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     await state.update_data(final_selection=final_selection)
     await state.set_state(RoutStates.FINAL_ROUTE)
 
-    await callback_query.message.edit_text("Маршрут сохранен! Вы можете перейти к следующему шагу.")
+    cities = ["Москва", "Владивосток"]  # Города начала и конца маршрута
+    start_city = (cities[0], 0)  # Начальный город
+    end_city = (cities[1], 0)  # Конечный город
+    departure_date = datetime.date(2025, 3, 25)  # Дата отправления
+
+    # Сегменты маршрута (пример данных)
+    segments = [
+        [("Челябинск", 5), ("Санкт-Петербург", 3)],
+        [("Казань", 4), ("Екатеринбург", 2)],
+        [("Сочи", 3), ("Новосибирск", 2)]
+    ]
+
+    # Вызов функции для получения маршрутов
+    routes = get_routes(start_city, end_city, departure_date, segments)
+
+    # Сохранение маршрутов в JSON-файл
+    file_path = './src/Map/routes.json'
+    with open(file_path, 'w', encoding='utf-8') as file:
+        json.dump(routes, file, ensure_ascii=False, indent=4)
+    # Создание клавиатуры с кнопкой для открытия карты
+    keyboard = [
+        [InlineKeyboardButton("Открыть карту", web_app=WebAppInfo(url="http://localhost:8000"))]
+    ]
+    reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+    # Отправка сообщения с кнопкой
+    await callback_query.message.edit_text(
+        "Маршрут сохранен! Нажмите кнопку, чтобы открыть карту:",
+        reply_markup=reply_markup
+    )
     await callback_query.answer()

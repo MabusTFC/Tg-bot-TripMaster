@@ -37,3 +37,5 @@ async def process_city_input(message: types.Message, state: FSMContext):
                              reply_markup=await get_calendar_keyboard()
                              )
         await state.set_state(DateSelection.START_DATE)
+
+

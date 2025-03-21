@@ -30,13 +30,13 @@ def get_routes(start_city, end_city, departure_date, segments):
             #response_train = fetch_train_prices(origin, destination, current_date)
 
             # Новый код:
-            #response_avia = fetch_cached_ticket(origin, destination, current_date, "avia")
+            response_avia = fetch_cached_ticket(origin, destination, current_date, "avia")
             response_train = fetch_cached_ticket(origin, destination, current_date, "train")
 
             # Преобразуем данные в список билетов
             all_tickets = []
-            #if response_avia and "data" in response_avia:
-                #all_tickets.extend(response_avia["data"])
+            if response_avia and "data" in response_avia:
+                all_tickets.extend(response_avia["data"])
             if response_train:
                 all_tickets.extend(response_train)
 
@@ -47,9 +47,9 @@ def get_routes(start_city, end_city, departure_date, segments):
             # Выбираем самый дешевый билет
             best_ticket = min(
                 all_tickets,
-                key=lambda t: float(t.get("price", float("inf")))
-                if isinstance(t.get("price"), (int, float, str)) and t.get("price") != "Не указана"
-                else float("inf")
+                key=lambda t: float("inf")  # Бесконечность для цены 0 или отсутствующей цены
+                if not t.get("price") or t.get("price") == "Не указана" or float(t.get("price", 0)) == 0
+                else float(t.get("price"))
             )
 
             # Обновляем маршрутную информацию
@@ -75,14 +75,14 @@ def get_routes(start_city, end_city, departure_date, segments):
             segment_info = {
                 "origin": origin,
                 "destination": destination,
-                "departure_datetime": best_ticket.get("departure_at"),
-                "arrival_datetime": best_ticket.get("arrival_at"),
+                "departure_datetime": best_ticket.get("departure_at"),  # Время отправления
+                "arrival_datetime": str(arrival_datetime),  # Преобразуем время прибытия в строку
                 "flight_number": best_ticket.get("flight_number", ""),  # Номер рейса (авиа)
                 "train_number": best_ticket.get("train_number", ""),  # Номер поезда
                 "price": float(best_ticket.get("price", 0)) if best_ticket.get("price") and best_ticket.get(
                     "price") != "Не указана" else 0,
                 "duration_hours": best_ticket.get("duration", 0) / 60,  # Длительность перелета/поездки в часах
-                "booking_link": best_ticket.get("booking_link", "N/A"),  # Полная ссылка на бронирование билета
+                "booking_link": full_link,  # Полная ссылка на бронирование билета
                 "transport_type": "avia" if "flight_number" in best_ticket else "train"  # Тип транспорта
             }
             route_info["full_path"].append(segment_info)
