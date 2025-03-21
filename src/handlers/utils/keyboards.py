@@ -12,7 +12,8 @@ async def get_greetings_keyboard():
     inline_kb_list = [
         [InlineKeyboardButton(text="Инструкция", callback_data="manual")],
         [InlineKeyboardButton(text="Создать маршрут", callback_data="create_trip")],
-        [InlineKeyboardButton(text="Пополнить баланс", callback_data="balance")],
+        [InlineKeyboardButton(text="Поолнить баланс", callback_data="balance")],
+        [InlineKeyboardButton(text="Календарь", callback_data="g_calendar")],
         [InlineKeyboardButton(text="Настройка Календаря событий", callback_data="settings_calendar")],
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
@@ -154,4 +155,11 @@ async def get_zveno_rout_keyboard(days: int, max_days: int):
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
+async def get_google_calendar_keyboard():
+    buttons = [
+        [InlineKeyboardButton(text="Авторизация гугл", callback_data="authorization")],
+        [InlineKeyboardButton(text="Добавить путешествие в календарь", callback_data="add_event")],
+        [InlineKeyboardButton(text="Распечатать поездку", callback_data="print_calendar")]
+    ]
 
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

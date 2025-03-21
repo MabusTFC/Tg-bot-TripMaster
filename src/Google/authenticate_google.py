@@ -1,4 +1,4 @@
-from config_google import *
+from config_g.config_google import *
 from config_g import *
 from google_auth_oauthlib.flow import Flow
 import json

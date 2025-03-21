@@ -18,14 +18,17 @@ from handlers.create_rout import (
 from handlers.hands_input import (
     hands_input_handler,
     change_days_handler,
-    chose_days_handler, \
-    select_city_handler
+    chose_days_handler,
+    select_city_handler,
+    work_calendar_handler
 )
 
 from handlers.greeting_ import (
     auth_handler,
     manual_handler,
-    support_handler
+    support_handler,
+    balance_handler,
+    google_calendar_handler
 )
 
 from config import (
@@ -56,6 +59,8 @@ async def main():
     dp.include_router(change_days_handler.router)
     dp.include_router(chose_days_handler.router)
     dp.include_router(node_rout_handler.router)
+    dp.include_router(google_calendar_handler.router)
+    dp.include_router(work_calendar_handler.router)
     dp.startup.register(on_startup)
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(
