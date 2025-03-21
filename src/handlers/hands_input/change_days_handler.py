@@ -12,7 +12,7 @@ from handlers.utils.keyboards import (
     get_list_sity_keyboard
 )
 
-from src.handlers.utils.state_machine import DateSelection
+from handlers.utils.state_machine import DateSelection
 
 router = Router()
 
@@ -34,7 +34,6 @@ async def change_days(callback_query: CallbackQuery, state: FSMContext):
     elif action == "decrease" and current_days > 1:
         current_days -= 1
         max_days+=1
-
 
     user_days[city] = current_days
     await state.update_data(user_days=user_days, max_days=max_days)

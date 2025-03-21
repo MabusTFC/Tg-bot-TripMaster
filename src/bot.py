@@ -8,17 +8,24 @@ from aiogram.webhook.aiohttp_server import (
     setup_application,
 )
 
-from handlers import (
+from handlers.benefit_rout import node_rout_handler
+
+from handlers.create_rout import (
+    calendar_handler,
+    trip_handler,
+)
+
+from handlers.hands_input import (
+    hands_input_handler,
+    change_days_handler,
+    chose_days_handler, \
+    select_city_handler
+)
+
+from handlers.greeting_ import (
     auth_handler,
     manual_handler,
-    support_handler,
-    trip_handler,
-    hands_input_handler,
-    calendar_handler,
-    select_city_handler,
-    change_days_handler,
-    chose_days_handler,
-
+    support_handler
 )
 
 from config import (
@@ -27,7 +34,6 @@ from config import (
     WEB_HOOK_PATH,
     WEB_SERVER_HOST
 )
-from database.database import init_db
 
 logging.basicConfig(level=logging.INFO)
 
@@ -49,6 +55,7 @@ async def main():
     dp.include_router(select_city_handler.router)
     dp.include_router(change_days_handler.router)
     dp.include_router(chose_days_handler.router)
+    dp.include_router(node_rout_handler.router)
     dp.startup.register(on_startup)
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(

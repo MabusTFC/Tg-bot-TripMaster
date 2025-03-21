@@ -76,9 +76,8 @@ async def get_calendar_keyboard(year: int = None, month: int = None) -> InlineKe
 
 async def get_selection_keyboard():
     inline_kb_list = [
-        [InlineKeyboardButton(text="Выгодный по стоимости вариант", callback_data="benefit_cost")],
-        [InlineKeyboardButton(text="Оптимальный по времени вариант", callback_data="benefit_time")],
-        [InlineKeyboardButton(text="Ввести вручную промежуточные города", callback_data="hands_input")],
+        [InlineKeyboardButton(text="Найти наиболее подходящий маршрут из списка городов", callback_data="benefit_rout")],
+        [InlineKeyboardButton(text="Ввести вручную промежуточные города итогового маршрута", callback_data="hands_input")],
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
@@ -138,5 +137,21 @@ async def get_number_keyboard(city: str, current_days: int, max_days: int):
 
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
+
+async def get_zveno_rout_keyboard(days: int, max_days: int):
+    increase_button = InlineKeyboardButton(
+        text="➕" if days < max_days else "🔒",
+        callback_data="pluse_days" if days < max_days else "locked"
+    )
+
+    buttons = [
+        [InlineKeyboardButton(text="Создать ещё звено", callback_data="add_zveno")],
+        [InlineKeyboardButton(text="➖", callback_data="minus_days"),
+         InlineKeyboardButton(text=f"{days} дн", callback_data="current_days_zveno"),
+         increase_button],
+        [InlineKeyboardButton(text="✅ Готово", callback_data="save_zveno")]
+    ]
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 

@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, InlineKeyboardMarkup, WebAppInfo
 from telegram import InlineKeyboardButton
 
-from src.Algorithm.FindCheapestWay import get_routes
+from Algorithm.FindCheapestWay import get_routes
 import logging
 
 from handlers.utils.keyboards import (

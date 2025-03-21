@@ -13,3 +13,4 @@ class RoutStates(StatesGroup):
     SELECT_CITY = State()
     ADD_CITY = State()
     FINAL_ROUTE = State()
+    ZVENO_ROUT = State()
