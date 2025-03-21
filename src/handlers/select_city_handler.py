@@ -1,9 +1,11 @@
 import json
-from datetime import datetime
+import datetime
 
 from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, WebAppInfo
+from telegram import InlineKeyboardButton
+
 from src.Algorithm.FindCheapestWay import get_routes
 import logging
 
