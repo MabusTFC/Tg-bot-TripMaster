@@ -9,7 +9,7 @@ router = Router()
 async def support_handler(callback_query: CallbackQuery):
     await callback_query.message.answer_photo(
         caption=SUPPORT_TEH_MESS,
-        parse_mode="Markdown",
-        photo=types.FSInputFile("img/zaglushka.jpg")
+        parse_mode="MarkdownV2",
+        photo=types.FSInputFile("img/SupportPhoto.png")
     )
     await callback_query.answer()
