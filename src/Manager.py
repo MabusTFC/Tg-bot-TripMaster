@@ -1,4 +1,4 @@
-from Algorithm.FindCheapestWay import get_routes
+from Algorithm.FindCheapestWay import get_routes_optimized
 import datetime
 import json
 
@@ -15,7 +15,7 @@ segments = [
 ]
 
 # Вызов функции
-routes = get_routes(start_city, end_city, departure_date, segments)
+routes = get_routes_optimized(start_city, end_city, departure_date, segments)
 
 def save_routes_to_json(routes, file_path):
     # Преобразуем маршруты в JSON

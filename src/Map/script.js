@@ -1,12 +1,24 @@
-// script.js
-
-import { cityCoordinates, routes, loadRoutes } from './config.js';
+import { cityCoordinates } from './config.js';
 
 // Основная функция для инициализации карты и маршрутов
 async function initMap() {
     try {
-        // Загрузка маршрутов
-        await loadRoutes();
+        // Получаем ID пользователя из Telegram Web App
+        const telegram = window.Telegram.WebApp;
+        const userId = telegram.initDataUnsafe.user?.id;
+
+        if (!userId) {
+            console.error("Не удалось получить ID пользователя");
+            return;
+        }
+
+        // Загружаем маршруты пользователя с сервера
+        const userRoutes = await loadUserRoutes(userId);
+
+        if (!userRoutes || userRoutes.length === 0) {
+            alert("Нет доступных маршрутов для этого пользователя.");
+            return;
+        }
 
         // Создание карты
         const map = L.map('map').setView([55.7558, 37.6173], 5);
@@ -25,14 +37,14 @@ async function initMap() {
                 fillColor: "white",
                 fillOpacity: 1
             }).addTo(map)
-              .bindTooltip(city, {permanent: true, direction: "top"});
+              .bindTooltip(city, { permanent: true, direction: "top" });
         });
 
         // Хранилище полилиний для управления их видимостью
         const routePolylines = [];
 
         // Обработка маршрутов
-        routes.forEach((routeData, index) => {
+        userRoutes.forEach((routeData, index) => {
             const fullPath = routeData.full_path;
             const polylines = [];
 
@@ -43,10 +55,10 @@ async function initMap() {
                 const coordsDest = cityCoordinates[destination];
 
                 if (coordsOrigin && coordsDest) {
-                    const polyline = L.polyline([coordsOrigin, coordsDest], {color: index === 0 ? 'blue' : 'green'}).addTo(map);
+                    const polyline = L.polyline([coordsOrigin, coordsDest], { color: index === 0 ? 'blue' : 'green' }).addTo(map);
                     polyline.bindPopup(`
                         <b>Перелет: ${origin} → ${destination}</b><br>
-                        Рейс: ${segment.flight_number}<br>
+                        Рейс: ${segment.flight_number || segment.train_number}<br>
                         Отправление: ${segment.departure_datetime}<br>
                         Прибытие: ${segment.arrival_datetime}<br>
                         Цена: ${segment.price} руб.
@@ -76,7 +88,7 @@ async function initMap() {
         const routeSelect = document.getElementById('route-select');
         const infoContainer = document.getElementById('route-info');
 
-        routes.forEach((routeData, index) => {
+        userRoutes.forEach((routeData, index) => {
             const option = document.createElement('option');
             option.value = index;
             option.textContent = `Маршрут ${index + 1}`;
@@ -89,11 +101,11 @@ async function initMap() {
 
             // Сделать все маршруты тусклыми
             routePolylines.forEach((polylines, i) => {
-                polylines.forEach(polyline => polyline.setStyle({opacity: i === selectedIndex ? 1 : 0.3}));
+                polylines.forEach(polyline => polyline.setStyle({ opacity: i === selectedIndex ? 1 : 0.3 }));
             });
 
             // Показать информацию о выбранном маршруте
-            const selectedRoute = routes[selectedIndex];
+            const selectedRoute = userRoutes[selectedIndex];
             infoContainer.innerHTML = getRouteInfo(selectedRoute);
         });
 
@@ -105,22 +117,22 @@ async function initMap() {
 
         // Кнопка "Самый дешевый маршрут"
         document.getElementById('cheapest-route').addEventListener('click', () => {
-            const cheapestRoute = routes.reduce((min, route) =>
+            const cheapestRoute = userRoutes.reduce((min, route) =>
                 route.total_price < min.total_price ? route : min
             );
 
             alert(`Самый дешевый маршрут: ${cheapestRoute.route.join(' → ')}, цена: ${cheapestRoute.total_price} руб.`);
-            selectRoute(routes.indexOf(cheapestRoute));
+            selectRoute(userRoutes.indexOf(cheapestRoute));
         });
 
         // Кнопка "Самый короткий маршрут"
         document.getElementById('shortest-route').addEventListener('click', () => {
-            const shortestRoute = routes.reduce((min, route) =>
+            const shortestRoute = userRoutes.reduce((min, route) =>
                 route.duration < min.duration ? route : min
             );
 
             alert(`Самый короткий маршрут: ${shortestRoute.route.join(' → ')}, длительность: ${shortestRoute.duration} часов`);
-            selectRoute(routes.indexOf(shortestRoute));
+            selectRoute(userRoutes.indexOf(shortestRoute));
         });
 
         // Кнопка "Применить фильтры"
@@ -128,7 +140,7 @@ async function initMap() {
             const maxPrice = parseFloat(document.getElementById('max-price').value);
             const maxDate = document.getElementById('max-date').value;
 
-            const filteredRoutes = routes.filter(route => {
+            const filteredRoutes = userRoutes.filter(route => {
                 const priceCondition = isNaN(maxPrice) || route.total_price <= maxPrice;
                 const dateCondition = !maxDate || new Date(route.end_date) <= new Date(maxDate);
 
@@ -154,6 +166,22 @@ async function initMap() {
         });
     } catch (error) {
         console.error('Ошибка при загрузке маршрутов:', error);
+    }
+}
+
+// Функция для загрузки маршрутов пользователя с сервера
+// Функция для загрузки маршрутов пользователя с сервера
+async function loadUserRoutes(userId) {
+    try {
+        const response = await fetch(`https://b2e2-141-95-47-22.ngrok-free.app/api/routes?user_id=${userId}`);
+        if (!response.ok) {
+            throw new Error("Ошибка загрузки маршрутов");
+        }
+        const data = await response.json();
+        return data.routes;
+    } catch (error) {
+        console.error("Ошибка:", error);
+        return [];
     }
 }
 
