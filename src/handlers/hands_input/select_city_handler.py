@@ -1,5 +1,5 @@
-import json
 import datetime
+import requests
 
 from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
@@ -45,13 +45,11 @@ async def select_city(callback_query: CallbackQuery, state: FSMContext):
     )
     await callback_query.answer()
 
-
 @router.callback_query(lambda c: c.data == "finish_selection")
 async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     user_data = await state.get_data()
     route = user_data.get("route", [])
     user_days = user_data.get("user_days", {})
-
 
     final_selection = [(city, user_days.get(city, 1)) for city in route]
 
@@ -73,10 +71,15 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     # Вызов функции для получения маршрутов
     routes = get_routes(start_city, end_city, departure_date, segments)
 
-    # Сохранение маршрутов в JSON-файл
-    file_path = './src/Map/routes.json'
-    with open(file_path, 'w', encoding='utf-8') as file:
-        json.dump(routes, file, ensure_ascii=False, indent=4)
+    # Отправка маршрутов на сервер
+    user_id = callback_query.from_user.id  # ID пользователя из Telegram
+    server_url = "https://b2e2-141-95-47-22.ngrok-free.app/api/save-routes"
+    response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes})
+
+    if response.status_code != 200:
+        await callback_query.message.answer("Ошибка при сохранении маршрутов. Попробуйте позже.")
+        return
+
     # Создание клавиатуры с кнопкой для открытия карты
     keyboard = [
         [InlineKeyboardButton("Открыть карту", web_app=WebAppInfo(url="http://localhost:8000"))]
