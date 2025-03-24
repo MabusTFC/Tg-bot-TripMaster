@@ -163,3 +163,12 @@ async def get_google_calendar_keyboard():
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+async def get_balance_keyboard():
+    buttons = [
+        [InlineKeyboardButton(text="$ 10 ТОКЕНОВ $", callback_data="add_10_tokens")],
+        [InlineKeyboardButton(text="$ 20 ТОКЕНОВ $", callback_data="add_20_tokens")],
+        [InlineKeyboardButton(text="$ 50 ТОКЕНОВ $", callback_data="add_50_tokens")]
+    ]
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

@@ -5,17 +5,17 @@ from aiogram import (
 from aiogram.types import CallbackQuery
 
 
-from handlers.utils.answer import MANUAL_MESSAGE
-from handlers.utils.keyboards import get_support_keyboard
+from handlers.utils.answer import BALANCE_MESSAGE
+from handlers.utils.keyboards import get_balance_keyboard
 
 router = Router()
 
 @router.callback_query(lambda c: c.data == "balance")
 async def balance_handler(callback_query: CallbackQuery):
     await callback_query.message.answer_photo(
-        caption=MANUAL_MESSAGE,
+        caption=BALANCE_MESSAGE,
         parse_mode="Markdown",
-        photo=types.FSInputFile("img/zaglushka.jpg"),
-        reply_markup=await get_support_keyboard()
+        photo=types.FSInputFile("img/balance.png"),
+        reply_markup=await get_balance_keyboard()
     )
     await callback_query.answer()

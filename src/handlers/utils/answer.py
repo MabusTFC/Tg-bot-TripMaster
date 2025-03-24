@@ -12,7 +12,7 @@ MANUAL_MESSAGE = """
 Инструкция
 """
 
-TEST_BALANCE_MESSAGE = """
+BALANCE_MESSAGE = """
 Пополнение 
 """
 
@@ -21,7 +21,7 @@ SUPPORT_TEH_MESS = """
 
 Наше приложение разработано командой из четырех создателей:
 @*mabus777*
-@*Egor\\_goryachev*
+@*Egor_goryachev*
 @*jasperinina*
 @*Ingviar*
 

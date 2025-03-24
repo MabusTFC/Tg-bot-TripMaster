@@ -10,12 +10,13 @@ from telegram import InlineKeyboardButton
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from datetime import datetime
 
 from Google.config_g.config_google import *
@@ -53,7 +54,6 @@ async def authorization_google(callback_query: CallbackQuery, state: FSMContext)
     except Exception as e:
         await callback_query.message.reply(f'Ошибка при создании потока авторизации: {e}')
 
-
 @router.callback_query(lambda c: c.data == "add_event")
 async def add_event_to_calendar(callback_query: CallbackQuery, state: FSMContext):
     try:
@@ -89,66 +89,101 @@ async def add_event_to_calendar(callback_query: CallbackQuery, state: FSMContext
     except Exception as e:
         await callback_query.message.reply(f'Ошибка!')
 
-
-
 @router.callback_query(lambda c: c.data == "print_calendar")
 async def export_calendar_to_pdf(callback_query: types.CallbackQuery, state: FSMContext):
-    # Пример данных о событиях
-    events = [
-        {"date": "2023-10-15", "event": "Поездка в Париж"},
-        {"date": "2023-11-01", "event": "Экскурсия по Риму"},
-        {"date": "2023-12-10", "event": "Отдых на Бали"},
-    ]
+    data = await state.get_data()
+    routes = data.get('routes', [])
 
-    # Создаем PDF
-    pdf_filename = "travel_calendar.pdf"
+    if not routes:
+        with open('Map/routes.json', 'r', encoding='utf-8') as f:
+            routes = json.load(f)
+
+    pdf_filename = "travel_routes.pdf"
     doc = SimpleDocTemplate(pdf_filename, pagesize=A4)
     styles = getSampleStyleSheet()
 
-    # Регистрируем шрифт с поддержкой кириллицы
-    # Убедитесь, что файл шрифта DejaVuSerif.ttf находится в вашей директории
-    pdfmetrics.registerFont(TTFont('DejaVuSerif', 'DejaVuSerif.ttf'))
-
-    # Устанавливаем шрифт для стилей
-    styles['Title'].fontName = 'DejaVuSerif'
-    styles['Normal'].fontName = 'DejaVuSerif'
+    try:
+        pdfmetrics.registerFont(TTFont('DejaVuSerif', 'DejaVuSerif.ttf'))
+        styles['Title'].fontName = 'DejaVuSerif'
+        styles['Normal'].fontName = 'DejaVuSerif'
+        styles['Heading2'].fontName = 'DejaVuSerif'
+    except:
+        pass
 
     elements = []
 
-    # Заголовок календаря
-    title = Paragraph("Календарь событий путешествий", styles['Title'])
+    title = Paragraph("Маршруты путешествий", styles['Title'])
     elements.append(title)
+    elements.append(Spacer(1, 12))
 
-    # Создаем таблицу с событиями
-    data = [["Дата", "Событие"]]
-    for event in events:
-        date = datetime.strptime(event["date"], "%Y-%m-%d").strftime("%d.%m.%Y")
-        data.append([date, event["event"]])
+    for i, route in enumerate(routes, 1):
+        route_title = Paragraph(f"Маршрут #{i}", styles['Heading2'])
+        elements.append(route_title)
 
-    table = Table(data)
-    table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, -1), 'DejaVuSerif'),  # Шрифт для всей таблицы
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-    ]))
-    elements.append(table)
+        cities = " → ".join(route['route'])
+        elements.append(Paragraph(f"Города: {cities}", styles['Normal']))
 
-    # Генерируем PDF
+        price = f"{route['total_price']:,.2f}".replace(',', ' ') + " руб."
+        duration = f"{route['total_duration']:.1f} часов"
+        elements.append(Paragraph(f"Общая стоимость: {price}", styles['Normal']))
+        elements.append(Paragraph(f"Общая продолжительность: {duration}", styles['Normal']))
+        elements.append(Spacer(1, 12))
+
+        segments_data = [
+            ["Отправление", "Прибытие", "Откуда", "Куда", "Тип", "Цена", "Длительность"]
+        ]
+
+        for segment in route['full_path']:
+            # Format datetimes
+            dep_datetime = datetime.fromisoformat(segment['departure_datetime'].replace(' ', 'T'))
+            arr_datetime = datetime.fromisoformat(segment['arrival_datetime'].replace(' ', 'T'))
+
+            dep_str = dep_datetime.strftime("%d.%m %H:%M")
+            arr_str = arr_datetime.strftime("%d.%m %H:%M")
+
+            transport_type = "Авиа" if segment['transport_type'] == "avia" else "Поезд"
+            price = f"{segment['price']:,.2f}".replace(',', ' ') + " руб."
+            duration = f"{segment['duration_hours']:.1f} ч."
+
+            segments_data.append([
+                dep_str,
+                arr_str,
+                segment['origin'],
+                segment['destination'],
+                transport_type,
+                price,
+                duration
+            ])
+
+        table = Table(segments_data, colWidths=[70, 70, 90, 90, 60, 70, 60])  # Увеличил ширину столбцов
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, -1), 'DejaVuSerif'),
+            ('FONTSIZE', (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ]))
+        elements.append(table)
+        elements.append(Spacer(1, 24))
+
     doc.build(elements)
 
-    # Читаем содержимое файла в байты
-    with open(pdf_filename, "rb") as file:
+    with open(pdf_filename, 'rb') as file:
         pdf_data = file.read()
 
-    # Создаем объект BufferedInputFile
-    input_file = BufferedInputFile(pdf_data, filename=pdf_filename)
+        input_file = types.BufferedInputFile(
+            file=pdf_data,
+            filename=pdf_filename
+        )
 
-    # Отправляем PDF пользователю
-    await callback_query.bot.send_document(chat_id=callback_query.from_user.id, document=input_file)
+        await callback_query.bot.send_document(
+            chat_id=callback_query.from_user.id,
+            document=input_file,
+            caption="Ваши маршруты путешествий"
+        )
 
-    # Удаляем временный файл
     os.remove(pdf_filename)
