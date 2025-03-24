@@ -1,48 +1,449 @@
-<head>
-    <style>
-        /* Стили для страницы */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+/* Базовые стили для страницы */
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
-        #map {
-            flex: 1;
-            width: 100%;
-        }
+/* Карта */
+#map {
+  flex: 1;
+  width: 100%;
+}
 
-        #info {
-            padding: 10px;
-            background: #f4f4f4;
-            border-top: 1px solid #ddd;
-            text-align: center;
-        }
+/* Цвет плейсхолдера */
+.input-field::placeholder {
+  color: #E1E1E1;
+}
 
-        .route-button {
-            margin: 5px;
-            padding: 10px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+.ruble-input-group {
+  position: relative;
+}
 
-        .route-button:hover {
-            background: #0056b3;
-        }
+.ruble-input-group .input-field {
+  padding-right: 40px;
+}
 
-        /* Стили для меток городов */
-        .city-label {
-            font-weight: bold;
-            background: white;
-            padding: 5px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-    </style>
-</head>
+/* Значок рубля (₽) */
+.ruble-input-group::after {
+  content: '₽';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(70%);
+  font-size: 16px;
+  color: #000;
+  font-family: 'Montserrat', sans-serif;
+  pointer-events: none;
+}
+
+/* Контейнер для поля с календарем */
+.input-field {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  border: 1px solid #E1E1E1;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  appearance: none;
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+
+.input-field[type="date"] {
+  color: #E1E1E1;
+}
+
+.input-field[type="date"]:focus {
+  color: #000000;
+}
+
+/* Цвет плейсхолдера (для поля ввода даты) */
+.input-field[type="date"]::placeholder {
+  color: #E1E1E1; /* Цвет текста плейсхолдера */
+}
+
+/* При клике на иконку календаря, откроется календарь */
+.input-field[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  background: url('icon/calendar.svg') no-repeat center;
+  background-size: 16px 16px;
+}
+
+.input-field[type="date"]::-webkit-input-placeholder {
+  color: #E1E1E1;
+  font-size: 16px;
+}
+
+/* ХОВЕРЫ */
+
+.input-field:hover {
+  border-color: #9E5349;
+}
+
+.input-field:focus {
+  border-color: #9E5349;
+  outline: none;
+}
+
+/* ДЕСКТОП (до 769px) */
+@media (min-width: 769px) {
+  #controls {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 410px;
+    height: 100%;
+    background: white;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow: hidden;
+    padding: 30px;
+    box-sizing: border-box;
+  }
+
+  /* Кнопка-«полоса» на десктопе скрыта */
+  .toggle-filters-btn {
+    display: none;
+  }
+
+  h4 {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0 0 20px 0;
+  }
+
+  .form-group {
+    width: 100%;
+    margin: 0 0 30px 0;
+  }
+
+  .divider {
+    height: 2px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    margin: 0 0 30px 0;
+  }
+
+  .input-field {
+    width: 350px;
+    height: 40px;
+    background-color: #FFFFFF;
+    border: 1px solid #E1E1E1;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  select.input-field,
+  select.input-field option {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  select.input-field {
+    padding-right: 40px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    background: url("icon/Arrow.svg") no-repeat right 12px center;
+    background-size: 16px 16px;
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+
+  /* Радиокнопки */
+  .radio-buttons-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-group {
+    margin-bottom: 12px;
+  }
+
+  .radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+  }
+
+  .radio-label input[type="radio"] {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #E1E1E1;
+    border-radius: 50%;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+  }
+
+  .radio-label input[type="radio"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background-color: #9E5349;
+    border-radius: 50%;
+  }
+
+  /* Контейнер с фильтрами + кнопкой (кнопка снизу) */
+  #filters-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Прокрутка только для содержимого фильтров */
+  #filters-content {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  .apply-button {
+    width: 350px;
+    height: 40px;
+    background-color: #9E5349;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: auto;
+  }
+}
+
+/* МОБИЛЬНАЯ ВЕРСТКА (от 768px) */
+@media (max-width: 768px) {
+  #controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    top: auto;
+    width: 100%;
+    height: 70%;
+    background: white;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    transform: translateY(100%);
+    visibility: hidden;
+    transition: transform 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    z-index: 1000;
+    padding: 0px 20px 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Значок рубля (₽) */
+  .ruble-input-group::after {
+    content: '₽';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(40%);
+    font-size: 16px;
+    color: #000;
+    font-family: 'Montserrat', sans-serif;
+    pointer-events: none;
+  }
+
+    #controls.open {
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  /* Кнопка-«полоса» (только на мобильных) */
+  .toggle-filters-btn {
+    display: block;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+    border: none;
+    background: #ffffff;
+    padding: 0;
+    margin: 0;
+    z-index: 1100;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, bottom 0.3s ease-in-out;
+  }
+
+  .toggle-filters-btn::before {
+    content: "";
+    display: block;
+    width: 70px;
+    height: 3px;
+    background: #C3C3C3;
+    border-radius: 2px;
+    margin: 6px auto 0 auto;
+  }
+
+  .toggle-filters-btn.open {
+    bottom: 70%;
+  }
+
+  /* Контейнер с фильтрами + кнопкой */
+  #filters-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Контейнер для прокрутки */
+  #filters-content {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0 0 12px 0;
+  }
+
+  label,
+  select,
+  input,
+  button,
+  #route-info,
+  #filters {
+    font-size: 14px;
+  }
+
+  .form-group {
+    width: 100%;
+    margin: 0 0 20px 0;
+  }
+
+  .divider {
+    height: 2px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    margin: 0 0 20px 0;
+  }
+
+  .input-field {
+    width: 100%;
+    height: 40px;
+    background-color: #FFFFFF;
+    border: 1px solid #E1E1E1;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  select.input-field,
+  select.input-field option {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  select.input-field {
+    padding-right: 40px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    background: url("icon/Arrow.svg") no-repeat right 12px center;
+    background-size: 16px 16px;
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+
+  /* Радиокнопки */
+  .radio-buttons-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-group {
+    margin-bottom: 10px;
+  }
+
+  .radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+  }
+
+  .radio-label input[type="radio"] {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #E1E1E1;
+    border-radius: 50%;
+    appearance: none;
+    outline: none;
+    cursor: pointer;
+    margin: 0;
+    position: relative;
+  }
+
+  .radio-label input[type="radio"]:checked::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background-color: #9E5349;
+    border-radius: 50%;
+  }
+
+  /* Кнопка "Применить" */
+  .apply-button {
+    width: 100%;
+    height: 40px;
+    background-color: #9E5349;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: auto;
+    margin-bottom: 10px;
+  }
+}
