@@ -84,7 +84,7 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     keyboard = [
         [InlineKeyboardButton(
             text="Открыть карту",
-            web_app=WebAppInfo(url="https://e985-45-8-147-174.ngrok-free.app")
+            web_app=WebAppInfo(url="https://mabustfc.github.io/Tg-bot-TripMaster")
         )]
     ]
 

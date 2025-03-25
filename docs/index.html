@@ -35,6 +35,7 @@
           <select id="route-select" class="input-field"></select>
         </div>
 
+
         <!-- Линия-разделитель -->
         <div class="divider"></div>
 
@@ -67,6 +68,8 @@
                 Самый короткий
               </label>
             </div>
+
+
           </div>
         </div>
 
@@ -97,12 +100,22 @@
             class="input-field"
           />
         </div>
+
+        <!-- Контейнер для информации о маршруте -->
+            <div id="route-details" class="form-group">
+              <h4 class="filters-title">Информация о маршруте</h4>
+              <div id="route-summary"></div> <!-- Основная информация -->
+              <div id="route-detailed-info"></div> <!-- Детальная информация -->
+            </div>
+
       </div>
 
       <!-- Кнопка Применить -->
       <button id="apply-filters" class="apply-button">Применить</button>
       <!-- Добавьте кнопку в HTML -->
       <button id="export-pdf">Экспорт в PDF</button>
+
+
     </div>
   </div>
 
