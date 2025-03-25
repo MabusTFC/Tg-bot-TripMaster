@@ -62,28 +62,16 @@ async function initMap() {
     let routes = [];
 
     // Определение, запущено ли приложение в Telegram
-    document.addEventListener("DOMContentLoaded", async () => {
-        const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
-
-        if (isTelegramWebApp) {
-            console.log("Запущено в Telegram.");
-            console.log("Telegram WebApp object:", Telegram.WebApp);
-
-            const user = Telegram.WebApp.initDataUnsafe?.user;
-            if (user) {
-                console.log("ID пользователя:", user.id);
-                routes = await fetchUserRoutes(user.id);
-            } else {
-                console.error("Данные пользователя не доступны.");
-            }
-        } else {
-            console.log("Запущено в браузере. Используется тестовый User ID.");
-            const testUserId = '12345'; // Замените на нужный вам ID для тестирования
-            routes = await fetchUserRoutes(testUserId);
-        }
-
-        console.log("Маршруты:", routes);
-    });
+    const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
+    if (isTelegramWebApp) {
+      // Если запущено в Telegram, используем user_id из WebApp
+      const userId = Telegram.WebApp.initDataUnsafe.user.id;
+      routes = await fetchUserRoutes(userId);
+    } else {
+      // Если запущено в браузере, используем тестовый user_id
+      const testUserId = '12345'; // Замените на нужный вам ID для тестирования
+      routes = await fetchUserRoutes(testUserId);
+    }
 
 
     if (!routes || routes.length === 0) {

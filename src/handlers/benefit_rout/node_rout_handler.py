@@ -1,145 +1,145 @@
-    from datetime import datetime
+from datetime import datetime
 
-    import requests
+import requests
 
-    from aiogram import Router, types
+from aiogram import Router, types
 
-    from aiogram.types import CallbackQuery
-    from aiogram.fsm.context import FSMContext
-
-
-    from handlers.utils.state_machine import RoutStates
-    from handlers.utils.keyboards import get_zveno_rout_keyboard
-    from Algorithm.FindCheapestWay import get_routes
-
-    router = Router()
+from aiogram.types import CallbackQuery
+from aiogram.fsm.context import FSMContext
 
 
-    @router.callback_query(lambda c: c.data == "benefit_rout")
-    async def node_rout_handler(callback_query: CallbackQuery, state: FSMContext):
-        await state.set_state(RoutStates.ZVENO_ROUT)
-        await callback_query.message.answer(text="Введите список городов через запятую:")
+from handlers.utils.state_machine import RoutStates
+from handlers.utils.keyboards import get_zveno_rout_keyboard
+from Algorithm.FindCheapestWay import get_routes
+
+router = Router()
 
 
-    @router.message(RoutStates.ZVENO_ROUT)
-    async def node_input_cities(message: types.Message, state: FSMContext):
-
-        user_data = await state.get_data()
-        total_days = user_data.get("total_days", 30)
-        max_days = user_data.get("max_days", total_days)
-
-        temp_cities = [city.strip() for city in message.text.split(",") if city.strip()]
-
-        await state.update_data(temp_cities=temp_cities, current_days_zveno=1)
-
-        await message.answer(
-            "Настройте количество дней:",
-            reply_markup=await get_zveno_rout_keyboard(1, max_days)
-        )
+@router.callback_query(lambda c: c.data == "benefit_rout")
+async def node_rout_handler(callback_query: CallbackQuery, state: FSMContext):
+    await state.set_state(RoutStates.ZVENO_ROUT)
+    await callback_query.message.answer(text="Введите список городов через запятую:")
 
 
-    @router.callback_query(lambda c: c.data in ["pluse_days", "minus_days"])
-    async def change_days_count(callback_query: CallbackQuery, state: FSMContext):
-        user_data = await state.get_data()
-        max_days = user_data.get("max_days", user_data.get("total_days", 30))
-        current_days = user_data.get("current_days_zveno", 1)
+@router.message(RoutStates.ZVENO_ROUT)
+async def node_input_cities(message: types.Message, state: FSMContext):
 
-        action = callback_query.data
+    user_data = await state.get_data()
+    total_days = user_data.get("total_days", 30)
+    max_days = user_data.get("max_days", total_days)
 
-        if action == "pluse_days" and current_days < max_days:
-            current_days += 1
-            max_days -= 1
-        elif action == "minus_days" and current_days > 1:
-            current_days -= 1
-            max_days += 1
+    temp_cities = [city.strip() for city in message.text.split(",") if city.strip()]
 
-        await state.update_data(current_days_zveno=current_days, max_days=max_days)
+    await state.update_data(temp_cities=temp_cities, current_days_zveno=1)
 
-        new_markup = await get_zveno_rout_keyboard(current_days, max_days)
-
-        print(f"DEBUG: Action: {action}, max_days: {max_days}, current_days_zveno: {current_days}")
-
-        if str(callback_query.message.reply_markup) != str(new_markup):
-            await callback_query.message.edit_reply_markup(reply_markup=new_markup)
-
-        await callback_query.answer()
+    await message.answer(
+        "Настройте количество дней:",
+        reply_markup=await get_zveno_rout_keyboard(1, max_days)
+    )
 
 
-    @router.callback_query(lambda c: c.data == "add_zveno")
-    async def add_node(callback_query: CallbackQuery, state: FSMContext):
-        user_data = await state.get_data()
-        temp_cities = user_data.get("temp_cities", [])
-        days_count = user_data.get("current_days_zveno", 1)
-        zveno_list = user_data.get("zveno_list", [])
+@router.callback_query(lambda c: c.data in ["pluse_days", "minus_days"])
+async def change_days_count(callback_query: CallbackQuery, state: FSMContext):
+    user_data = await state.get_data()
+    max_days = user_data.get("max_days", user_data.get("total_days", 30))
+    current_days = user_data.get("current_days_zveno", 1)
 
-        if temp_cities:
-            new_zveno = {city: days_count for city in temp_cities}
-            zveno_list.append(new_zveno)
+    action = callback_query.data
 
-            await state.update_data(zveno_list=zveno_list, temp_cities=[], current_days_zveno=1)
+    if action == "pluse_days" and current_days < max_days:
+        current_days += 1
+        max_days -= 1
+    elif action == "minus_days" and current_days > 1:
+        current_days -= 1
+        max_days += 1
 
-        await callback_query.message.answer("Введите список городов для нового звена:")
-        await state.set_state(RoutStates.ZVENO_ROUT)
+    await state.update_data(current_days_zveno=current_days, max_days=max_days)
+
+    new_markup = await get_zveno_rout_keyboard(current_days, max_days)
+
+    print(f"DEBUG: Action: {action}, max_days: {max_days}, current_days_zveno: {current_days}")
+
+    if str(callback_query.message.reply_markup) != str(new_markup):
+        await callback_query.message.edit_reply_markup(reply_markup=new_markup)
+
+    await callback_query.answer()
 
 
-    @router.callback_query(lambda c: c.data == "save_zveno")
-    async def save_node(callback_query: CallbackQuery, state: FSMContext):
-        user_data = await state.get_data()
-        route = user_data.get("route", [])
-        start_date = user_data.get("start_date")
-        temp_cities = user_data.get("temp_cities", [])
-        days_count = user_data.get("current_days_zveno", 1)
-        zveno_list = user_data.get("zveno_list", [])
+@router.callback_query(lambda c: c.data == "add_zveno")
+async def add_node(callback_query: CallbackQuery, state: FSMContext):
+    user_data = await state.get_data()
+    temp_cities = user_data.get("temp_cities", [])
+    days_count = user_data.get("current_days_zveno", 1)
+    zveno_list = user_data.get("zveno_list", [])
 
-        if temp_cities:
-            new_zveno = {city: days_count for city in temp_cities}
-            zveno_list.append(new_zveno)
+    if temp_cities:
+        new_zveno = {city: days_count for city in temp_cities}
+        zveno_list.append(new_zveno)
 
         await state.update_data(zveno_list=zveno_list, temp_cities=[], current_days_zveno=1)
 
-        formatted_zveno_list = "\n".join(
-            [f"{i + 1} звено: {zveno}" for i, zveno in enumerate(zveno_list)]
-        )
+    await callback_query.message.answer("Введите список городов для нового звена:")
+    await state.set_state(RoutStates.ZVENO_ROUT)
 
 
-        start_city = route[0],0  # Начальный город
-        end_city = route[1],0 # Конечный город
-        departure_date = datetime.strptime(start_date, "%Y-%m-%d")  # Дата отправления
+@router.callback_query(lambda c: c.data == "save_zveno")
+async def save_node(callback_query: CallbackQuery, state: FSMContext):
+    user_data = await state.get_data()
+    route = user_data.get("route", [])
+    start_date = user_data.get("start_date")
+    temp_cities = user_data.get("temp_cities", [])
+    days_count = user_data.get("current_days_zveno", 1)
+    zveno_list = user_data.get("zveno_list", [])
 
-        # Сегменты маршрута (пример данных)
-        segments = [[(city, days) for city, days in group.items()] for group in zveno_list]
-        print(segments,start_city,end_city,type(departure_date))
+    if temp_cities:
+        new_zveno = {city: days_count for city in temp_cities}
+        zveno_list.append(new_zveno)
 
-        # Вызов функции для получения маршрутов
-        routes = get_routes(start_city, end_city, departure_date, segments)
+    await state.update_data(zveno_list=zveno_list, temp_cities=[], current_days_zveno=1)
 
-        # Отправка маршрутов на сервер
-        user_id = callback_query.from_user.id  # ID пользователя из Telegram
-        server_url = "https://5d66-57-129-20-222.ngrok-free.app/api/save-routes"
-        response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes})
+    formatted_zveno_list = "\n".join(
+        [f"{i + 1} звено: {zveno}" for i, zveno in enumerate(zveno_list)]
+    )
 
-        if response.status_code != 200:
-            await callback_query.message.answer("Ошибка при сохранении маршрутов. Попробуйте позже.")
-            return
 
-        # Создание клавиатуры с кнопкой для открытия карты
-        from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+    start_city = route[0],0  # Начальный город
+    end_city = route[1],0 # Конечный город
+    departure_date = datetime.strptime(start_date, "%Y-%m-%d")  # Дата отправления
 
-        keyboard = [
-            [InlineKeyboardButton(
-                text="Открыть карту",
-                web_app=WebAppInfo(url="https://mabustfc.github.io/Tg-bot-TripMaster")
-            )]
-        ]
+    # Сегменты маршрута (пример данных)
+    segments = [[(city, days) for city, days in group.items()] for group in zveno_list]
+    print(segments,start_city,end_city,type(departure_date))
 
-        reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    # Вызов функции для получения маршрутов
+    routes = get_routes(start_city, end_city, departure_date, segments)
 
-        # Отправка сообщения с кнопкой
-        await callback_query.message.edit_text(
-            f"Маршрут сохранен! Нажмите кнопку, чтобы открыть карту:\nВаш маршрут:\n{formatted_zveno_list}",
-            reply_markup=reply_markup
-        )
-        await callback_query.answer()
+    # Отправка маршрутов на сервер
+    user_id = callback_query.from_user.id  # ID пользователя из Telegram
+    server_url = "https://5d66-57-129-20-222.ngrok-free.app/api/save-routes"
+    response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes})
+
+    if response.status_code != 200:
+        await callback_query.message.answer("Ошибка при сохранении маршрутов. Попробуйте позже.")
+        return
+
+    # Создание клавиатуры с кнопкой для открытия карты
+    from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+
+    keyboard = [
+        [InlineKeyboardButton(
+            text="Открыть карту",
+            web_app=WebAppInfo(url="https://mabustfc.github.io/Tg-bot-TripMaster")
+        )]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+    # Отправка сообщения с кнопкой
+    await callback_query.message.edit_text(
+        f"Маршрут сохранен! Нажмите кнопку, чтобы открыть карту:\nВаш маршрут:\n{formatted_zveno_list}",
+        reply_markup=reply_markup
+    )
+    await callback_query.answer()
 
 
 
