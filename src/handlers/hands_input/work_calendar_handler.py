@@ -18,39 +18,44 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from datetime import datetime
-
+import uuid
 from src.Google.config_g.config_google import *
 from src.Fonts import *
 
 router = Router()
 
+
 @router.callback_query(lambda c: c.data == "authorization")
 async def authorization_google(callback_query: CallbackQuery, state: FSMContext):
     try:
-        with open('Google/config_g/credentials.json', 'r') as file:
-            client_config = json.load(file)
-        flow = Flow.from_client_config(
-            client_config,
+        session_id = str(uuid.uuid4())
+        await state.update_data(chat_id=callback_query.message.chat.id, session_id=session_id)
+
+        flow = Flow.from_client_secrets_file(
+            'Google/config_g/credentials.json',
             scopes=SCOPES,
             redirect_uri=REDIRECT_URI
         )
-        auth_url, _ = flow.authorization_url(prompt='consent')
-        await callback_query.message.reply(f'Пожалуйста, авторизуйтесь через Google: {auth_url}')
 
-        @router.message()
-        async def handle_auth_code(message: types.Message):
-            try:
-                auth_code = message.text.strip()
-                flow.fetch_token(code=auth_code)
-                creds = flow.credentials
+        state_param = f"{callback_query.message.chat.id}:{session_id}"
+        auth_url = flow.authorization_url(
+            prompt='consent',
+            state=state_param,
+            access_type='offline',
+            include_granted_scopes='true'
+        )[0]
 
-                # Сохранение учетных данных в базу
+        keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+            [types.InlineKeyboardButton(text="Авторизоваться через Google", url=auth_url)]
+        ])
 
-                await message.reply('Авторизация прошла успешно!')
-            except Exception as e:
-                await message.reply(f'Ошибка авторизации: {e}')
+        await callback_query.message.answer(
+            "Пожалуйста, авторизуйтесь через Google:",
+            reply_markup=keyboard
+        )
+
     except Exception as e:
-        await callback_query.message.reply(f'Ошибка при создании потока авторизации: {e}')
+        await callback_query.message.answer(f'Ошибка при создании ссылки авторизации: {str(e)}')
 
 @router.callback_query(lambda c: c.data == "add_event")
 async def add_event_to_calendar(callback_query: CallbackQuery, state: FSMContext):
