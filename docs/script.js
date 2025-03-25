@@ -64,7 +64,15 @@ async function initMap() {
         // Определение, запущено ли приложение в Telegram
     let userId = null;
 
-    userId = Telegram.WebApp.initDataUnsafe.user.id;
+    if (window.Telegram && window.Telegram.WebApp) {
+      // Уведомляем Telegram, что приложение готово
+       const user = window.Telegram.WebApp.initDataUnsafe?.user;
+       const userId = user.id;
+    } else {
+      // Если запущено в браузере, используем тестовый user_id
+      userId = '12345'; // Замените на нужный вам ID для тестирования
+      console.log('Запущено в браузере. Используется тестовый User ID:', userId);
+    }
 
     // Создание карты Leaflet
     const map = L.map('map').setView([55.7558, 37.6173], 5);
