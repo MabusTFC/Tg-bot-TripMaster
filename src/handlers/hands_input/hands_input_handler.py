@@ -40,6 +40,7 @@ async def process_intermediate_cities(message: types.Message, state: FSMContext)
                          )
 
 
+
 @router.callback_query(lambda c: c.data.startswith("page_"))
 async def change_page(callback_query: CallbackQuery, state: FSMContext):
     page = int(callback_query.data.split("_")[1])

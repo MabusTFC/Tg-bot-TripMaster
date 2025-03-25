@@ -39,3 +39,5 @@ async def process_city_input(message: types.Message, state: FSMContext):
         await state.set_state(DateSelection.START_DATE)
 
 
+
+
