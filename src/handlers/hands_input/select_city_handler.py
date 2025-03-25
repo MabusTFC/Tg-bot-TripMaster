@@ -9,7 +9,7 @@ from aiogram.types import (
 )
 
 from Algorithm.FindCheapestWay import get_routes
-import logging
+
 
 from handlers.utils.keyboards import (
     get_days_keyboard,
@@ -27,14 +27,15 @@ async def select_city(callback_query: CallbackQuery, state: FSMContext):
     total_days = user_data.get("total_days")
     max_days = user_data.get("max_days", total_days)
     route = user_data.get("route", [])
-    user_days = user_data.get("user_days", {})
+    user_days = user_data.get("user_days", [])
+    user_days_dict = dict(user_days)
 
     if city_index >= len(route):
         await callback_query.answer("Ошибка! Город не найден.")
         return
 
     city = route[city_index]
-    days = user_days.get(city, 1)
+    days = user_days_dict.get(city, 1)
 
     await state.update_data(selected_city=city)
     await callback_query.message.edit_text(
@@ -47,6 +48,7 @@ async def select_city(callback_query: CallbackQuery, state: FSMContext):
 async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     user_data = await state.get_data()
     route = user_data.get("route", [])
+    start_date = user_data.get("start_date")
     user_days = user_data.get("user_days", {})
 
     final_selection = [(city, user_days.get(city, 1)) for city in route]
@@ -54,17 +56,14 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     await state.update_data(final_selection=final_selection)
     await state.set_state(RoutStates.FINAL_ROUTE)
 
-    cities = ["Москва", "Владивосток"]  # Города начала и конца маршрута
-    start_city = (cities[0], 0)  # Начальный город
-    end_city = (cities[1], 0)  # Конечный город
-    departure_date = datetime.date(2025, 3, 25)  # Дата отправления
+    #cities = ["Москва", "Владивосток"]  # Города начала и конца маршрута
 
+    start_city = route[0]  # Начальный город
+    end_city = route[1]  # Конечный город
+    departure_date = start_date  # Дата отправления
+    print(list(user_days.items()))
     # Сегменты маршрута (пример данных)
-    segments = [
-        [("Челябинск", 5), ("Санкт-Петербург", 3)],
-        [("Казань", 4), ("Екатеринбург", 2)],
-        [("Сочи", 3), ("Новосибирск", 2)]
-    ]
+    segments = list(user_days.items())
 
     # Вызов функции для получения маршрутов
     routes = get_routes(start_city, end_city, departure_date, segments)
