@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import requests
 
 from aiogram import Router, types
@@ -100,13 +102,13 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
     )
 
 
-    start_city = zveno_list[0][0]  # Начальный город
-    end_city = zveno_list[-1][0]  # Конечный город
-    departure_date = start_date  # Дата отправления
+    start_city = route[0]  # Начальный город
+    end_city = route[1]  # Конечный город
+    departure_date = datetime.strptime(start_date, "%Y-%m-%d")  # Дата отправления
 
     # Сегменты маршрута (пример данных)
     segments = [[(city, days) for city, days in group.items()] for group in zveno_list]
-    print(segments)
+    print(segments,start_city,end_city,type(departure_date))
 
     # Вызов функции для получения маршрутов
     routes = get_routes(start_city, end_city, departure_date, segments)
