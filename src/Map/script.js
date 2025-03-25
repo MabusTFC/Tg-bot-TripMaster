@@ -1,19 +1,36 @@
-import { cityCoordinates, routes, loadRoutes } from './config.js';
+import { cityCoordinates } from './config.js';
 
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
+const SERVER_URL = 'https://5d66-57-129-20-222.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
 
 async function initMap() {
   try {
-    // 1. Загрузка маршрутов
-    await loadRoutes();
+    let routes = [];
 
-    // 2. Создание карты Leaflet
+    // Определение, запущено ли приложение в Telegram
+    const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
+    if (isTelegramWebApp) {
+      // Если запущено в Telegram, используем user_id из WebApp
+      const userId = Telegram.WebApp.initDataUnsafe.user.id;
+      routes = await fetchUserRoutes(userId);
+    } else {
+      // Если запущено в браузере, используем тестовый user_id
+      const testUserId = '12345'; // Замените на нужный вам ID для тестирования
+      routes = await fetchUserRoutes(testUserId);
+    }
+
+
+    if (!routes || routes.length === 0) {
+      throw new Error('Маршруты не найдены');
+    }
+
+    // Создание карты Leaflet
     const map = L.map('map').setView([55.7558, 37.6173], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    // 3. Отрисовка городов
+    // Отрисовка городов
     Object.keys(cityCoordinates).forEach(city => {
       const coords = cityCoordinates[city];
       L.circleMarker(coords, {
@@ -25,7 +42,7 @@ async function initMap() {
         .bindTooltip(city, { permanent: true, direction: "top" });
     });
 
-    // 4. Отрисовка маршрутов
+    // Отрисовка маршрутов
     const routePolylines = [];
     routes.forEach((routeData, index) => {
       const fullPath = routeData.full_path;
@@ -65,7 +82,7 @@ async function initMap() {
       `;
     }
 
-    // 5. Заполняем выпадающий список
+    // Заполняем выпадающий список
     const routeSelect = document.getElementById('route-select');
     const infoContainer = document.getElementById('route-info');
     routes.forEach((routeData, index) => {
@@ -92,7 +109,7 @@ async function initMap() {
       routeSelect.dispatchEvent(new Event('change'));
     }
 
-    // 6. Кнопки "Самый дешевый" и "Самый короткий"
+    // Кнопки "Самый дешевый" и "Самый короткий"
     document.getElementById('cheapest-route').addEventListener('click', () => {
       const cheapestRoute = routes.reduce((min, route) =>
         route.total_price < min.total_price ? route : min
@@ -109,7 +126,7 @@ async function initMap() {
       selectRoute(routes.indexOf(shortestRoute));
     });
 
-    // 7. Фильтры по цене и дате
+    // Фильтры по цене и дате
     document.getElementById('apply-filters').addEventListener('click', () => {
       const maxPrice = parseFloat(document.getElementById('max-price').value);
       const maxDate = document.getElementById('max-date').value;
@@ -135,17 +152,15 @@ async function initMap() {
       selectRoute(0);
     });
 
-    // 8. Мобильная логика: панель и кнопка
+    // Мобильная логика: панель и кнопка
     const toggleButton = document.getElementById('toggle-filters');
     const controls = document.getElementById('controls');
 
-    // --- КЛИК на кнопку: просто открываем/закрываем ---
     toggleButton.addEventListener('click', () => {
       controls.classList.toggle('open');
       toggleButton.classList.toggle('open');
     });
 
-    // --- СВАЙП по ПАНЕЛИ (закрытие) ---
     let panelStartY = 0;
     let panelCurrentY = 0;
     controls.addEventListener('touchstart', (e) => {
@@ -168,7 +183,6 @@ async function initMap() {
       }
     }, { passive: true });
 
-    // --- СВАЙП по КНОПКЕ (и открытие, и закрытие) ---
     let buttonStartY = 0;
     let buttonCurrentY = 0;
 
@@ -184,22 +198,88 @@ async function initMap() {
     toggleButton.addEventListener('touchend', () => {
       const diff = buttonCurrentY - buttonStartY;
 
-      // Если панель закрыта и свайп вверх => ОТКРЫВАЕМ
       if (!controls.classList.contains('open') && diff < -SWIPE_THRESHOLD) {
         controls.classList.add('open');
         toggleButton.classList.add('open');
-      }
-
-      // Если панель открыта и свайп вниз => ЗАКРЫВАЕМ
-      else if (controls.classList.contains('open') && diff > SWIPE_THRESHOLD) {
+      } else if (controls.classList.contains('open') && diff > SWIPE_THRESHOLD) {
         controls.classList.remove('open');
         toggleButton.classList.remove('open');
       }
     }, { passive: true });
+
+    document.getElementById('export-pdf').addEventListener('click', async () => {
+      try {
+        // Получаем выбранный маршрут
+        const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
+        const selectedRoute = routes[selectedRouteIndex];
+
+        if (!selectedRoute) {
+          alert('Выберите маршрут перед экспортом.');
+          return;
+        }
+
+        // Создаем JSON с выбранным маршрутом
+        const exportData = {
+          user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 'test_user_123',
+          route: selectedRoute,
+        };
+
+        console.log('Экспортируемые данные:', exportData);
+
+        // Отправляем JSON на сервер бота
+        const botServerUrl = 'https://your-bot-server-url.com/export-route'; // Замените на URL вашего бота
+        const response = await fetch(botServerUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(exportData),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Ошибка при отправке данных (${response.status}): ${await response.text()}`);
+        }
+
+        console.log('Маршрут успешно отправлен на сервер бота.');
+
+        // Закрываем Web App
+        if (window.Telegram?.WebApp?.close) {
+          window.Telegram.WebApp.close();
+        }
+      } catch (error) {
+        console.error('Ошибка при экспорте маршрута:', error);
+        alert('Произошла ошибка при экспорте маршрута.');
+      }
+    });
 
   } catch (error) {
     console.error('Ошибка при инициализации карты:', error);
   }
 }
 
-initMap();
+// Функция для получения маршрутов пользователя
+async function fetchUserRoutes(userId) {
+  try {
+    const url = `${SERVER_URL}/api/routes?user_id=${userId}`;
+    console.log('Отправляю запрос:', url);
+
+    // Добавляем заголовок ngrok-skip-browser-warning
+    const response = await fetch(url, {
+      headers: {
+        'ngrok-skip-browser-warning': 'true', // Этот заголовок игнорирует предупреждение ngrok
+      },
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`HTTP ошибка (${response.status}): ${errorMessage}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Ошибка при получении маршрутов:', error);
+    return [];
+  }
+}
+document.addEventListener("DOMContentLoaded", initMap);

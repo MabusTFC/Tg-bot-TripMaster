@@ -1,30 +1,25 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+import requests
 import json
 
-# Токен вашего бота
-BOT_TOKEN = "7172385372:AAETZ_QzAfjJIpZLLfHiLM0ZmDUJhi2_0GA"
+# Путь к файлу routes.json
+file_path = "Map/routes.json"
 
-# Команда /start
-async def start(update: Update, context: CallbackContext):
-    # Создаем кнопку для открытия Web App
-    keyboard = [
-        [InlineKeyboardButton("Открыть карту", web_app=WebAppInfo(url="https://c37f-162-19-19-218.ngrok-free.app"))]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+# URL сервера
+url = "https://5d66-57-129-20-222.ngrok-free.app/api/save-routes"
 
-    await update.message.reply_text("Нажмите кнопку, чтобы открыть карту:", reply_markup=reply_markup)
+# Чтение данных из файла routes.json
+with open(file_path, 'r', encoding='utf-8') as file:
+    data = json.load(file)
 
-# Основная функция для запуска бота
-def main():
-    application = Application.builder().token(BOT_TOKEN).build()
+# Добавление user_id в данные
+data_with_user_id = {
+    "user_id": "12345",
+    "routes": data  # Предполагается, что в файле routes.json находится массив маршрутов
+}
 
-    # Регистрация обработчиков
-    application.add_handler(CommandHandler("start", start))
-    #application.add_handler(MessageHandler(filters.StatusUpdate.WEB_APP_DATA, web_app_data))
+# Отправка POST-запроса на сервер
+response = requests.post(url, json=data_with_user_id)
 
-    # Запуск бота
-    application.run_polling()
-
-if __name__ == "__main__":
-    main()
+# Вывод результатов
+print("Status Code:", response.status_code)
+print("Response Body:", response.json())

@@ -24,7 +24,7 @@ def fetch_cached_ticket(origin, destination, departure_date, transport_type):
         result = cursor.fetchone()
 
         if result:
-            print("Данные найдены в кеше.")
+            #print("Данные найдены в кеше.")
             return result[0]  # Возвращаем JSON из базы данных
 
         # Если данных в кеше нет, делаем запрос к API

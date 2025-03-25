@@ -1,13 +1,11 @@
 import datetime
 import requests
-
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
 from aiogram.types import (
     CallbackQuery,
-    InlineKeyboardMarkup,
-    WebAppInfo,
-    InlineKeyboardButton,
+
 )
 
 from Algorithm.FindCheapestWay import get_routes
@@ -73,7 +71,7 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
 
     # Отправка маршрутов на сервер
     user_id = callback_query.from_user.id  # ID пользователя из Telegram
-    server_url = "https://b2e2-141-95-47-22.ngrok-free.app/api/save-routes"
+    server_url = "https://5d66-57-129-20-222.ngrok-free.app/api/save-routes"
     response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes})
 
     if response.status_code != 200:
@@ -81,9 +79,15 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
         return
 
     # Создание клавиатуры с кнопкой для открытия карты
+    from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+
     keyboard = [
-        [InlineKeyboardButton("Открыть карту", web_app=WebAppInfo(url="http://localhost:8000"))]
+        [InlineKeyboardButton(
+            text="Открыть карту",
+            web_app=WebAppInfo(url="https://e985-45-8-147-174.ngrok-free.app")
+        )]
     ]
+
     reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
 
     # Отправка сообщения с кнопкой
