@@ -2,7 +2,7 @@ import requests
 import json
 
 # Путь к файлу routes.json
-file_path = "Map/routes.json"
+file_path = "../docs/routes.json"
 
 # URL сервера
 url = "https://5d66-57-129-20-222.ngrok-free.app/api/save-routes"

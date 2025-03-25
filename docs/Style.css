@@ -447,3 +447,41 @@ body {
     margin-bottom: 10px;
   }
 }
+
+/* Стили для основной информации о маршруте */
+#route-summary {
+  margin-bottom: 15px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+#route-summary b {
+  font-weight: 500;
+  color: #9E5349;
+}
+
+/* Стили для детальной информации о маршруте */
+#route-detailed-info {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+#route-detailed-info .step {
+  margin-bottom: 10px;
+}
+
+#route-detailed-info .step-city {
+  font-weight: 500;
+  color: #9E5349;
+}
+
+#route-detailed-info .step-flight {
+  margin-left: 10px;
+  color: #555;
+}
+
+#route-detailed-info .step-flight b {
+  color: #333;
+}

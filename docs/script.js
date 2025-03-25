@@ -1,5 +1,59 @@
 import { cityCoordinates } from './config.js';
 
+
+// Функция для генерации случайного цвета
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+// Функция для формирования основной информации о маршруте
+function getRouteSummary(routeData) {
+  const routeDescription = routeData.route.join(' → ');
+  return `
+    <b>Маршрут:</b> ${routeDescription}<br>
+    <b>Общая цена:</b> ${routeData.total_price} руб.<br>
+    <b>Общая длительность:</b> ${routeData.total_duration.toFixed(2)} часов<br>
+  `;
+}
+
+// Функция для формирования детальной информации о маршруте
+function getDetailedRouteInfo(routeData) {
+  let detailedInfo = '';
+
+  // Добавляем информацию о первом городе
+  detailedInfo += `<div class="step"><span class="step-city">${routeData.route[0]}</span></div>`;
+
+  // Проходим по всем сегментам маршрута (перелётам)
+  routeData.full_path.forEach((segment, index) => {
+    // Добавляем информацию о перелёте
+    detailedInfo += `
+      <div class="step">
+        <span class="step-flight">
+          <b>Перелёт:</b> ${segment.origin} → ${segment.destination}<br>
+          Рейс: ${segment.flight_number}<br>
+          Отправление: ${new Date(segment.departure_datetime).toLocaleString()}<br>
+          Прибытие: ${new Date(segment.arrival_datetime).toLocaleString()}<br>
+          Цена: ${segment.price} руб.<br>
+          Длительность: ${segment.duration_hours.toFixed(2)} часов
+        </span>
+      </div>
+    `;
+
+    // Добавляем информацию о следующем городе (кроме последнего шага)
+    if (index < routeData.route.length - 1) {
+      detailedInfo += `<div class="step"><span class="step-city">${routeData.route[index + 1]}</span></div>`;
+    }
+  });
+
+  return detailedInfo;
+}
+
+
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
 const SERVER_URL = 'https://5d66-57-129-20-222.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
 
@@ -7,22 +61,10 @@ async function initMap() {
   try {
     let routes = [];
 
-    // Определение, запущено ли приложение в Telegram
-    const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
-    if (isTelegramWebApp) {
-      // Если запущено в Telegram, используем user_id из WebApp
-      const userId = Telegram.WebApp.initDataUnsafe.user.id;
-      routes = await fetchUserRoutes(userId);
-    } else {
-      // Если запущено в браузере, используем тестовый user_id
-      const testUserId = '12345'; // Замените на нужный вам ID для тестирования
-      routes = await fetchUserRoutes(testUserId);
-    }
+        // Определение, запущено ли приложение в Telegram
+    let userId = null;
 
-
-    if (!routes || routes.length === 0) {
-      throw new Error('Маршруты не найдены');
-    }
+    userId = Telegram.WebApp.initDataUnsafe.user.id;
 
     // Создание карты Leaflet
     const map = L.map('map').setView([55.7558, 37.6173], 5);
@@ -42,20 +84,28 @@ async function initMap() {
         .bindTooltip(city, { permanent: true, direction: "top" });
     });
 
+    // Создание массива цветов для маршрутов
+    const routeColors = routes.map(() => getRandomColor());
     // Отрисовка маршрутов
     const routePolylines = [];
     routes.forEach((routeData, index) => {
       const fullPath = routeData.full_path;
       const polylines = [];
+      const routeColor = routeColors[index]; // Уникальный цвет для текущего маршрута
+
       fullPath.forEach(segment => {
         const origin = segment.origin;
         const destination = segment.destination;
         const coordsOrigin = cityCoordinates[origin];
         const coordsDest = cityCoordinates[destination];
+
         if (coordsOrigin && coordsDest) {
           const polyline = L.polyline([coordsOrigin, coordsDest], {
-            color: index === 0 ? 'blue' : 'green'
+            color: routeColor,
+            weight: 3,
+            opacity: index === 0 ? 1 : 0.5 // Первый маршрут более яркий
           }).addTo(map);
+
           polyline.bindPopup(`
             <b>Перелет: ${origin} → ${destination}</b><br>
             Рейс: ${segment.flight_number}<br>
@@ -63,9 +113,11 @@ async function initMap() {
             Прибытие: ${segment.arrival_datetime}<br>
             Цена: ${segment.price} руб.
           `);
+
           polylines.push(polyline);
         }
       });
+
       routePolylines.push(polylines);
     });
 
@@ -94,13 +146,25 @@ async function initMap() {
 
     routeSelect.addEventListener('change', (event) => {
       const selectedIndex = parseInt(event.target.value);
+      const selectedRoute = routes[selectedIndex];
+
+      // Обновляем полилайны на карте
       routePolylines.forEach((polylines, i) => {
         polylines.forEach(polyline => {
-          polyline.setStyle({ opacity: i === selectedIndex ? 1 : 0.3 });
+          polyline.setStyle({
+            color: routeColors[i], // Используем уникальный цвет для маршрута
+            weight: i === selectedIndex ? 9 : 3, // Увеличенная толщина для выбранного маршрута
+            opacity: i === selectedIndex ? 1 : 0.3, // Выбранный маршрут более яркий
+            dashArray: i === selectedIndex ? '5, 5' : null // Пунктирная линия для выбранного маршрута
+          });
         });
       });
-      const selectedRoute = routes[selectedIndex];
-      infoContainer.innerHTML = getRouteInfo(selectedRoute);
+
+      // Заполняем основную информацию о маршруте
+      document.getElementById('route-summary').innerHTML = getRouteSummary(selectedRoute);
+
+      // Заполняем детальную информацию о маршруте
+      document.getElementById('route-detailed-info').innerHTML = getDetailedRouteInfo(selectedRoute);
     });
 
     // Утилита для програмного выбора маршрута
@@ -256,6 +320,7 @@ async function initMap() {
     console.error('Ошибка при инициализации карты:', error);
   }
 }
+
 
 // Функция для получения маршрутов пользователя
 async function fetchUserRoutes(userId) {

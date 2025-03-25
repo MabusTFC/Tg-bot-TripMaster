@@ -19,10 +19,8 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from datetime import datetime
 
-from Google.config_g.config_google import *
-from Algorithm.FindCheapestWay import get_routes
-
-from handlers.utils.keyboards import get_google_calendar_keyboard
+from src.Google.config_g.config_google import *
+from src.Fonts import *
 
 router = Router()
 
