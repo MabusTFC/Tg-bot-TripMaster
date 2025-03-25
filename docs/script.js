@@ -81,13 +81,10 @@ async function initMap() {
       console.log('Запущено в браузере. Используется тестовый User ID:', userId);
     }
 
-// Получаем маршруты для пользователя
-const routes = await fetchUserRoutes(userId);
+    // Получаем маршруты для пользователя
+    routes = await fetchUserRoutes(userId);
 
-// Отрисовываем карту и маршруты
-initMap(routes);
-
-
+    // Проверяем, что маршруты загружены
     if (!routes || routes.length === 0) {
       throw new Error('Маршруты не найдены');
     }
