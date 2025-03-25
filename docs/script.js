@@ -1,5 +1,13 @@
 import { cityCoordinates } from './config.js';
 
+function getUserId() {
+    const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
+    if (isTelegramWebApp) {
+        return window.Telegram.WebApp.initDataUnsafe?.user?.id || null;
+    }
+    const params = new URLSearchParams(window.location.search);
+    return params.get("user_id") || '12345';
+}
 
 // Функция для генерации случайного цвета
 function getRandomColor() {
@@ -62,16 +70,8 @@ async function initMap() {
     let routes = [];
 
     // Определение, запущено ли приложение в Telegram
-    const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
-    if (isTelegramWebApp) {
-      // Если запущено в Telegram, используем user_id из WebApp
-      const userId = Telegram.WebApp.initDataUnsafe.user.id;
-      routes = await fetchUserRoutes(userId);
-    } else {
-      // Если запущено в браузере, используем тестовый user_id
-      const testUserId = '12345'; // Замените на нужный вам ID для тестирования
-      routes = await fetchUserRoutes(testUserId);
-    }
+    const userId = getUserId();
+    routes = await fetchUserRoutes(userId);
 
 
     if (!routes || routes.length === 0) {

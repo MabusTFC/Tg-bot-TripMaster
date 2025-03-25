@@ -124,11 +124,16 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
 
     # Создание клавиатуры с кнопкой для открытия карты
     from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+    from urllib.parse import urlencode
+
+    base_url = "https://mabustfc.github.io/Tg-bot-TripMaster"
+    params = urlencode({"user_id": user_id})
+    full_url = f"{base_url}?{params}"
 
     keyboard = [
         [InlineKeyboardButton(
             text="Открыть карту",
-            web_app=WebAppInfo(url="https://mabustfc.github.io/Tg-bot-TripMaster")
+            web_app=WebAppInfo(url=full_url)
         )]
     ]
 
