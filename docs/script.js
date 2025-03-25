@@ -61,14 +61,14 @@ async function initMap() {
   try {
     let routes = [];
 
-    // Определение, запущено ли приложение в Telegram
+        // Определение, запущено ли приложение в Telegram
     let userId = null;
 
     if (window.Telegram && window.Telegram.WebApp) {
-      // Ждем, пока Telegram WebApp инициализируется
-      Telegram.WebApp.ready(); // Уведомляем Telegram, что приложение готово
+      // Уведомляем Telegram, что приложение готово
+      Telegram.WebApp.ready();
 
-      // Проверяем наличие initDataUnsafe
+      // Проверяем, загружены ли данные initDataUnsafe
       if (Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
         userId = Telegram.WebApp.initDataUnsafe.user.id;
         console.log('Запущено в Telegram. User ID:', userId);
@@ -79,14 +79,6 @@ async function initMap() {
       // Если запущено в браузере, используем тестовый user_id
       userId = '12345'; // Замените на нужный вам ID для тестирования
       console.log('Запущено в браузере. Используется тестовый User ID:', userId);
-    }
-
-    // Получаем маршруты для пользователя
-    routes = await fetchUserRoutes(userId);
-
-    // Проверяем, что маршруты загружены
-    if (!routes || routes.length === 0) {
-      throw new Error('Маршруты не найдены');
     }
 
     // Создание карты Leaflet
