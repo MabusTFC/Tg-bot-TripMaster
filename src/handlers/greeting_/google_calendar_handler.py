@@ -15,7 +15,7 @@ async def balance_handler(callback_query: CallbackQuery):
     await callback_query.message.answer_photo(
         caption=MANUAL_MESSAGE,
         parse_mode="Markdown",
-        photo=types.FSInputFile("img/zaglushka.jpg"),
+        photo=types.FSInputFile("img/calendar.jpg"),
         reply_markup=await get_google_calendar_keyboard()
     )
     await callback_query.answer()

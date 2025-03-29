@@ -14,7 +14,6 @@ async def get_greetings_keyboard():
         [InlineKeyboardButton(text="Создать маршрут", callback_data="create_trip")],
         [InlineKeyboardButton(text="Поолнить баланс", callback_data="balance")],
         [InlineKeyboardButton(text="Календарь", callback_data="g_calendar")],
-        [InlineKeyboardButton(text="Настройка Календаря событий", callback_data="settings_calendar")],
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
