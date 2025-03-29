@@ -20,9 +20,9 @@ from handlers.hands_input import (
     change_days_handler,
     chose_days_handler, 
     select_city_handler,
-    work_calendar_handler,
-    add_balance_handler
+    work_calendar_handler
 )
+from database.database import init_db
 
 from handlers.greeting_ import (
     auth_handler,
@@ -47,7 +47,7 @@ async def on_startup(bot: Bot) -> None:
 
 
 async def main():
-    #await init_db()
+    await init_db()
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
     dp.include_router(auth_handler.router)
@@ -63,7 +63,6 @@ async def main():
     dp.include_router(work_calendar_handler.router)
     dp.include_router(google_calendar_handler.router)
     dp.include_router(balance_handler.router)
-    dp.include_router(add_balance_handler.router)
     dp.startup.register(on_startup)
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(
