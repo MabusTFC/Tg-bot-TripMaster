@@ -2,7 +2,7 @@ import { cityCoordinates } from './config.js';
 
 
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
-const SERVER_URL = 'https://45.8.147.174:5000'; // Замените на актуальный ngrok-URL// URL вашего сервера
+const SERVER_URL = 'https://b5a3-45-8-147-174.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
 
 
 function getUserId() {
@@ -337,20 +337,17 @@ async function initMap() {
 
 
 // Функция для получения маршрутов пользователя
-const fetch = require('node-fetch');
-const https = require('https');
-
 async function fetchUserRoutes(userId) {
   try {
     const url = `${SERVER_URL}/api/routes?user_id=${userId}`;
     console.log('Отправляю запрос:', url);
 
-    // Отключение проверки SSL
-    const agent = new https.Agent({
-      rejectUnauthorized: false, // Отключаем проверку SSL
+    // Добавляем заголовок ngrok-skip-browser-warning
+    const response = await fetch(url), {
+      headers: {
+        'ngrok-skip-browser-warning': 'true', // Этот заголовок игнорирует предупреждение ngrok
+      },
     });
-
-    const response = await fetch(url, { agent });
 
     if (!response.ok) {
       const errorMessage = await response.text();
