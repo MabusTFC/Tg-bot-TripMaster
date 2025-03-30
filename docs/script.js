@@ -343,7 +343,7 @@ async function fetchUserRoutes(userId) {
     console.log('Отправляю запрос:', url);
 
     // Добавляем заголовок ngrok-skip-browser-warning
-    const response = await fetch(url, {
+    const response = await fetch(url), {
       headers: {
         'ngrok-skip-browser-warning': 'true', // Этот заголовок игнорирует предупреждение ngrok
       },
