@@ -1,5 +1,10 @@
 import { cityCoordinates } from './config.js';
 
+
+const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
+const SERVER_URL = 'http://45.8.147.174:5000'; // Замените на актуальный ngrok-URL// URL вашего сервера
+
+
 function getUserId() {
     const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
     if (isTelegramWebApp) {
@@ -61,9 +66,6 @@ function getDetailedRouteInfo(routeData) {
   return detailedInfo;
 }
 
-
-const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
-const SERVER_URL = 'https://5d66-57-129-20-222.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
 
 async function initMap() {
   try {
@@ -296,14 +298,14 @@ async function initMap() {
 
         // Создаем JSON с выбранным маршрутом
         const exportData = {
-          user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 'test_user_123',
+          user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id || '12345',
           route: selectedRoute,
         };
 
         console.log('Экспортируемые данные:', exportData);
 
         // Отправляем JSON на сервер бота
-        const botServerUrl = 'https://your-bot-server-url.com/export-route'; // Замените на URL вашего бота
+        const botServerUrl = `${SERVER_URL}/api/save-final-routes`; // Замените на URL вашего бота
         const response = await fetch(botServerUrl, {
           method: 'POST',
           headers: {

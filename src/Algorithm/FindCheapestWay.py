@@ -25,14 +25,14 @@ def process_route(start_city, end_city, departure_date, segments):
 
         # Получаем билеты из кэша или базы данных
         response_avia = fetch_cached_ticket(origin, destination, current_date, "avia")
-        response_train = fetch_cached_ticket(origin, destination, current_date, "train")
+        #response_train = fetch_cached_ticket(origin, destination, current_date, "train")
 
         # Преобразуем данные в список билетов
         all_tickets = []
         if response_avia and "data" in response_avia:
             all_tickets.extend(response_avia["data"])
-        if response_train:
-            all_tickets.extend(response_train)
+        #if response_train:
+            #all_tickets.extend(response_train)
 
         if not all_tickets:
             print(f"Нет билетов из {origin} в {destination} на {current_date.strftime('%Y-%m-%d')}")

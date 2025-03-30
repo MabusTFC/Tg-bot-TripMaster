@@ -115,7 +115,7 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
 
     # Отправка маршрутов на сервер
     user_id = callback_query.from_user.id  # ID пользователя из Telegram
-    server_url = "https://5d66-57-129-20-222.ngrok-free.app/api/save-routes"
+    server_url = "http://45.8.147.174:5000/api/save-routes"
     response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes})
 
     if response.status_code != 200:
@@ -146,7 +146,31 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
     )
     await callback_query.answer()
 
+@router.callback_query(lambda c: c.data.startswith("web_app_data"))
+async def handle_web_app_data(callback_query: CallbackQuery):
+    # Извлекаем данные из callback_query
+    data = callback_query.data.split(":")[1]  # Предполагается, что данные разделены ":"
+    try:
+        parsed_data = json.loads(data)  # Парсим JSON-строку
+        user_id = parsed_data.get("user_id")
 
+        if not user_id:
+            await callback_query.message.answer("Ошибка: Не удалось получить user_id.")
+            return
+
+        # Запрашиваем маршруты с сервера
+        server_url = f"http://45.8.147.174:5000:5000/api/final-routes?user_id={user_id}"
+        response = requests.get(server_url)
+
+        if response.status_code == 200:
+            routes = response.json()
+            formatted_routes = "\n".join(routes)
+            await callback_query.message.answer(f"Ваши маршруты:\n{formatted_routes}")
+        else:
+            await callback_query.message.answer("Ошибка: Не удалось получить маршруты.")
+
+    except Exception as e:
+        await callback_query.message.answer(f"Произошла ошибка: {str(e)}")
 
 
 
