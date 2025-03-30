@@ -337,17 +337,20 @@ async function initMap() {
 
 
 // Функция для получения маршрутов пользователя
+const fetch = require('node-fetch');
+const https = require('https');
+
 async function fetchUserRoutes(userId) {
   try {
     const url = `${SERVER_URL}/api/routes?user_id=${userId}`;
     console.log('Отправляю запрос:', url);
 
-    // Добавляем заголовок ngrok-skip-browser-warning
-    const response = await fetch(url, {
-      headers: {
-        'ngrok-skip-browser-warning': 'true', // Этот заголовок игнорирует предупреждение ngrok
-      },
+    // Отключение проверки SSL
+    const agent = new https.Agent({
+      rejectUnauthorized: false, // Отключаем проверку SSL
     });
+
+    const response = await fetch(url, { agent });
 
     if (!response.ok) {
       const errorMessage = await response.text();
