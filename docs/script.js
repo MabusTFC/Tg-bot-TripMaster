@@ -2,7 +2,7 @@ import { cityCoordinates } from './config.js';
 
 
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
-const SERVER_URL = 'http://45.8.147.174:5000'; // Замените на актуальный ngrok-URL// URL вашего сервера
+const SERVER_URL = 'https://45.8.147.174:5000'; // Замените на актуальный ngrok-URL// URL вашего сервера
 
 
 function getUserId() {
