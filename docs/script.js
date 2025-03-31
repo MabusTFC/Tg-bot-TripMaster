@@ -287,7 +287,7 @@ async function initMap() {
 
     document.getElementById('export-pdf').addEventListener('click', async () => {
       try {
-        console.log('Export button clicked'); 
+        console.log('Export button clicked');
 
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
@@ -296,9 +296,6 @@ async function initMap() {
           alert('Выберите маршрут перед экспортом.');
           return;
         }
-
-        // Логирование данных
-        console.log('Selected route:', selectedRoute);
 
         const exportData = {
           user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id || '12345',
@@ -315,32 +312,34 @@ async function initMap() {
             'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify(exportData),
-        }).catch(err => {
-          console.error('Fetch error:', err);
-          throw err;
         });
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('Server error:', errorText);
           throw new Error(`Server error: ${response.status} - ${errorText}`);
         }
 
         console.log('Export successful, attempting to close WebApp...');
-        console.log('Telegram WebApp available:', !!window.Telegram?.WebApp);
 
-        // Попытка закрыть WebApp
-        if (window.Telegram?.WebApp?.expand) {
-          window.Telegram.WebApp.expand(); // Расширяем на всякий случай
-        }
-
+        // Основной способ закрытия WebApp
         if (window.Telegram?.WebApp?.close) {
+          // Важно: сначала расширить, потом закрыть
+          window.Telegram.WebApp.expand();
           window.Telegram.WebApp.close();
-        } else {
-          console.warn('Telegram WebApp close method not available');
-          alert('Маршрут успешно экспортирован! Закройте окно вручную.');
-          // Альтернативные действия
-          document.getElementById('map').style.display = 'none';
+        }
+        // Альтернативный способ для Mini Apps
+        else if (window.Telegram?.WebApp?.sendData) {
+          window.Telegram.WebApp.sendData(JSON.stringify({
+            action: 'close',
+            data: { status: 'success' }
+          }));
+          window.Telegram.WebApp.close();
+        }
+        // Если WebApp API недоступен (тестирование в браузере)
+        else {
+          console.warn('Telegram WebApp API not available');
+          // Имитация закрытия для тестирования
+          document.body.innerHTML = '<h1>Маршрут успешно экспортирован!</h1><p>Это окно можно закрыть.</p>';
         }
 
       } catch (error) {
