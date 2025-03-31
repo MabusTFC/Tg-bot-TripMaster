@@ -287,7 +287,6 @@ async function initMap() {
 
    document.getElementById('export-pdf').addEventListener('click', async () => {
       try {
-        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
         const userId = getUserId();
@@ -297,29 +296,76 @@ async function initMap() {
           return;
         }
 
-        // Отправляем запрос боту на генерацию PDF
-        const response = await fetch('https://api.telegram.org/bot${BOT_TOKEN}/sendMessage', {
+        // Создаем PDF с помощью jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Заголовок
+        doc.setFontSize(20);
+        doc.text('Маршрут путешествия', 105, 20, { align: 'center' });
+
+        // Информация о маршруте
+        doc.setFontSize(12);
+        doc.text(`Маршрут: ${selectedRoute.route.join(' → ')}`, 14, 30);
+        doc.text(`Общая цена: ${selectedRoute.total_price} руб.`, 14, 40);
+        doc.text(`Общая длительность: ${selectedRoute.total_duration.toFixed(2)} часов`, 14, 50);
+
+        // Таблица с сегментами маршрута
+        const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Цена", "Длительность"]];
+        const rows = selectedRoute.full_path.map(segment => [
+          new Date(segment.departure_datetime).toLocaleString(),
+          new Date(segment.arrival_datetime).toLocaleString(),
+          segment.origin,
+          segment.destination,
+          segment.flight_number,
+          `${segment.price} руб.`,
+          `${segment.duration_hours.toFixed(2)} ч.`
+        ]);
+
+        doc.autoTable({
+          startY: 60,
+          head: headers,
+          body: rows,
+          theme: 'grid',
+          headStyles: {
+            fillColor: [100, 100, 100],
+            textColor: 255,
+            fontStyle: 'bold'
+          },
+          styles: {
+            cellPadding: 3,
+            fontSize: 10,
+            valign: 'middle'
+          },
+          columnStyles: {
+            0: { cellWidth: 40 },
+            1: { cellWidth: 40 },
+            2: { cellWidth: 30 },
+            3: { cellWidth: 30 },
+            4: { cellWidth: 30 },
+            5: { cellWidth: 25 },
+            6: { cellWidth: 25 }
+          }
+        });
+
+        // Генерируем PDF
+        const pdfBlob = doc.output('blob');
+        const formData = new FormData();
+        formData.append('document', pdfBlob, 'travel_route.pdf');
+        formData.append('chat_id', userId);
+
+        // Отправляем PDF через Telegram Bot API
+        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: userId,
-            text: 'Генерация PDF...',
-            reply_markup: {
-              inline_keyboard: [[
-                {
-                  text: "Сгенерировать PDF",
-                  callback_data: "print_calendar"
-                }
-              ]]
-            }
-          })
+          body: formData
         });
 
         if (!response.ok) {
-          throw new Error('Не удалось инициировать генерацию PDF');
+          throw new Error('Не удалось отправить PDF');
         }
 
-        alert('Запрос на генерацию PDF отправлен! Проверьте чат с ботом.');
+        alert('PDF успешно отправлен! Проверьте чат с ботом.');
 
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();
@@ -331,22 +377,6 @@ async function initMap() {
       }
     });
 
-    function formatRouteForTelegram(route) {
-      let message = `<b>${route.route.join(' → ')}</b>\n`;
-      message += `💰 Общая цена: ${route.total_price} руб.\n`;
-      message += `⏱ Длительность: ${route.total_duration.toFixed(2)} ч.\n\n`;
-
-      route.full_path.forEach(segment => {
-        message += `✈️ <b>${segment.origin} → ${segment.destination}</b>\n`;
-        message += `Рейс: ${segment.flight_number}\n`;
-        message += `Вылет: ${new Date(segment.departure_datetime).toLocaleString()}\n`;
-        message += `Прибытие: ${new Date(segment.arrival_datetime).toLocaleString()}\n`;
-        message += `Цена: ${segment.price} руб.\n`;
-        message += `Длительность: ${segment.duration_hours.toFixed(2)} ч.\n\n`;
-      });
-
-      return message;
-    }
 
   } catch (error) {
     console.error('Ошибка при инициализации карты:', error);
