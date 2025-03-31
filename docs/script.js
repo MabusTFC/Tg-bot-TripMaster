@@ -302,7 +302,7 @@ async function initMap() {
           route: selectedRoute,
         };
 
-        const botServerUrl = `${SERVER_URL}/api/save-final-routes`;
+        const botServerUrl = `${SERVER_URL}/api/export-route`;
         console.log('Sending to:', botServerUrl);
 
         const response = await fetch(botServerUrl, {
@@ -319,27 +319,16 @@ async function initMap() {
           throw new Error(`Server error: ${response.status} - ${errorText}`);
         }
 
-        console.log('Export successful, attempting to close WebApp...');
+        // Получаем PDF файл в ответ
+        const pdfBlob = await response.blob();
+        const pdfUrl = URL.createObjectURL(pdfBlob);
 
-        // Основной способ закрытия WebApp
+        // Открываем PDF в новой вкладке (для тестирования)
+        window.open(pdfUrl, '_blank');
+
+        // Для Telegram WebApp - закрываем приложение
         if (window.Telegram?.WebApp?.close) {
-          // Важно: сначала расширить, потом закрыть
-          window.Telegram.WebApp.expand();
           window.Telegram.WebApp.close();
-        }
-        // Альтернативный способ для Mini Apps
-        else if (window.Telegram?.WebApp?.sendData) {
-          window.Telegram.WebApp.sendData(JSON.stringify({
-            action: 'close',
-            data: { status: 'success' }
-          }));
-          window.Telegram.WebApp.close();
-        }
-        // Если WebApp API недоступен (тестирование в браузере)
-        else {
-          console.warn('Telegram WebApp API not available');
-          // Имитация закрытия для тестирования
-          document.body.innerHTML = '<h1>Маршрут успешно экспортирован!</h1><p>Это окно можно закрыть.</p>';
         }
 
       } catch (error) {
