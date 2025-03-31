@@ -296,13 +296,15 @@ async function initMap() {
           return;
         }
 
-        console.log('Selected route data:', selectedRoute); // Проверка данных
-
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // Используем стандартный шрифт для упрощения
-        doc.setFont('helvetica');
+        // Решение 1: Используем стандартный шрифт с поддержкой кириллицы
+        doc.addFont('https://cdn.jsdelivr.net/npm/roboto-font@0.1.0/fonts/Roboto/roboto-regular-webfont.ttf', 'Roboto', 'normal');
+        doc.setFont('Roboto');
+
+        // Решение 2: Альтернатива - использовать шрифт 'Arial Unicode MS' (если доступен)
+        // doc.setFont('Arial Unicode MS');
 
         // Заголовок
         doc.setFontSize(20);
@@ -314,7 +316,7 @@ async function initMap() {
         doc.text(`Общая цена: ${selectedRoute.total_price} руб.`, 14, 40);
         doc.text(`Общая длительность: ${selectedRoute.total_duration.toFixed(2)} часов`, 14, 50);
 
-        // Таблица с сегментами маршрута
+        // Таблица
         const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Цена", "Длительность"]];
         const rows = selectedRoute.full_path.map(segment => [
           segment.departure_datetime ? new Date(segment.departure_datetime).toLocaleString() : 'N/A',
@@ -337,48 +339,36 @@ async function initMap() {
             fontStyle: 'bold'
           },
           styles: {
+            font: 'Roboto', // Указываем шрифт для таблицы
             cellPadding: 3,
             fontSize: 10,
             valign: 'middle'
-          },
-          columnStyles: {
-            0: { cellWidth: 40 },
-            1: { cellWidth: 40 },
-            2: { cellWidth: 30 },
-            3: { cellWidth: 30 },
-            4: { cellWidth: 30 },
-            5: { cellWidth: 25 },
-            6: { cellWidth: 25 }
           }
         });
 
-        // Генерируем PDF
+        // Отправка PDF
         const pdfBlob = doc.output('blob');
         const formData = new FormData();
         formData.append('document', pdfBlob, 'travel_route.pdf');
         formData.append('chat_id', userId);
 
-        // Отправляем PDF через Telegram Bot API
         const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
-        const telegramResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
           method: 'POST',
           body: formData
         });
 
-        if (!telegramResponse.ok) {
-          throw new Error('Не удалось отправить PDF');
-        }
-
-        alert('PDF успешно отправлен! Проверьте чат с ботом.');
+        if (!response.ok) throw new Error('Ошибка отправки PDF');
+        alert('PDF успешно отправлен!');
 
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();
         }
       } catch (error) {
-        console.error('Export failed:', error);
-        alert('Ошибка: ' + error.message);
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка: ' + error.message);
       }
-   });
+    });
 
 
   } catch (error) {
