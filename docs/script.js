@@ -285,9 +285,9 @@ async function initMap() {
       }
     }, { passive: true });
 
-    document.getElementById('export-pdf').addEventListener('click', async () => {
+   document.getElementById('export-pdf').addEventListener('click', async () => {
       try {
-        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4'; // Ваш токен бота
+        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
         const userId = getUserId();
@@ -297,28 +297,32 @@ async function initMap() {
           return;
         }
 
-        // 1. Отправляем данные напрямую в Telegram бота
-        const botResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        // Отправляем запрос боту на генерацию PDF
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: userId,
-            text: `✅ Ваш маршрут:\n\n${formatRouteForTelegram(selectedRoute)}`,
-            parse_mode: 'HTML'
+            text: 'Генерация PDF...',
+            reply_markup: {
+              inline_keyboard: [[
+                {
+                  text: "Сгенерировать PDF",
+                  callback_data: "print_calendar"
+                }
+              ]]
+            }
           })
         });
 
-        if (!botResponse.ok) {
-          throw new Error('Не удалось отправить сообщение через Bot API');
+        if (!response.ok) {
+          throw new Error('Не удалось инициировать генерацию PDF');
         }
 
-        // 2. Показываем уведомление и закрываем WebApp
-        alert('Маршрут успешно отправлен в чат!');
+        alert('Запрос на генерацию PDF отправлен! Проверьте чат с ботом.');
 
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();
-        } else {
-          document.body.innerHTML = '<h1>Маршрут отправлен в чат!</h1><p>Закройте это окно.</p>';
         }
 
       } catch (error) {
