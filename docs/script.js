@@ -296,9 +296,13 @@ async function initMap() {
           return;
         }
 
-        // Создаем PDF с помощью jsPDF
+        console.log('Selected route data:', selectedRoute); // Проверка данных
+
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
+
+        // Используем стандартный шрифт для упрощения
+        doc.setFont('helvetica');
 
         // Заголовок
         doc.setFontSize(20);
@@ -313,13 +317,13 @@ async function initMap() {
         // Таблица с сегментами маршрута
         const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Цена", "Длительность"]];
         const rows = selectedRoute.full_path.map(segment => [
-          new Date(segment.departure_datetime).toLocaleString(),
-          new Date(segment.arrival_datetime).toLocaleString(),
-          segment.origin,
-          segment.destination,
-          segment.flight_number,
-          `${segment.price} руб.`,
-          `${segment.duration_hours.toFixed(2)} ч.`
+          segment.departure_datetime ? new Date(segment.departure_datetime).toLocaleString() : 'N/A',
+          segment.arrival_datetime ? new Date(segment.arrival_datetime).toLocaleString() : 'N/A',
+          segment.origin || 'N/A',
+          segment.destination || 'N/A',
+          segment.flight_number || 'N/A',
+          segment.price ? `${segment.price} руб.` : 'N/A',
+          segment.duration_hours ? `${segment.duration_hours.toFixed(2)} ч.` : 'N/A'
         ]);
 
         doc.autoTable({
@@ -356,12 +360,12 @@ async function initMap() {
 
         // Отправляем PDF через Telegram Bot API
         const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+        const telegramResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
           method: 'POST',
           body: formData
         });
 
-        if (!response.ok) {
+        if (!telegramResponse.ok) {
           throw new Error('Не удалось отправить PDF');
         }
 
@@ -370,12 +374,11 @@ async function initMap() {
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();
         }
-
       } catch (error) {
         console.error('Export failed:', error);
         alert('Ошибка: ' + error.message);
       }
-    });
+   });
 
 
   } catch (error) {
