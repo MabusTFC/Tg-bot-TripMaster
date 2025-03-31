@@ -287,68 +287,62 @@ async function initMap() {
 
     document.getElementById('export-pdf').addEventListener('click', async () => {
       try {
-        console.log('Export button clicked');
-
-        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4'; // ⚠️ Не делайте так в продакшене!
+        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4'; // Ваш токен бота
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
-        const userId = getUserId(); // Ваша функция для получения user_id
+        const userId = getUserId();
 
         if (!selectedRoute) {
           alert('Выберите маршрут перед экспортом.');
           return;
         }
 
-        const exportData = {
-          user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id || '12345',
-          route: selectedRoute,
-        };
-
-        const botServerUrl = `${SERVER_URL}/api/save-final-routes`;
-        console.log('Sending to:', botServerUrl);
-
-        const response = await fetch(botServerUrl, {
+        // 1. Отправляем данные напрямую в Telegram бота
+        const botResponse = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'ngrok-skip-browser-warning': 'true',
-          },
-          body: JSON.stringify(exportData),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: userId,
+            text: `✅ Ваш маршрут:\n\n${formatRouteForTelegram(selectedRoute)}`,
+            parse_mode: 'HTML'
+          })
         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Server error: ${response.status} - ${errorText}`);
+        if (!botResponse.ok) {
+          throw new Error('Не удалось отправить сообщение через Bot API');
         }
 
-        console.log('Export successful, attempting to close WebApp...');
+        // 2. Показываем уведомление и закрываем WebApp
+        alert('Маршрут успешно отправлен в чат!');
 
-        // Основной способ закрытия WebApp
         if (window.Telegram?.WebApp?.close) {
-          // Важно: сначала расширить, потом закрыть
-          window.Telegram.WebApp.expand();
           window.Telegram.WebApp.close();
-        }
-        // Альтернативный способ для Mini Apps
-        else if (window.Telegram?.WebApp?.sendData) {
-          window.Telegram.WebApp.sendData(JSON.stringify({
-            action: 'close',
-            data: { status: 'success' }
-          }));
-          window.Telegram.WebApp.close();
-        }
-        // Если WebApp API недоступен (тестирование в браузере)
-        else {
-          console.warn('Telegram WebApp API not available');
-          // Имитация закрытия для тестирования
-          document.body.innerHTML = '<h1>Маршрут успешно экспортирован!</h1><p>Это окно можно закрыть.</p>';
+        } else {
+          document.body.innerHTML = '<h1>Маршрут отправлен в чат!</h1><p>Закройте это окно.</p>';
         }
 
       } catch (error) {
         console.error('Export failed:', error);
-        alert('Ошибка при экспорте: ' + error.message);
+        alert('Ошибка: ' + error.message);
       }
     });
+
+    function formatRouteForTelegram(route) {
+      let message = `<b>${route.route.join(' → ')}</b>\n`;
+      message += `💰 Общая цена: ${route.total_price} руб.\n`;
+      message += `⏱ Длительность: ${route.total_duration.toFixed(2)} ч.\n\n`;
+
+      route.full_path.forEach(segment => {
+        message += `✈️ <b>${segment.origin} → ${segment.destination}</b>\n`;
+        message += `Рейс: ${segment.flight_number}\n`;
+        message += `Вылет: ${new Date(segment.departure_datetime).toLocaleString()}\n`;
+        message += `Прибытие: ${new Date(segment.arrival_datetime).toLocaleString()}\n`;
+        message += `Цена: ${segment.price} руб.\n`;
+        message += `Длительность: ${segment.duration_hours.toFixed(2)} ч.\n\n`;
+      });
+
+      return message;
+    }
 
   } catch (error) {
     console.error('Ошибка при инициализации карты:', error);
