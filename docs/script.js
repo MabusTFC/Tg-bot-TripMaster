@@ -287,6 +287,8 @@ async function initMap() {
 
     document.getElementById('export-pdf').addEventListener('click', async () => {
       try {
+        console.log('Export button clicked'); 
+
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
 
@@ -295,43 +297,55 @@ async function initMap() {
           return;
         }
 
-        // Создаем JSON с выбранным маршрутом
+        // Логирование данных
+        console.log('Selected route:', selectedRoute);
+
         const exportData = {
           user_id: window.Telegram?.WebApp?.initDataUnsafe?.user?.id || '12345',
           route: selectedRoute,
         };
 
-        console.log('Экспортируемые данные:', exportData);
-
-        // Отправляем JSON на сервер бота
         const botServerUrl = `${SERVER_URL}/api/save-final-routes`;
+        console.log('Sending to:', botServerUrl);
+
         const response = await fetch(botServerUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
           },
           body: JSON.stringify(exportData),
+        }).catch(err => {
+          console.error('Fetch error:', err);
+          throw err;
         });
 
         if (!response.ok) {
-          throw new Error(`Ошибка при отправке данных (${response.status}): ${await response.text()}`);
+          const errorText = await response.text();
+          console.error('Server error:', errorText);
+          throw new Error(`Server error: ${response.status} - ${errorText}`);
         }
 
-        console.log('Маршрут успешно отправлен на сервер бота.');
+        console.log('Export successful, attempting to close WebApp...');
+        console.log('Telegram WebApp available:', !!window.Telegram?.WebApp);
 
-        // Закрываем Web App (с проверкой доступности)
+        // Попытка закрыть WebApp
+        if (window.Telegram?.WebApp?.expand) {
+          window.Telegram.WebApp.expand(); // Расширяем на всякий случай
+        }
+
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();
         } else {
-          console.log('Telegram WebApp не доступен, имитация закрытия');
-          // Альтернативные действия, например, показ сообщения
-          alert('Маршрут успешно экспортирован!');
-          // Или скрытие карты
+          console.warn('Telegram WebApp close method not available');
+          alert('Маршрут успешно экспортирован! Закройте окно вручную.');
+          // Альтернативные действия
           document.getElementById('map').style.display = 'none';
         }
+
       } catch (error) {
-        console.error('Ошибка при экспорте маршрута:', error);
-        alert('Произошла ошибка при экспорте маршрута: ' + error.message);
+        console.error('Export failed:', error);
+        alert('Ошибка при экспорте: ' + error.message);
       }
     });
 
