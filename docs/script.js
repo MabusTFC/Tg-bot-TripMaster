@@ -289,8 +289,10 @@ async function initMap() {
       try {
         console.log('Export button clicked');
 
+        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4'; // ⚠️ Не делайте так в продакшене!
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
+        const userId = getUserId(); // Ваша функция для получения user_id
 
         if (!selectedRoute) {
           alert('Выберите маршрут перед экспортом.');
@@ -302,7 +304,7 @@ async function initMap() {
           route: selectedRoute,
         };
 
-        const botServerUrl = `${SERVER_URL}/api/export-route`;
+        const botServerUrl = `${SERVER_URL}/api/save-final-routes`;
         console.log('Sending to:', botServerUrl);
 
         const response = await fetch(botServerUrl, {
@@ -319,16 +321,27 @@ async function initMap() {
           throw new Error(`Server error: ${response.status} - ${errorText}`);
         }
 
-        // Получаем PDF файл в ответ
-        const pdfBlob = await response.blob();
-        const pdfUrl = URL.createObjectURL(pdfBlob);
+        console.log('Export successful, attempting to close WebApp...');
 
-        // Открываем PDF в новой вкладке (для тестирования)
-        window.open(pdfUrl, '_blank');
-
-        // Для Telegram WebApp - закрываем приложение
+        // Основной способ закрытия WebApp
         if (window.Telegram?.WebApp?.close) {
+          // Важно: сначала расширить, потом закрыть
+          window.Telegram.WebApp.expand();
           window.Telegram.WebApp.close();
+        }
+        // Альтернативный способ для Mini Apps
+        else if (window.Telegram?.WebApp?.sendData) {
+          window.Telegram.WebApp.sendData(JSON.stringify({
+            action: 'close',
+            data: { status: 'success' }
+          }));
+          window.Telegram.WebApp.close();
+        }
+        // Если WebApp API недоступен (тестирование в браузере)
+        else {
+          console.warn('Telegram WebApp API not available');
+          // Имитация закрытия для тестирования
+          document.body.innerHTML = '<h1>Маршрут успешно экспортирован!</h1><p>Это окно можно закрыть.</p>';
         }
 
       } catch (error) {
