@@ -287,7 +287,6 @@ async function initMap() {
 
     document.getElementById('export-pdf').addEventListener('click', async () => {
       try {
-        // Получаем выбранный маршрут
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
 
@@ -305,7 +304,7 @@ async function initMap() {
         console.log('Экспортируемые данные:', exportData);
 
         // Отправляем JSON на сервер бота
-        const botServerUrl = `${SERVER_URL}/api/save-final-routes`; // Замените на URL вашего бота
+        const botServerUrl = `${SERVER_URL}/api/save-final-routes`;
         const response = await fetch(botServerUrl, {
           method: 'POST',
           headers: {
@@ -320,13 +319,19 @@ async function initMap() {
 
         console.log('Маршрут успешно отправлен на сервер бота.');
 
-        // Закрываем Web App
+        // Закрываем Web App (с проверкой доступности)
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();
+        } else {
+          console.log('Telegram WebApp не доступен, имитация закрытия');
+          // Альтернативные действия, например, показ сообщения
+          alert('Маршрут успешно экспортирован!');
+          // Или скрытие карты
+          document.getElementById('map').style.display = 'none';
         }
       } catch (error) {
         console.error('Ошибка при экспорте маршрута:', error);
-        alert('Произошла ошибка при экспорте маршрута.');
+        alert('Произошла ошибка при экспорте маршрута: ' + error.message);
       }
     });
 
