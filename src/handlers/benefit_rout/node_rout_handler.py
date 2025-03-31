@@ -115,7 +115,7 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
 
     # Отправка маршрутов на сервер
     user_id = callback_query.from_user.id  # ID пользователя из Telegram
-    server_url = "https://b5a3-45-8-147-174.ngrok-free.app/api/save-routes"
+    server_url = "https://6660-45-8-147-174.ngrok-free.app/api/save-routes"
     response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes}, verify = False)
 
     if response.status_code != 200:
@@ -159,7 +159,7 @@ async def handle_web_app_data(callback_query: CallbackQuery):
             return
 
         # Запрашиваем маршруты с сервера
-        server_url = f"https://b5a3-45-8-147-174.ngrok-free.app/api/final-routes?user_id={user_id}"
+        server_url = f"https://6660-45-8-147-174.ngrok-free.app/api/final-routes?user_id={user_id}"
         response = requests.get(server_url)
 
         if response.status_code == 200:
