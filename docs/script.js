@@ -414,13 +414,13 @@ async function initMap() {
             halign: 'center'
           },
           columnStyles: {
-            0: { halign: 'left', cellWidth: 31 },
-            1: { halign: 'left', cellWidth: 31 },
-            2: { halign: 'left', cellWidth: 21 },
-            3: { halign: 'left', cellWidth: 21 },
-            4: { halign: 'center', cellWidth: 16 },
-            5: { halign: 'center', cellWidth: 16 },
-            6: { halign: 'center', cellWidth: 21 }
+            0: { halign: 'left', cellWidth: 38 },  
+            1: { halign: 'left', cellWidth: 38 },
+            2: { halign: 'left', cellWidth: 25 },
+            3: { halign: 'left', cellWidth: 25 },
+            4: { halign: 'center', cellWidth: 20 },
+            5: { halign: 'center', cellWidth: 20 },
+            6: { halign: 'center', cellWidth: 25 }
           },
           margin: { top: 12 }
         });
