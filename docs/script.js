@@ -313,7 +313,7 @@ async function initMap() {
         doc.rect(0, 0, doc.internal.pageSize.getWidth(), 30, 'F');
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(18);
-        doc.setFont('Roboto', 'bold');
+        doc.setFont('Roboto', 'normal');
         doc.text('МАРШРУТ ПУТЕШЕСТВИЯ', 105, 20, { align: 'center' });
 
         // Основные параметры документа
@@ -324,7 +324,7 @@ async function initMap() {
         // Информация о маршруте
         doc.setTextColor(...primaryColor);
         doc.setFontSize(12);
-        doc.setFont('Roboto', 'bold');
+        doc.setFont('Roboto', 'normal');
         doc.text('ОБЩАЯ ИНФОРМАЦИЯ', 14, yPos);
         yPos += lineHeight;
 
@@ -342,7 +342,7 @@ async function initMap() {
 
         // Рассчитываем время пребывания в каждом городе
         if (selectedRoute.full_path.length > 1) {
-          doc.setFont('Roboto', 'bold');
+          doc.setFont('Roboto', 'normal');
           doc.text('ВРЕМЯ ПРЕБЫВАНИЯ В ГОРОДАХ', 14, yPos);
           yPos += lineHeight;
 
@@ -389,7 +389,7 @@ async function initMap() {
         ]);
 
         doc.autoTable({
-          startY: yPos + 10, // Добавляем отступ перед таблицей
+          startY: yPos + 50, // Добавляем отступ перед таблицей
           head: headers,
           body: rows,
           theme: 'grid',
@@ -416,11 +416,11 @@ async function initMap() {
           columnStyles: {
             0: { halign: 'left', cellWidth: 30 },
             1: { halign: 'left', cellWidth: 30 },
-            2: { halign: 'left', cellWidth: 20 },
-            3: { halign: 'left', cellWidth: 20 },
-            4: { halign: 'center', cellWidth: 15 },
-            5: { halign: 'center', cellWidth: 15 },
-            6: { halign: 'center', cellWidth: 20 }
+            2: { halign: 'left', cellWidth: 40 },
+            3: { halign: 'left', cellWidth: 40 },
+            4: { halign: 'center', cellWidth: 25 },
+            5: { halign: 'center', cellWidth: 25 },
+            6: { halign: 'center', cellWidth: 30 }
           },
           margin: { top: 10 }
         });
