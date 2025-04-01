@@ -389,7 +389,7 @@ async function initMap() {
         ]);
 
         doc.autoTable({
-          startY: yPos + 20, // Добавляем отступ перед таблицей
+          startY: yPos + 25, // Добавляем отступ перед таблицей
           head: headers,
           body: rows,
           theme: 'grid',
@@ -418,9 +418,9 @@ async function initMap() {
             1: { halign: 'left', cellWidth: 30 },
             2: { halign: 'left', cellWidth: 20 },
             3: { halign: 'left', cellWidth: 20 },
-            4: { halign: 'center', cellWidth: 25 },
-            5: { halign: 'center', cellWidth: 25 },
-            6: { halign: 'center', cellWidth: 30 }
+            4: { halign: 'center', cellWidth: 15 },
+            5: { halign: 'center', cellWidth: 15 },
+            6: { halign: 'center', cellWidth: 20 }
           },
           margin: { top: 10 }
         });
