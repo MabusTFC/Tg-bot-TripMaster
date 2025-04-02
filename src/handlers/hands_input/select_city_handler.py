@@ -18,6 +18,8 @@ from handlers.utils.keyboards import (
 
 from handlers.utils.state_machine import RoutStates
 
+from database.database_manager import save_route_db
+
 router = Router()
 
 @router.callback_query(lambda c: c.data.startswith("select_"))
@@ -29,6 +31,7 @@ async def select_city(callback_query: CallbackQuery, state: FSMContext):
     route = user_data.get("route", [])
     user_days = user_data.get("user_days", [])
     user_days_dict = dict(user_days)
+
 
     if city_index >= len(route):
         await callback_query.answer("Ошибка! Город не найден.")
@@ -51,7 +54,12 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     start_date = user_data.get("start_date")
     user_days = user_data.get("user_days", {})
 
+    tg_id = callback_query.from_user.id
+    await save_route_db(tg_id, route)
+
+
     final_selection = [(city, user_days.get(city, 1)) for city in route]
+
 
     await state.update_data(final_selection=final_selection)
     await state.set_state(RoutStates.FINAL_ROUTE)

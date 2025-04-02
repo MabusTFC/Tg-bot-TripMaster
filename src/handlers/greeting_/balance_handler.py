@@ -11,7 +11,7 @@ from handlers.utils.keyboards import (
     get_balance_keyboard,
     get_greetings_keyboard
 )
-from src.database.database_manager import update_balance
+from database.database_manager import update_balance
 
 router = Router()
 
@@ -28,8 +28,7 @@ async def balance_handler(callback_query: CallbackQuery):
 
 @router.callback_query(lambda c: c.data.startswith("add_10_tokens") or c.data.startswith("add_20_tokens") or c.data.startswith("add_50_tokens"))
 async def balance_update_handler(callback_query: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    tg_id = data.get("tg_id")
+    tg_id = callback_query.from_user.id
 
     if tg_id is None:
         await callback_query.message.reply("Ошибка: пользователь не аутентифицирован.")
@@ -48,7 +47,7 @@ async def balance_update_handler(callback_query: CallbackQuery, state: FSMContex
 
     await update_balance(tg_id, amount)
     await callback_query.message.answer(
-        caption = f"Ваш баланс пополнен на {amount} единиц.",
+        text = f"Ваш баланс пополнен на {amount} единиц.",
         parse_mode="Markdown",
         reply_markup=await get_greetings_keyboard(),
     )

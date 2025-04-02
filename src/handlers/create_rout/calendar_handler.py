@@ -37,7 +37,15 @@ async def process_start_date(callback_query: CallbackQuery, state: FSMContext):
         await process_end_date(callback_query, state)
         return
 
+
     selected_date = callback_query.data.split("_")[1]
+    selected_date_obj = datetime.datetime.strptime(selected_date, "%Y-%m-%d")
+    today = datetime.datetime.now().date()
+
+    if selected_date_obj.date() < today:
+        await callback_query.answer("❌ Нельзя выбрать прошедшую дату!")
+        return
+
     await state.update_data(start_date=selected_date)
 
     await callback_query.message.edit_text(

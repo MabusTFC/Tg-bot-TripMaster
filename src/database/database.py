@@ -19,24 +19,22 @@ async def init_db():
     async with pool.acquire() as conn:
         await conn.execute("""
             CREATE TABLE IF NOT EXISTS Users (
-                id SERIAL PRIMARY KEY,
-                tg_id BIGINT UNIQUE NOT NULL,
+                tg_id BIGINT PRIMARY KEY,
                 balance NUMERIC DEFAULT 0,
                 yandex_calendar TEXT
             );
 
             CREATE TABLE IF NOT EXISTS Paths (
                 id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                citys TEXT[],  -- Массив городов
-                user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE
+                citys TEXT[],  
+                user_id BIGINT REFERENCES Users(tg_id) ON DELETE CASCADE
             );
 
             CREATE TABLE IF NOT EXISTS UnSavedPaths (
                 id SERIAL PRIMARY KEY,
                 name TEXT NOT NULL,
-                citys TEXT[],  -- Массив городов
-                user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE
+                citys TEXT[],  
+                user_id BIGINT REFERENCES Users(tg_id) ON DELETE CASCADE
             );
         """)
 

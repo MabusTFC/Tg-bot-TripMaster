@@ -29,7 +29,8 @@ from handlers.greeting_ import (
     manual_handler,
     support_handler,
     google_calendar_handler,
-    balance_handler
+    balance_handler,
+    saved_routes_handler,
 )
 
 from config import (
@@ -63,7 +64,9 @@ async def main():
     dp.include_router(work_calendar_handler.router)
     dp.include_router(google_calendar_handler.router)
     dp.include_router(balance_handler.router)
+    dp.include_router(saved_routes_handler.router)
     dp.startup.register(on_startup)
+
     app = web.Application()
     webhook_requests_handler = SimpleRequestHandler(
         dispatcher=dp,

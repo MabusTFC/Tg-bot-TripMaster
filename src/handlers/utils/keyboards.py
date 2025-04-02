@@ -8,12 +8,17 @@ from aiogram.types import (
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from database.database_manager import citys_list_db
+
+
 async def get_greetings_keyboard():
     inline_kb_list = [
         [InlineKeyboardButton(text="Инструкция", callback_data="manual")],
         [InlineKeyboardButton(text="Создать маршрут", callback_data="create_trip")],
         [InlineKeyboardButton(text="Поолнить баланс", callback_data="balance")],
         [InlineKeyboardButton(text="Календарь", callback_data="g_calendar")],
+        [InlineKeyboardButton(text="Настройка Календаря событий", callback_data="settings_calendar")],
+        [InlineKeyboardButton(text="Сохраненные маршруты", callback_data="saved_routes")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
@@ -171,3 +176,20 @@ async def get_balance_keyboard():
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
+async def get_cities_keyboard(tg_id: int):
+    citys = await citys_list_db(tg_id)
+    print(f"🔹 Городa из БД: {citys}")
+
+    citys = list(citys)
+    if not citys:
+        return None
+
+    buttons = [
+        InlineKeyboardButton(text=city, callback_data=f"city_{city}") for city in citys
+    ]
+
+    print(f"✅ Созданные кнопки: {buttons}")
+
+    return InlineKeyboardMarkup(inline_keyboard=[[button] for button in buttons])
