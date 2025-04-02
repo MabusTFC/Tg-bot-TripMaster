@@ -21,7 +21,8 @@ async def init_db():
             CREATE TABLE IF NOT EXISTS Users (
                 tg_id BIGINT PRIMARY KEY,
                 balance NUMERIC DEFAULT 0,
-                yandex_calendar TEXT
+                yandex_calendar TEXT,
+                role TEXT DEFAULT 'user'
             );
 
             CREATE TABLE IF NOT EXISTS Paths (
