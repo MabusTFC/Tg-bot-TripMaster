@@ -299,22 +299,82 @@ async function initMap() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // Решение 1: Используем стандартный шрифт с поддержкой кириллицы
+        // Устанавливаем шрифт
         doc.addFont('https://cdn.jsdelivr.net/npm/roboto-font@0.1.0/fonts/Roboto/roboto-regular-webfont.ttf', 'Roboto', 'normal');
         doc.setFont('Roboto');
 
-        // Решение 2: Альтернатива - использовать шрифт 'Arial Unicode MS' (если доступен)
-        // doc.setFont('Arial Unicode MS');
+        // Цвета для оформления
+        const primaryColor = [44, 62, 80];
+        const secondaryColor = [52, 152, 219];
+        const lightColor = [236, 240, 241];
 
         // Заголовок
-        doc.setFontSize(20);
-        doc.text('Маршрут путешествия', 105, 20, { align: 'center' });
+        doc.setFillColor(...primaryColor);
+        doc.rect(0, 0, doc.internal.pageSize.getWidth(), 30, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(18);
+        doc.setFont('Roboto', 'normal');
+        doc.text('МАРШРУТ ПУТЕШЕСТВИЯ', 105, 20, { align: 'center' });
+
+        // Основные параметры документа
+        let yPos = 40; // Начальная позиция Y после заголовка
+        const lineHeight = 7;
+        const sectionGap = 10;
 
         // Информация о маршруте
+        doc.setTextColor(...primaryColor);
         doc.setFontSize(12);
-        doc.text(`Маршрут: ${selectedRoute.route.join(' → ')}`, 14, 30);
-        doc.text(`Общая цена: ${selectedRoute.total_price} руб.`, 14, 40);
-        doc.text(`Общая длительность: ${selectedRoute.total_duration.toFixed(2)} часов`, 14, 50);
+        doc.setFont('Roboto', 'normal');
+        doc.text('ОБЩАЯ ИНФОРМАЦИЯ', 14, yPos);
+        yPos += lineHeight;
+
+        doc.setDrawColor(...lightColor);
+        doc.line(14, yPos, 60, yPos);
+        yPos += sectionGap;
+
+        doc.setFont('Roboto', 'normal');
+        doc.text(`Маршрут: ${selectedRoute.route.join(' → ')}`, 14, yPos);
+        yPos += lineHeight;
+        doc.text(`Общая стоимость: ${selectedRoute.total_price} руб.`, 14, yPos);
+        yPos += lineHeight;
+        doc.text(`Общая длительность: ${selectedRoute.total_duration.toFixed(2)} часов`, 14, yPos);
+        yPos += sectionGap;
+
+        // Рассчитываем время пребывания в каждом городе
+        if (selectedRoute.full_path.length > 1) {
+          doc.setFont('Roboto', 'normal');
+          doc.text('ВРЕМЯ ПРЕБЫВАНИЯ В ГОРОДАХ', 14, yPos);
+          yPos += lineHeight;
+
+          doc.setDrawColor(...lightColor);
+          doc.line(14, yPos, 80, yPos);
+          yPos += sectionGap;
+
+          doc.setFont('Roboto', 'normal');
+
+          for (let i = 0; i < selectedRoute.full_path.length - 1; i++) {
+            const currentSegment = selectedRoute.full_path[i];
+            const nextSegment = selectedRoute.full_path[i + 1];
+
+            if (currentSegment.arrival_datetime && nextSegment.departure_datetime) {
+              const arrival = new Date(currentSegment.arrival_datetime);
+              const departure = new Date(nextSegment.departure_datetime);
+              const stayDuration = (departure - arrival) / (1000 * 60 * 60); // в часах
+
+              const cityName = currentSegment.destination || 'N/A';
+              const days = Math.floor(stayDuration / 24);
+              const hours = Math.floor(stayDuration % 24);
+
+              let stayText = `${cityName}: `;
+              if (days > 0) stayText += `${days} дн. `;
+              stayText += `${hours} ч.`;
+
+              doc.text(stayText, 14, yPos);
+              yPos += lineHeight;
+            }
+          }
+          yPos += sectionGap;
+        }
 
         // Таблица
         const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Цена", "Длительность"]];
@@ -329,22 +389,47 @@ async function initMap() {
         ]);
 
         doc.autoTable({
-          startY: 60,
+          startY: yPos + 20, // Добавляем отступ перед таблицей
           head: headers,
           body: rows,
           theme: 'grid',
           headStyles: {
-            fillColor: [100, 100, 100],
+            fillColor: secondaryColor,
             textColor: 255,
-            fontStyle: 'bold'
+            fontStyle: 'bold',
+            fontSize: 10
+          },
+          bodyStyles: {
+            textColor: primaryColor,
+            fontSize: 9
+          },
+          alternateRowStyles: {
+            fillColor: [245, 245, 245]
           },
           styles: {
-            font: 'Roboto', // Указываем шрифт для таблицы
-            cellPadding: 3,
-            fontSize: 10,
-            valign: 'middle'
-          }
+            font: 'Roboto',
+            cellPadding: 4,
+            fontSize: 9,
+            valign: 'middle',
+            halign: 'center'
+          },
+          columnStyles: {
+            0: { halign: 'left', cellWidth: 38 },  
+            1: { halign: 'left', cellWidth: 38 },
+            2: { halign: 'left', cellWidth: 25 },
+            3: { halign: 'left', cellWidth: 25 },
+            4: { halign: 'center', cellWidth: 20 },
+            5: { halign: 'center', cellWidth: 20 },
+            6: { halign: 'center', cellWidth: 25 }
+          },
+          margin: { top: 12 }
         });
+
+        // Футер
+        const finalY = doc.lastAutoTable.finalY || yPos;
+        doc.setFontSize(10);
+        doc.setTextColor(150, 150, 150);
+        doc.text(`Сгенерировано ${new Date().toLocaleDateString()}`, 105, finalY + 20, { align: 'center' });
 
         // Отправка PDF
         const pdfBlob = doc.output('blob');
