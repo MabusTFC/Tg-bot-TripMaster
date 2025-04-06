@@ -6,11 +6,13 @@ from aiogram import Router, types
 
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
-
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from urllib.parse import urlencode
 
 from handlers.utils.state_machine import RoutStates
 from handlers.utils.keyboards import get_zveno_rout_keyboard
 from Algorithm.FindCheapestWay import get_routes
+from config import MAP_URL, SERVER_URL
 
 router = Router()
 
@@ -115,7 +117,7 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
 
     # Отправка маршрутов на сервер
     user_id = callback_query.from_user.id  # ID пользователя из Telegram
-    server_url = "https://6660-45-8-147-174.ngrok-free.app/api/save-routes"
+    server_url = SERVER_URL
     response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes}, verify = False)
 
     if response.status_code != 200:
@@ -123,10 +125,9 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
         return
 
     # Создание клавиатуры с кнопкой для открытия карты
-    from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-    from urllib.parse import urlencode
 
-    base_url = "https://mabustfc.github.io/Tg-bot-TripMaster"
+
+    base_url = MAP_URL
     params = urlencode({"user_id": user_id})
     full_url = f"{base_url}?{params}"
 
