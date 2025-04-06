@@ -71,7 +71,6 @@ async function initMap() {
   try {
     let routes = [];
 
-    // Определение, запущено ли приложение в Telegram
     const userId = getUserId();
     routes = await fetchUserRoutes(userId);
 
@@ -86,16 +85,27 @@ async function initMap() {
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    // Отрисовка городов
-    Object.keys(cityCoordinates).forEach(city => {
+    // Сбор уникальных городов из всех маршрутов
+    const uniqueCities = new Set();
+    routes.forEach(routeData => {
+      routeData.full_path.forEach(segment => {
+        uniqueCities.add(segment.origin);
+        uniqueCities.add(segment.destination);
+      });
+    });
+
+    // Отрисовка только тех городов, которые есть в маршрутах
+    uniqueCities.forEach(city => {
       const coords = cityCoordinates[city];
-      L.circleMarker(coords, {
-        radius: 8,
-        color: "black",
-        fillColor: "white",
-        fillOpacity: 1
-      }).addTo(map)
-        .bindTooltip(city, { permanent: true, direction: "top" });
+      if (coords) {
+        L.circleMarker(coords, {
+          radius: 8,
+          color: "black",
+          fillColor: "white",
+          fillOpacity: 1
+        }).addTo(map)
+          .bindTooltip(city, { permanent: true, direction: "top" });
+      }
     });
 
     // Создание массива цветов для маршрутов

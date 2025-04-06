@@ -94,6 +94,9 @@ def fetch_train_prices(origin, destination, current_date):
                 price = distance_km * base_price_per_km * train_coeff * carriage_coeff * dynamic_coeff
                 price = round(price, -2)
 
+            departure_datetime = datetime.fromisoformat(segment["departure"].replace("Z", "+00:00"))
+            arrival_datetime = datetime.fromisoformat(segment["arrival"].replace("Z", "+00:00"))
+
             train_info = {
                 "origin": segment["from"]["title"],
                 "destination": segment["to"]["title"],
@@ -139,7 +142,7 @@ def print_detailed_trains(trains, currency="RUB"):
 if __name__ == "__main__":
     origin = "Москва"
     destination = "Санкт-Петербург"
-    departure_date = datetime(2025, 4, 3)
+    departure_date = datetime(2025, 7, 29)
 
     result = fetch_train_prices(origin, destination, departure_date)
     if result:
