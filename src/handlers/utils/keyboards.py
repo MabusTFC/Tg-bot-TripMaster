@@ -3,12 +3,18 @@ from calendar import monthrange
 
 from aiogram.types import (
     InlineKeyboardButton,
-    InlineKeyboardMarkup
+    InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 )
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from database.database_manager import citys_list_db
+from database.database_manager import (
+    citys_list_db,
+    get_all_managers_list
+)
+
+
+
 
 
 async def get_greetings_keyboard():
@@ -193,3 +199,89 @@ async def get_cities_keyboard(tg_id: int):
     print(f"✅ Созданные кнопки: {buttons}")
 
     return InlineKeyboardMarkup(inline_keyboard=[[button] for button in buttons])
+
+
+async def get_manager_keyboard():
+    buttons = [
+        [KeyboardButton(text="График новых пользователей")],
+        [KeyboardButton(text="График популярности городов")]
+    ]
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+
+async def get_admin_keyboard():
+    buttons = [
+        [KeyboardButton(text="Добавить менеджера")],
+        [KeyboardButton(text="Удалить менеджера")],
+        [KeyboardButton(text="График новых пользователей")],
+        [KeyboardButton(text="График популярности городов")]
+    ]
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
+
+async def get_list_manager_keyboard():
+    kb = InlineKeyboardBuilder()
+
+    managers_list = await get_all_managers_list()
+
+    for manager in managers_list:
+        kb.row(InlineKeyboardButton(text=manager, callback_data=f"delete_manager_{manager}"))
+
+    return kb.as_markup(resize_keyboard=True)
+
+
+async def get_agreement_dell_keyboard(manager_teg):
+    kb = [[InlineKeyboardButton(text="✅ Да", callback_data=f"confirm_delete_{manager_teg}")],
+          [InlineKeyboardButton(text="❌ Отмена", callback_data=f"cancel_delete")]
+          ]
+    return InlineKeyboardMarkup(inline_keyboard=kb)
+
+
+async def get_calendar_admin_keyboard(year: int = None, month: int = None) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardBuilder()
+
+    today = datetime.now()
+    current_year, current_month, current_day = today.year, today.month, today.day
+
+    if year is None:
+        year = today.year
+    if month is None:
+        month = today.month
+
+    first_day_weekday, days_in_month = monthrange(year, month)
+    first_day_weekday = first_day_weekday % 7
+
+    prev_month = 12 if month == 1 else month - 1
+    next_month = 1 if month == 12 else month + 1
+    prev_year = year - 1 if month == 1 else year
+    next_year = year + 1 if month == 12 else year
+
+    keyboard.row(
+        InlineKeyboardButton(text="←", callback_data=f"change_month-{prev_year}-{prev_month:02d}"),
+        InlineKeyboardButton(text=f"{month:02d}-{year}", callback_data="ignore"),
+        InlineKeyboardButton(text="→", callback_data=f"change_month-{next_year}-{next_month:02d}"),
+    )
+
+    days_of_week = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+    keyboard.row(*[InlineKeyboardButton(text=day, callback_data="ignore") for day in days_of_week])
+
+    week_row = []
+    for _ in range(first_day_weekday):
+        week_row.append(InlineKeyboardButton(text="-", callback_data="ignore"))
+
+    for day in range(1, days_in_month + 1):
+        date_str = f"{year}-{month:02d}-{day:02d}"
+        week_row.append(
+            InlineKeyboardButton(text=f"{day:02d}", callback_data=f"date_{date_str}")
+        )
+
+        if len(week_row) == 7:
+            keyboard.row(*week_row)
+            week_row = []
+
+    while len(week_row) < 7:
+        week_row.append(InlineKeyboardButton(text="-", callback_data="ignore"))
+    if any(button.text != "-" for button in week_row):
+        keyboard.row(*week_row)
+
+    keyboard.row(InlineKeyboardButton(text="Вернуться в Меню", callback_data="menu"))
+    return keyboard.as_markup(resize_keyboard=True, one_time_keyboard=True)
+
