@@ -22,7 +22,9 @@ async def init_db():
                 tg_id BIGINT PRIMARY KEY,
                 balance NUMERIC DEFAULT 0,
                 yandex_calendar TEXT,
-                role TEXT DEFAULT 'user'
+                code_autorization_google TEXT DEFAULT '',
+                name TEXT UNIQUE,
+                registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
             CREATE TABLE IF NOT EXISTS Paths (
@@ -36,6 +38,12 @@ async def init_db():
                 name TEXT NOT NULL,
                 citys TEXT[],  
                 user_id BIGINT REFERENCES Users(tg_id) ON DELETE CASCADE
+            );
+            
+            CREATE TABLE IF NOT EXISTS manager (
+                id SERIAL PRIMARY KEY,
+                name TEXT UNIQUE NOT NULL,
+                role TEXT NOT NULL
             );
         """)
 

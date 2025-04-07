@@ -32,7 +32,6 @@ async def select_city(callback_query: CallbackQuery, state: FSMContext):
     user_days = user_data.get("user_days", [])
     user_days_dict = dict(user_days)
 
-
     if city_index >= len(route):
         await callback_query.answer("Ошибка! Город не найден.")
         return

@@ -3,12 +3,18 @@ from calendar import monthrange
 
 from aiogram.types import (
     InlineKeyboardButton,
-    InlineKeyboardMarkup
+    InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 )
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from database.database_manager import citys_list_db
+from database.database_manager import (
+    citys_list_db,
+    get_all_managers_list
+)
+
+
+
 
 
 async def get_greetings_keyboard():
@@ -82,7 +88,7 @@ async def get_calendar_keyboard(year: int = None, month: int = None) -> InlineKe
 async def get_selection_keyboard():
     inline_kb_list = [
         [InlineKeyboardButton(text="Найти наиболее подходящий маршрут из списка городов", callback_data="benefit_rout")],
-        [InlineKeyboardButton(text="Ввести вручную промежуточные города итогового маршрута", callback_data="hands_input")],
+        #[InlineKeyboardButton(text="Ввести вручную промежуточные города итогового маршрута", callback_data="hands_input")],
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
@@ -159,6 +165,15 @@ async def get_zveno_rout_keyboard(days: int, max_days: int):
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
+async def get_number_keyboard_zveno(city: str, current_days: int, max_days: int):
+    buttons = [
+        InlineKeyboardButton(text=f"{i}дн", callback_data=f"choose_number_zveno|{city}|{i}") for i in range(1, max_days + 1)
+    ]
+
+    rows = [buttons[i:i + 7] for i in range(0, len(buttons), 7)]
+
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
 async def get_google_calendar_keyboard():
     buttons = [
         [InlineKeyboardButton(text="Авторизация гугл", callback_data="authorization")],
@@ -179,17 +194,55 @@ async def get_balance_keyboard():
 
 
 async def get_cities_keyboard(tg_id: int):
-    citys = await citys_list_db(tg_id)
-    print(f"🔹 Городa из БД: {citys}")
+    paths = await citys_list_db(tg_id)
 
-    citys = list(citys)
-    if not citys:
+    if not paths:
         return None
 
+    buttons = []
+    for i, route in enumerate(paths, start=1):
+        label = f"{i}. " + ", ".join(route)
+        callback_data = f"route_{i}"
+        buttons.append(
+            [InlineKeyboardButton(text=label, callback_data=callback_data)]
+        )
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
+
+
+async def get_manager_keyboard():
     buttons = [
-        InlineKeyboardButton(text=city, callback_data=f"city_{city}") for city in citys
+        [KeyboardButton(text="График новых пользователей")],
+        [KeyboardButton(text="График популярности городов")]
     ]
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
-    print(f"✅ Созданные кнопки: {buttons}")
+async def get_admin_keyboard():
+    buttons = [
+        [KeyboardButton(text="Добавить менеджера")],
+        [KeyboardButton(text="Удалить менеджера")],
+        [KeyboardButton(text="График новых пользователей")],
+        [KeyboardButton(text="График популярности городов")]
+    ]
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
-    return InlineKeyboardMarkup(inline_keyboard=[[button] for button in buttons])
+async def get_list_manager_keyboard():
+    kb = InlineKeyboardBuilder()
+
+    managers_list = await get_all_managers_list()
+
+    for manager in managers_list:
+        kb.row(InlineKeyboardButton(text=manager, callback_data=f"delete_manager_{manager}"))
+
+    return kb.as_markup(resize_keyboard=True)
+
+
+async def get_agreement_dell_keyboard(manager_teg):
+    kb = [[InlineKeyboardButton(text="✅ Да", callback_data=f"confirm_delete_{manager_teg}")],
+          [InlineKeyboardButton(text="❌ Отмена", callback_data=f"cancel_delete")]
+          ]
+    return InlineKeyboardMarkup(inline_keyboard=kb)
+
+
+
+

@@ -11,7 +11,7 @@
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap"
   />
 
-  <!-- Подключение вашего CSS -->
+  <!-- Подключение CSS -->
   <link rel="stylesheet" href="Style.css" />
 
   <!-- Подключение Leaflet CSS -->
@@ -20,6 +20,7 @@
   <!-- Подключение Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+  <!-- Библиотеки для экспорта в PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
@@ -30,7 +31,7 @@
   <!-- Панель управления (фильтры) -->
   <div id="controls">
     <div id="filters-container">
-      <!-- Контейнер с фильтрами -->
+      <!-- Прокручиваемый контент (фильтры, поля ввода, информация о маршруте) -->
       <div id="filters-content">
         <!-- Выпадающий список выбора маршрута -->
         <div class="form-group">
@@ -38,44 +39,27 @@
           <select id="route-select" class="input-field"></select>
         </div>
 
-
         <!-- Линия-разделитель -->
         <div class="divider"></div>
 
-        <!-- Блок фильтров: Радио кнопки -->
+        <!-- Блок с радиокнопками -->
         <div class="form-group">
           <h4 class="filters-title">Фильтры</h4>
           <div class="radio-buttons-container">
-            <!-- Первая радиокнопка -->
             <div class="filter-group">
               <label for="cheapest-route" class="radio-label">
-                <input
-                  type="radio"
-                  name="route-type"
-                  id="cheapest-route"
-                  value="cheapest"
-                />
+                <input type="radio" name="route-type" id="cheapest-route" value="cheapest" />
                 Самый дешевый
               </label>
             </div>
-
-            <!-- Вторая радиокнопка -->
             <div class="filter-group">
               <label for="shortest-route" class="radio-label">
-                <input
-                  type="radio"
-                  name="route-type"
-                  id="shortest-route"
-                  value="shortest"
-                />
+                <input type="radio" name="route-type" id="shortest-route" value="shortest" />
                 Самый короткий
               </label>
             </div>
-
-
           </div>
         </div>
-
 
         <!-- Линия-разделитель -->
         <div class="divider"></div>
@@ -83,12 +67,7 @@
         <!-- Блок фильтров: По цене -->
         <div class="form-group ruble-input-group">
           <h4 class="filters-title" for="max-price">Максимальная цена</h4>
-          <input
-            type="number"
-            id="max-price"
-            placeholder="50 000"
-            class="input-field"
-          />
+          <input type="number" id="max-price" placeholder="50 000" class="input-field" />
         </div>
 
         <!-- Линия-разделитель -->
@@ -97,28 +76,26 @@
         <!-- Блок фильтров: По дате -->
         <div class="form-group">
           <h4 class="filters-title" for="max-date">Максимальная дата завершения</h4>
-          <input
-            type="date"
-            id="max-date"
-            class="input-field"
-          />
+          <input type="date" id="max-date" class="input-field" />
         </div>
 
-        <!-- Контейнер для информации о маршруте -->
-            <div id="route-details" class="form-group">
-              <h4 class="filters-title">Информация о маршруте</h4>
-              <div id="route-summary"></div> <!-- Основная информация -->
-              <div id="route-detailed-info"></div> <!-- Детальная информация -->
-            </div>
+        <!-- Дополнительный разделитель между датой и информацией о маршруте -->
+        <div class="divider"></div>
 
+        <!-- Контейнер для информации о маршруте -->
+        <div id="route-details" class="form-group">
+          <h4 class="filters-title">Информация о маршруте</h4>
+          <div id="route-summary"></div>
+          <div id="route-detailed-info"></div>
+        </div>
       </div>
 
-      <!-- Кнопка Применить -->
-      <button id="apply-filters" class="apply-button">Применить</button>
-      <!-- Добавьте кнопку в HTML -->
-      <button id="export-pdf">Экспорт в PDF</button>
-
-
+      <!-- Блок с кнопками (не прокручивается) -->
+      <div class="buttons-container">
+        <button id="apply-filters" class="apply-button">Применить</button>
+        <!-- Кнопка Экспорт в PDF -->
+        <button id="export-pdf" class="apply-button export-pdf-button">Экспорт в PDF</button>
+      </div>
     </div>
   </div>
 

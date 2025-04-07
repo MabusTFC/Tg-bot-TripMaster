@@ -5,13 +5,17 @@ from handlers.utils.keyboards import get_cities_keyboard
 
 router = Router()
 
+
 @router.callback_query(lambda c: c.data == "saved_routes")
-async def show_cities(message: types.Message):
-    keyboard = await get_cities_keyboard(message.from_user.id)
+async def show_cities(callback: types.CallbackQuery):
+    keyboard = await get_cities_keyboard(callback.from_user.id)
+
     if keyboard:
-        await message.answer("Cохраненные города", reply_markup=keyboard)
+        await callback.message.answer("Сохранённые города:", reply_markup=keyboard)
     else:
-        await message.answer("У вас нет сохранённых маршрутов.")
+        await callback.message.answer("У вас нет сохранённых маршрутов.")
+
+    await callback.answer()
 
 '''
     Метод для выбора города, как вариация улучшения/доработки
