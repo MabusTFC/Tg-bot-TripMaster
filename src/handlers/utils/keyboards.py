@@ -185,20 +185,20 @@ async def get_balance_keyboard():
 
 
 async def get_cities_keyboard(tg_id: int):
-    citys = await citys_list_db(tg_id)
-    print(f"🔹 Городa из БД: {citys}")
+    paths = await citys_list_db(tg_id)
 
-    citys = list(citys)
-    if not citys:
+    if not paths:
         return None
 
-    buttons = [
-        InlineKeyboardButton(text=city, callback_data=f"city_{city}") for city in citys
-    ]
+    buttons = []
+    for i, route in enumerate(paths, start=1):
+        label = f"{i}. " + ", ".join(route)
+        callback_data = f"route_{i}"
+        buttons.append(
+            [InlineKeyboardButton(text=label, callback_data=callback_data)]
+        )
 
-    print(f"✅ Созданные кнопки: {buttons}")
-
-    return InlineKeyboardMarkup(inline_keyboard=[[button] for button in buttons])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
 async def get_manager_keyboard():

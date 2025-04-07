@@ -42,10 +42,11 @@ async def save_route_db(tg_id: int, citys: list[str]):
 async def citys_list_db(tg_id: int):
     pool = await connect_db()
     async with pool.acquire() as conn:
-        citys = await conn.fetchval(
-                "SELECT citys FROM Paths WHERE user_id = (SELECT tg_id FROM Users WHERE tg_id = $1) LIMIT 1;", tg_id)
-
-    return citys
+        result = await conn.fetch("""
+                SELECT citys FROM Paths
+                WHERE user_id = $1
+            """, tg_id)
+        return [record["citys"] for record in result]
 
 async def get_user_role_from_manager(name: str) -> str | None:
     pool = await connect_db()
