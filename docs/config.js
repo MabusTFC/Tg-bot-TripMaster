@@ -119,3 +119,14 @@ export const cityCoordinates = {
     "Буэнос-Айрес": [-34.6037, -58.3816], // Буэнос-Айрес, Аргентина
     "Сан-Паулу": [-23.5505, -46.6333] // Сан-Паулу, Бразилия
 };
+
+export const DB_CONFIG = {
+  user: 'postgres',
+  password: '12345',
+  host: 'localhost',
+  port: 5432,
+  database: 'tripmaster',
+  ssl: {
+    rejectUnauthorized: false // Для разработки, в продакшене нужно настроить правильно
+  }
+};

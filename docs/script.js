@@ -1,9 +1,30 @@
 import { cityCoordinates } from './config.js';
-
+import { Client } from 'pg-browser';
 
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
 const SERVER_URL = 'https://6660-45-8-147-174.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
 
+function saveRouteDirectly(userId, routeData) {
+  const client = new Client(DB_CONFIG);
+
+  try {
+    await client.connect();
+
+    const result = await client.query(`
+      INSERT INTO Paths (citys, selected_route, user_id)
+      VALUES ($1, $2, $3)
+      RETURNING id
+    `, [routeData.route, routeData, userId]);
+
+    console.log('Маршрут сохранен с ID:', result.rows[0].id);
+    return true;
+  } catch (error) {
+    console.error('Ошибка сохранения:', error);
+    return false;
+  } finally {
+    await client.end();
+  }
+}
 
 function getUserId() {
     const isTelegramWebApp = window.Telegram && window.Telegram.WebApp;
@@ -305,95 +326,205 @@ async function initMap() {
     }, { passive: true });
 
    document.getElementById('export-pdf').addEventListener('click', async () => {
-        try {
-            const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
-            const selectedRoute = routes[selectedRouteIndex];
-            const userId = getUserId();
-
-            if (!selectedRoute) {
-                alert('Выберите маршрут перед экспортом.');
-                return;
-            }
-
-            // 1. Сначала сохраняем маршрут в базу данных
-            try {
-                const saveResponse = await fetch('/api/save-route', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        user_id: userId,
-                        cities: selectedRoute.route,
-                        route_details: selectedRoute
-                    })
-                });
-
-                if (!saveResponse.ok) {
-                    throw new Error('Ошибка сохранения маршрута в базу данных');
-                }
-
-                console.log('Маршрут успешно сохранен в базу данных');
-            } catch (saveError) {
-                console.error('Ошибка при сохранении маршрута:', saveError);
-                // Можно продолжить генерацию PDF даже если сохранение не удалось
-            }
-
-            // 2. Затем генерируем PDF (ваш существующий код)
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // ... (остальной код генерации PDF остается без изменений)
-
-            // 3. Отправка PDF в Telegram (ваш существующий код)
-            const pdfBlob = doc.output('blob');
-            const formData = new FormData();
-            formData.append('document', pdfBlob, 'travel_route.pdf');
-            formData.append('chat_id', userId);
-
-            const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
-
-            const keyboard = [
-                [
-                    {
-                        text: 'Добавить путешествие в календарь',
-                        callback_data: 'add_event'
-                    }
-                ]
-            ];
-
-            const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.ok) {
-                const messageId = (await response.json()).result.message_id;
-
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: userId,
-                        message_id: messageId,
-                        reply_markup: {
-                            inline_keyboard: keyboard
-                        }
-                    })
-                });
-
-                alert('PDF успешно отправлен!');
-            } else {
-                throw new Error('Ошибка отправки PDF');
-            }
-
-            if (window.Telegram?.WebApp?.close) {
-                window.Telegram.WebApp.close();
-            }
-        } catch (error) {
-            console.error('Ошибка:', error);
-            alert('Произошла ошибка: ' + error.message);
+      try {
+        const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
+        const selectedRoute = routes[selectedRouteIndex];
+        const userId = getUserId();
+        await saveRouteDirectly(userId, selectedRoute);
+        if (!selectedRoute) {
+          alert('Выберите маршрут перед экспортом.');
+          return;
         }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Устанавливаем шрифт
+        doc.addFont('https://cdn.jsdelivr.net/npm/roboto-font@0.1.0/fonts/Roboto/roboto-regular-webfont.ttf', 'Roboto', 'normal');
+        doc.setFont('Roboto');
+
+        // Цвета для оформления
+        const primaryColor = [44, 62, 80];
+        const secondaryColor = [52, 152, 219];
+        const lightColor = [236, 240, 241];
+
+        // Заголовок
+        doc.setFillColor(...primaryColor);
+        doc.rect(0, 0, doc.internal.pageSize.getWidth(), 30, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(18);
+        doc.setFont('Roboto', 'normal');
+        doc.text('МАРШРУТ ПУТЕШЕСТВИЯ', 105, 20, { align: 'center' });
+
+        // Основные параметры документа
+        let yPos = 40; // Начальная позиция Y после заголовка
+        const lineHeight = 7;
+        const sectionGap = 10;
+
+        // Информация о маршруте
+        doc.setTextColor(...primaryColor);
+        doc.setFontSize(12);
+        doc.setFont('Roboto', 'normal');
+        doc.text('ОБЩАЯ ИНФОРМАЦИЯ', 14, yPos);
+        yPos += lineHeight;
+
+        doc.setDrawColor(...lightColor);
+        doc.line(14, yPos, 60, yPos);
+        yPos += sectionGap;
+
+        doc.setFont('Roboto', 'normal');
+        doc.text(`Маршрут: ${selectedRoute.route.join(' → ')}`, 14, yPos);
+        yPos += lineHeight;
+        doc.text(`Общая стоимость: ${selectedRoute.total_price} руб.`, 14, yPos);
+        yPos += lineHeight;
+        doc.text(`Общая длительность: ${selectedRoute.total_duration.toFixed(2)} часов`, 14, yPos);
+        yPos += sectionGap;
+
+        // Рассчитываем время пребывания в каждом городе
+       if (selectedRoute.full_path.length > 1) {
+          doc.setFont('Roboto', 'normal');
+          doc.text('ВРЕМЯ ПРЕБЫВАНИЯ В ГОРОДАХ', 14, yPos);
+          yPos += lineHeight;
+
+          doc.setDrawColor(...lightColor);
+          doc.line(14, yPos, 80, yPos);
+          yPos += sectionGap;
+
+          doc.setFont('Roboto', 'normal');
+
+          // Проходим по всем городам маршрута (кроме последнего)
+          for (let i = 0; i < selectedRoute.route.length - 1; i++) {
+            const city = selectedRoute.route[i];
+            const nextSegment = selectedRoute.full_path[i];
+            const prevSegment = selectedRoute.full_path[i - 1];
+
+            // Время прибытия в город (если это не первый город)
+            const arrivalTime = prevSegment ? new Date(prevSegment.arrival_datetime) : new Date(selectedRoute.start_date);
+
+            // Время отправления из города
+            const departureTime = new Date(nextSegment.departure_datetime);
+
+            // Рассчитываем продолжительность пребывания в часах
+            const stayDurationHours = (departureTime - arrivalTime) / (1000 * 60 * 60);
+
+            doc.text(`${city}: ${stayDurationHours.toFixed(2)} часов`, 14, yPos);
+            yPos += lineHeight;
+          }
+
+          yPos += sectionGap;
+        }
+
+
+
+        // Таблица
+        const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Тип", "Цена", "Длительность"]];
+        const rows = selectedRoute.full_path.map(segment => [
+          segment.departure_datetime ? new Date(segment.departure_datetime).toLocaleString() : 'N/A',
+          segment.arrival_datetime ? new Date(segment.arrival_datetime).toLocaleString() : 'N/A',
+          segment.origin || 'N/A',
+          segment.destination || 'N/A',
+          segment.flight_number || segment.train_number || 'N/A',
+          segment.transport_type === 'avia' ? 'Авиа' : 'ЖД',
+          segment.price ? `${segment.price} руб.` : 'N/A',
+          segment.duration_hours ? `${segment.duration_hours.toFixed(2)} ч.` : 'N/A'
+        ]);
+
+        doc.autoTable({
+          startY: yPos + 20,
+          head: headers,
+          body: rows,
+          theme: 'grid',
+          headStyles: {
+            fillColor: secondaryColor,
+            textColor: 255,
+            fontStyle: 'bold',
+            fontSize: 10
+          },
+          bodyStyles: {
+            textColor: primaryColor,
+            fontSize: 9
+          },
+          alternateRowStyles: {
+            fillColor: [245, 245, 245]
+          },
+          styles: {
+            font: 'Roboto',
+            cellPadding: 4,
+            fontSize: 9,
+            valign: 'middle',
+            halign: 'center'
+          },
+          columnStyles: {
+            0: { halign: 'left', cellWidth: 35 },
+            1: { halign: 'left', cellWidth: 35 },
+            2: { halign: 'left', cellWidth: 20 },
+            3: { halign: 'left', cellWidth: 20 },
+            4: { halign: 'center', cellWidth: 15 },
+            5: { halign: 'center', cellWidth: 15 },
+            6: { halign: 'center', cellWidth: 15 },
+            7: { halign: 'center', cellWidth: 20 }
+          },
+          margin: { top: 12 }
+        });
+
+        // Футер
+        const finalY = doc.lastAutoTable.finalY || yPos;
+        doc.setFontSize(10);
+        doc.setTextColor(150, 150, 150);
+        doc.text(`Сгенерировано ${new Date().toLocaleDateString()}`, 105, finalY + 20, { align: 'center' });
+
+        // Отправка PDF
+        const pdfBlob = doc.output('blob');
+        const formData = new FormData();
+        formData.append('document', pdfBlob, 'travel_route.pdf');
+        formData.append('chat_id', userId);
+
+        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
+
+        // Создание inline-клавиатуры
+        const keyboard = [
+          [
+            {
+              text: 'Добавить путешествие в календарь',
+              callback_data: 'add_event'
+            }
+          ]
+        ];
+
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
+          method: 'POST',
+          body: formData
+        });
+
+        // Если отправка прошла успешно, отправляем сообщение с кнопкой
+        if (response.ok) {
+          const messageId = (await response.json()).result.message_id;
+
+          // Отправка сообщения с кнопкой
+          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: userId,
+              message_id: messageId,
+              reply_markup: {
+                inline_keyboard: keyboard
+              }
+            })
+          });
+
+          alert('PDF успешно отправлен!');
+        } else {
+          throw new Error('Ошибка отправки PDF');
+        }
+
+        if (window.Telegram?.WebApp?.close) {
+          window.Telegram.WebApp.close();
+        }
+      } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка: ' + error.message);
+      }
     });
 
 
