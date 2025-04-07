@@ -5,7 +5,7 @@ import json
 file_path = "../docs/routes.json"
 
 # URL сервера
-url = "https://b5a3-45-8-147-174.ngrok-free.app/api/save-routes"
+url = "https://6660-45-8-147-174.ngrok-free.app/api/save-routes"
 
 # Чтение данных из файла routes.json
 with open(file_path, 'r', encoding='utf-8') as file:

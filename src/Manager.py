@@ -6,24 +6,17 @@ import json
 cites = ["Москва", "Владивосток"]
 start_city = cites[0],0
 end_city = cites[1],0
-departure_date = datetime.date(2025, 5, 29)
+departure_date = datetime.date(2025, 4, 29)
 
 segments = [
     [("Челябинск", 5), ("Санкт-Петербург", 3), ("Самара", 2)],
     [("Казань", 4), ("Екатеринбург", 2), ("Пермь", 3)],
-    [("Сочи",3), ("Новосибирск", 2)],
+    [("Сочи",3), ("Красноярск", 2)],
 
 ]
 
 # Вызов функции
 routes = get_routes(start_city, end_city, departure_date, segments)
 
-def save_routes_to_json(routes, file_path):
-    # Преобразуем маршруты в JSON
-    with open(file_path, 'w', encoding='utf-8') as file:
-        json.dump(routes, file, ensure_ascii=False, indent=4)
-
-# Пример использования
-save_routes_to_json(routes, './docs/routes.json')
 # Вывод найденных маршрутов
 print(json.dumps(routes, indent=4, ensure_ascii=False))

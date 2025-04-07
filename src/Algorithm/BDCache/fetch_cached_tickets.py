@@ -2,7 +2,7 @@ from psycopg2 import sql
 import json
 from datetime import date, datetime  # Импортируем date и datetime
 from src.Algorithm.BDCache.DBConnect import get_ticket_cache_db_connection
-from src.Algorithm.MyParser import fetch_prices
+from src.Algorithm.ParseAvia import fetch_prices
 from src.Algorithm.ParseTrain import fetch_train_prices
 
 
