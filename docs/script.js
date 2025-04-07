@@ -381,25 +381,31 @@ async function initMap() {
 
               doc.text(stayText, 14, yPos);
               yPos += lineHeight;
+            } else {
+              // Обработка случаев, когда даты не заданы
+              const cityName = currentSegment.destination || 'N/A';
+              doc.text(`${cityName}: Даты не заданы`, 14, yPos);
+              yPos += lineHeight;
             }
           }
           yPos += sectionGap;
         }
 
         // Таблица
-        const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Цена", "Длительность"]];
+        const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Тип", "Цена", "Длительность"]];
         const rows = selectedRoute.full_path.map(segment => [
           segment.departure_datetime ? new Date(segment.departure_datetime).toLocaleString() : 'N/A',
           segment.arrival_datetime ? new Date(segment.arrival_datetime).toLocaleString() : 'N/A',
           segment.origin || 'N/A',
           segment.destination || 'N/A',
-          segment.flight_number || 'N/A',
+          segment.flight_number || segment.train_number || 'N/A',
+          segment.transport_type === 'avia' ? 'Авиа' : 'ЖД',
           segment.price ? `${segment.price} руб.` : 'N/A',
           segment.duration_hours ? `${segment.duration_hours.toFixed(2)} ч.` : 'N/A'
         ]);
 
         doc.autoTable({
-          startY: yPos + 20, // Добавляем отступ перед таблицей
+          startY: yPos + 20,
           head: headers,
           body: rows,
           theme: 'grid',
@@ -424,13 +430,14 @@ async function initMap() {
             halign: 'center'
           },
           columnStyles: {
-            0: { halign: 'left', cellWidth: 38 },  
-            1: { halign: 'left', cellWidth: 38 },
-            2: { halign: 'left', cellWidth: 25 },
-            3: { halign: 'left', cellWidth: 25 },
-            4: { halign: 'center', cellWidth: 20 },
-            5: { halign: 'center', cellWidth: 20 },
-            6: { halign: 'center', cellWidth: 25 }
+            0: { halign: 'left', cellWidth: 35 },
+            1: { halign: 'left', cellWidth: 35 },
+            2: { halign: 'left', cellWidth: 20 },
+            3: { halign: 'left', cellWidth: 20 },
+            4: { halign: 'center', cellWidth: 15 },
+            5: { halign: 'center', cellWidth: 15 },
+            6: { halign: 'center', cellWidth: 15 },
+            7: { halign: 'center', cellWidth: 20 }
           },
           margin: { top: 12 }
         });
@@ -464,6 +471,7 @@ async function initMap() {
         alert('Произошла ошибка: ' + error.message);
       }
     });
+
 
 
   } catch (error) {
