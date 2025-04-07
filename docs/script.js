@@ -376,7 +376,7 @@ async function initMap() {
 
             // Рассчитываем продолжительность пребывания в часах
             const stayDurationHours = (departureTime - arrivalTime) / (1000 * 60 * 60);
-            
+
             doc.text(`${city}: ${stayDurationHours.toFixed(2)} часов`, 14, yPos);
             yPos += lineHeight;
           }
@@ -450,13 +450,43 @@ async function initMap() {
         formData.append('chat_id', userId);
 
         const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
+
+        // Создание inline-клавиатуры
+        const keyboard = [
+          [
+            {
+              text: 'Добавить путешествие в календарь',
+              callback_data: 'add_event'
+            }
+          ]
+        ];
+
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
           method: 'POST',
           body: formData
         });
 
-        if (!response.ok) throw new Error('Ошибка отправки PDF');
-        alert('PDF успешно отправлен!');
+        // Если отправка прошла успешно, отправляем сообщение с кнопкой
+        if (response.ok) {
+          const messageId = (await response.json()).result.message_id;
+
+          // Отправка сообщения с кнопкой
+          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: userId,
+              message_id: messageId,
+              reply_markup: {
+                inline_keyboard: keyboard
+              }
+            })
+          });
+
+          alert('PDF успешно отправлен!');
+        } else {
+          throw new Error('Ошибка отправки PDF');
+        }
 
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();
