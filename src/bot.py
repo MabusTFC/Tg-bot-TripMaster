@@ -8,7 +8,10 @@ from aiogram.webhook.aiohttp_server import (
     setup_application,
 )
 
-from handlers.benefit_rout import node_rout_handler
+from handlers.benefit_rout import (
+    node_rout_handler,
+    chose_days_zveno_handler,
+)
 
 from handlers.create_rout import (
     calendar_handler,
@@ -22,8 +25,8 @@ from handlers.admin_hand import (
 
 from handlers.hands_input import (
     hands_input_handler,
-    change_days_handler,
-    chose_days_handler, 
+    #change_days_handler,
+    #chose_days_handler,
     select_city_handler,
     work_calendar_handler
 )
@@ -63,8 +66,8 @@ async def main():
     dp.include_router(hands_input_handler.router)
     dp.include_router(calendar_handler.router)
     dp.include_router(select_city_handler.router)
-    dp.include_router(change_days_handler.router)
-    dp.include_router(chose_days_handler.router)
+    #dp.include_router(change_days_handler.router)
+    #dp.include_router(chose_days_handler.router)
     dp.include_router(node_rout_handler.router)
     dp.include_router(work_calendar_handler.router)
     dp.include_router(google_calendar_handler.router)
@@ -72,6 +75,7 @@ async def main():
     dp.include_router(saved_routes_handler.router)
     dp.include_router(admin_handler.router)
     dp.include_router(manager_handler.router)
+    dp.include_router(chose_days_zveno_handler.router)
     dp.startup.register(on_startup)
 
     app = web.Application()
