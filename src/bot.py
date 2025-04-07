@@ -18,8 +18,6 @@ from handlers.create_rout import (
 from handlers.admin_hand import (
     admin_handler,
     manager_handler,
-    calendar_admin_handler,
-
 )
 
 from handlers.hands_input import (
@@ -74,7 +72,6 @@ async def main():
     dp.include_router(saved_routes_handler.router)
     dp.include_router(admin_handler.router)
     dp.include_router(manager_handler.router)
-    dp.include_router(calendar_admin_handler.router)
     dp.startup.register(on_startup)
 
     app = web.Application()

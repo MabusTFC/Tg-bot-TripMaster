@@ -24,6 +24,7 @@ router = Router()
 
 @router.message(Command("start"))
 async def auth_handler(message: types.Message, state: FSMContext):
+    await state.clear()
     user_name = message.from_user.first_name
     tg_id = message.from_user.id
     name = message.from_user.username

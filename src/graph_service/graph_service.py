@@ -34,7 +34,6 @@ async def statistic_citys_graph():
     if len(bars) > 2:
         bars[2].set_color('#cd7f32')  #3 место
 
-    # Настройка графика
     plt.xlabel('Города')
     plt.ylabel('Количество выборов')
     plt.title('Статистика популярности городов')
