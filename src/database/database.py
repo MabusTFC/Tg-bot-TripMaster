@@ -29,7 +29,8 @@ async def init_db():
 
             CREATE TABLE IF NOT EXISTS Paths (
                 id SERIAL PRIMARY KEY,
-                citys TEXT[],  
+                citys TEXT[],
+                selected_route JSONB,  -- Новый столбец для хранения полного маршрута в JSON
                 user_id BIGINT REFERENCES Users(tg_id) ON DELETE CASCADE
             );
 

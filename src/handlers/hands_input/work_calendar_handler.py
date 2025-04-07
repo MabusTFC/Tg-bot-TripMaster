@@ -19,9 +19,11 @@ import uuid
 from src.Google.config_g.config_google import *
 from pathlib import Path
 router = Router()
-
+from database.database_manager import *
 class AuthStates(StatesGroup):
-    waiting_for_auth_code = State()
+    waiting_for_auth_code_save = State()
+    waiting_for_auth_code_add = State()
+
 
 @router.callback_query(lambda c: c.data == "authorization")
 async def authorization_google(callback_query: CallbackQuery, state: FSMContext):
@@ -56,21 +58,63 @@ async def authorization_google(callback_query: CallbackQuery, state: FSMContext)
         await callback_query.message.answer(f'Ошибка при создании ссылки авторизации: {str(e)}')
 
 
-@router.callback_query(lambda c: c.data == "add_event")
-async def request_auth_code(callback_query: CallbackQuery, state: FSMContext):
-    await callback_query.message.answer(
-        "Пожалуйста, введите код авторизации, который вы получили после авторизации через Google:"
-    )
-    await state.set_state(AuthStates.waiting_for_auth_code)
-    await callback_query.answer()
+@router.callback_query(lambda c: c.data == "save_key")
+async def save_auth_code_handler(callback_query: CallbackQuery, state: FSMContext):
+    try:
+        user_id = callback_query.from_user.id
+        username = callback_query.from_user.username
 
 
-@router.message(AuthStates.waiting_for_auth_code)
-async def process_auth_code(message: Message, state: FSMContext):
+        await callback_query.message.answer(
+            "Пожалуйста, введите код авторизации, который вы получили после авторизации через Google:"
+        )
+        await state.set_state(AuthStates.waiting_for_auth_code_save)
+        await state.update_data(user_id=user_id, username=username)
+
+    except Exception as e:
+        await callback_query.message.answer(f"Произошла ошибка: {str(e)}")
+    finally:
+        await callback_query.answer()
+
+
+@router.message(AuthStates.waiting_for_auth_code_save)
+async def process_save_auth_code(message: Message, state: FSMContext):
     try:
         auth_code = message.text.strip()
-        await state.update_data(auth_code=auth_code)
+        data = await state.get_data()
+        user_id = data.get('user_id')
+        username = data.get('username')
 
+        if not auth_code:
+            await message.answer("Код авторизации не может быть пустым. Пожалуйста, попробуйте еще раз.")
+            return
+
+        await update_auth_code(user_id, auth_code)
+        await message.answer("Код авторизации успешно сохранен!")
+
+    except Exception as e:
+        await message.answer(f"Произошла ошибка при сохранении кода: {str(e)}")
+    finally:
+        await state.clear()
+
+
+@router.callback_query(lambda c: c.data == "add_event")
+async def add_event_to_calendar(callback_query: CallbackQuery, state: FSMContext):
+    try:
+        user_id = callback_query.from_user.id
+        auth_code = await get_auth_code(user_id)
+
+        if not auth_code:
+            await callback_query.message.answer(
+                "У вас нет сохраненного кода авторизации. Пожалуйста, сначала сохраните его через кнопку авторизации."
+            )
+            return
+
+        await callback_query.message.answer(
+            "Используем сохраненный код авторизации. Создаем события в календаре..."
+        )
+
+        # Получаем маршруты из состояния или файла
         data = await state.get_data()
         routes = data.get('routes', [])
         current_file = Path(__file__).absolute()
@@ -88,6 +132,7 @@ async def process_auth_code(message: Message, state: FSMContext):
             with open(routes_path, 'r', encoding='utf-8') as f:
                 routes = json.load(f)
 
+        # Авторизация и создание сервиса
         flow = Flow.from_client_secrets_file(
             'Google/config_g/credentials.json',
             scopes=SCOPES,
@@ -96,10 +141,10 @@ async def process_auth_code(message: Message, state: FSMContext):
         flow.fetch_token(code=auth_code)
         creds = flow.credentials
 
-        # Create calendar service
         service = build('calendar', 'v3', credentials=creds)
         events_added = 0
 
+        # Проверяем наличие календаря TripMaster
         calendar_list = service.calendarList().list().execute()
         trip_master_calendar = None
 
@@ -108,6 +153,7 @@ async def process_auth_code(message: Message, state: FSMContext):
                 trip_master_calendar = calendar
                 break
 
+        # Создаем календарь если его нет
         if not trip_master_calendar:
             new_calendar = {
                 'summary': 'TripMaster',
@@ -119,13 +165,14 @@ async def process_auth_code(message: Message, state: FSMContext):
         else:
             trip_master_calendar_id = trip_master_calendar['id']
 
+        # Добавляем события для каждого маршрута
         for route in routes:
             for path in route['full_path']:
                 start_time = datetime.fromisoformat(path['departure_datetime'])
                 end_time = datetime.fromisoformat(path['arrival_datetime'])
 
                 if start_time >= end_time:
-                    await message.answer(
+                    await callback_query.message.answer(
                         f"Ошибка: Дата начала события {path['origin']} -> {path['destination']} "
                         "должна быть раньше даты окончания."
                     )
@@ -146,121 +193,29 @@ async def process_auth_code(message: Message, state: FSMContext):
                     },
                 }
 
-                # Insert event into TripMaster calendar
-                service.events().insert(calendarId=trip_master_calendar_id, body=event).execute()
-                events_added += 1
+                try:
+                    service.events().insert(calendarId=trip_master_calendar_id, body=event).execute()
+                    events_added += 1
+                except Exception as e:
+                    await callback_query.message.answer(
+                        f"Ошибка при добавлении события {path['origin']} -> {path['destination']}: {str(e)}"
+                    )
 
-        await message.answer(f'Успешно добавлено {events_added} событий в календарь TripMaster')
-        await state.clear()
+        # Формируем ссылку на календарь
+        calendar_link = f"https://calendar.google.com/calendar/u/0/r?cid={trip_master_calendar_id}"
+
+        # Создаем кнопку с ссылкой
+        keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+            [types.InlineKeyboardButton(text="Открыть Google Календарь", url=calendar_link)]
+        ])
+
+        # Отправляем сообщение с кнопкой
+        await callback_query.message.answer(
+            f'Успешно добавлено {events_added} событий в календарь TripMaster',
+            reply_markup=keyboard
+        )
 
     except Exception as e:
-        await message.answer(f'Ошибка при добавлении событий в календарь: {str(e)}')
+        await callback_query.message.answer(f'Ошибка при добавлении событий в календарь: {str(e)}')
+    finally:
         await state.clear()
-
-@router.callback_query(lambda c: c.data == "print_calendar")
-async def export_calendar_to_pdf(callback_query: types.CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    routes = data.get('routes', [])
-    current_file = Path(__file__).absolute()
-
-    routes_path = (
-            current_file.parent
-            .parent
-            .parent
-            .parent
-            / 'docs'
-            / 'routes.json'
-    )
-    if not routes:
-        with open(routes_path, 'r', encoding='utf-8') as f:
-            routes = json.load(f)
-
-    pdf_filename = "travel_routes.pdf"
-    doc = SimpleDocTemplate(pdf_filename, pagesize=A4)
-    styles = getSampleStyleSheet()
-
-    try:
-        pdfmetrics.registerFont(TTFont('DejaVuSerif', 'DejaVuSerif.ttf'))
-        styles['Title'].fontName = 'DejaVuSerif'
-        styles['Normal'].fontName = 'DejaVuSerif'
-        styles['Heading2'].fontName = 'DejaVuSerif'
-    except:
-        pass
-
-    elements = []
-
-    title = Paragraph("Маршруты путешествий", styles['Title'])
-    elements.append(title)
-    elements.append(Spacer(1, 12))
-
-    for i, route in enumerate(routes, 1):
-        route_title = Paragraph(f"Маршрут #{i}", styles['Heading2'])
-        elements.append(route_title)
-
-        cities = " → ".join(route['route'])
-        elements.append(Paragraph(f"Города: {cities}", styles['Normal']))
-
-        price = f"{route['total_price']:,.2f}".replace(',', ' ') + " руб."
-        duration = f"{route['total_duration']:.1f} часов"
-        elements.append(Paragraph(f"Общая стоимость: {price}", styles['Normal']))
-        elements.append(Paragraph(f"Общая продолжительность: {duration}", styles['Normal']))
-        elements.append(Spacer(1, 12))
-
-        segments_data = [
-            ["Отправление", "Прибытие", "Откуда", "Куда", "Тип", "Цена", "Длительность"]
-        ]
-
-        for segment in route['full_path']:
-            # Format datetimes
-            dep_datetime = datetime.fromisoformat(segment['departure_datetime'].replace(' ', 'T'))
-            arr_datetime = datetime.fromisoformat(segment['arrival_datetime'].replace(' ', 'T'))
-
-            dep_str = dep_datetime.strftime("%d.%m %H:%M")
-            arr_str = arr_datetime.strftime("%d.%m %H:%M")
-
-            transport_type = "Авиа" if segment['transport_type'] == "avia" else "Поезд"
-            price = f"{segment['price']:,.2f}".replace(',', ' ') + " руб."
-            duration = f"{segment['duration_hours']:.1f} ч."
-
-            segments_data.append([
-                dep_str,
-                arr_str,
-                segment['origin'],
-                segment['destination'],
-                transport_type,
-                price,
-                duration
-            ])
-
-        table = Table(segments_data, colWidths=[70, 70, 90, 90, 60, 70, 60])  # Увеличил ширину столбцов
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, -1), 'DejaVuSerif'),
-            ('FONTSIZE', (0, 0), (-1, -1), 8),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ]))
-        elements.append(table)
-        elements.append(Spacer(1, 24))
-
-    doc.build(elements)
-
-    with open(pdf_filename, 'rb') as file:
-        pdf_data = file.read()
-
-        input_file = types.BufferedInputFile(
-            file=pdf_data,
-            filename=pdf_filename
-        )
-
-        await callback_query.bot.send_document(
-            chat_id=callback_query.from_user.id,
-            document=input_file,
-            caption="Ваши маршруты путешествий"
-        )
-
-    os.remove(pdf_filename)

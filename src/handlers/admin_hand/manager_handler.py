@@ -58,3 +58,5 @@ async def workload_graphic_handler(message: Message):
     )
     os.remove(graph_path)
 
+
+

@@ -116,3 +116,75 @@ async def get_new_users_by_day(conn: Connection) -> dict:
     stats = {record["reg_date"].strftime('%Y-%m-%d'): record["count"] for record in result}
 
     return stats
+
+async def update_auth_code(tg_id: int, auth_code: str):
+    pool = await connect_db()
+    async with pool.acquire() as conn:
+        await conn.execute("""
+            UPDATE Users 
+            SET code_autorization_google = $1 
+            WHERE tg_id = $2;
+        """, auth_code, tg_id)
+
+async def get_auth_code(tg_id: int) -> str | None:
+    pool = await connect_db()
+    async with pool.acquire() as conn:
+        return await conn.fetchval("""
+            SELECT code_autorization_google 
+            FROM Users 
+            WHERE tg_id = $1;
+        """, tg_id)
+
+async def has_auth_code(tg_id: int) -> bool:
+    pool = await connect_db()
+    async with pool.acquire() as conn:
+        code = await conn.fetchval("""
+            SELECT code_autorization_google 
+            FROM Users 
+            WHERE tg_id = $1 AND code_autorization_google != '';
+        """, tg_id)
+        return code is not None
+
+
+async def save_route_with_details(tg_id: int, cities: list[str], route_details: dict):
+    """
+    Сохраняет маршрут с деталями в JSON формате
+    :param tg_id: ID пользователя
+    :param cities: Список городов (для обратной совместимости)
+    :param route_details: Полная информация о маршруте в формате JSON
+    """
+    pool = await connect_db()
+    async with pool.acquire() as conn:
+        await conn.execute("""
+            INSERT INTO Paths (citys, selected_route, user_id)
+            VALUES ($1, $2, $3)
+        """, cities, route_details, tg_id)
+
+async def get_routes_with_details(tg_id: int) -> list[dict]:
+    """
+    Получает все маршруты пользователя с деталями
+    :param tg_id: ID пользователя
+    :return: Список словарей с полной информацией о маршрутах
+    """
+    pool = await connect_db()
+    async with pool.acquire() as conn:
+        records = await conn.fetch("""
+            SELECT id, citys, selected_route 
+            FROM Paths
+            WHERE user_id = $1
+        """, tg_id)
+        return [dict(record) for record in records]
+
+async def update_route_details(route_id: int, new_details: dict):
+    """
+    Обновляет детали конкретного маршрута
+    :param route_id: ID маршрута в таблице Paths
+    :param new_details: Новые детали маршрута в формате JSON
+    """
+    pool = await connect_db()
+    async with pool.acquire() as conn:
+        await conn.execute("""
+            UPDATE Paths
+            SET selected_route = $1
+            WHERE id = $2
+        """, new_details, route_id)
