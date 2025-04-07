@@ -1,5 +1,5 @@
 import { cityCoordinates } from './config.js';
-import { Client } from 'pg-browser';
+
 
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
 const SERVER_URL = 'https://6660-45-8-147-174.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
@@ -325,7 +325,7 @@ async function initMap() {
       }
     }, { passive: true });
 
-   document.getElementById('export-pdf').addEventListener('click', async () => {
+    document.getElementById('export-pdf').addEventListener('click', async () => {
       try {
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
