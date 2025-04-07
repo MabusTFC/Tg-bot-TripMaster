@@ -351,7 +351,7 @@ async function initMap() {
         yPos += sectionGap;
 
         // Рассчитываем время пребывания в каждом городе
-        if (selectedRoute.full_path.length > 1) {
+       if (selectedRoute.full_path.length > 1) {
           doc.setFont('Roboto', 'normal');
           doc.text('ВРЕМЯ ПРЕБЫВАНИЯ В ГОРОДАХ', 14, yPos);
           yPos += lineHeight;
@@ -362,34 +362,29 @@ async function initMap() {
 
           doc.setFont('Roboto', 'normal');
 
-          for (let i = 0; i < selectedRoute.full_path.length - 1; i++) {
-            const currentSegment = selectedRoute.full_path[i];
-            const nextSegment = selectedRoute.full_path[i + 1];
+          // Проходим по всем городам маршрута (кроме последнего)
+          for (let i = 0; i < selectedRoute.route.length - 1; i++) {
+            const city = selectedRoute.route[i];
+            const nextSegment = selectedRoute.full_path[i];
+            const prevSegment = selectedRoute.full_path[i - 1];
 
-            if (currentSegment.arrival_datetime && nextSegment.departure_datetime) {
-              const arrival = new Date(currentSegment.arrival_datetime);
-              const departure = new Date(nextSegment.departure_datetime);
-              const stayDuration = (departure - arrival) / (1000 * 60 * 60); // в часах
+            // Время прибытия в город (если это не первый город)
+            const arrivalTime = prevSegment ? new Date(prevSegment.arrival_datetime) : new Date(selectedRoute.start_date);
 
-              const cityName = currentSegment.destination || 'N/A';
-              const days = Math.floor(stayDuration / 24);
-              const hours = Math.floor(stayDuration % 24);
+            // Время отправления из города
+            const departureTime = new Date(nextSegment.departure_datetime);
 
-              let stayText = `${cityName}: `;
-              if (days > 0) stayText += `${days} дн. `;
-              stayText += `${hours} ч.`;
-
-              doc.text(stayText, 14, yPos);
-              yPos += lineHeight;
-            } else {
-              // Обработка случаев, когда даты не заданы
-              const cityName = currentSegment.destination || 'N/A';
-              doc.text(`${cityName}: Даты не заданы`, 14, yPos);
-              yPos += lineHeight;
-            }
+            // Рассчитываем продолжительность пребывания в часах
+            const stayDurationHours = (departureTime - arrivalTime) / (1000 * 60 * 60);
+            
+            doc.text(`${city}: ${stayDurationHours.toFixed(2)} часов`, 14, yPos);
+            yPos += lineHeight;
           }
+
           yPos += sectionGap;
         }
+
+
 
         // Таблица
         const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Тип", "Цена", "Длительность"]];
