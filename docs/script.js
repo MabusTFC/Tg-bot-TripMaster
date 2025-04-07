@@ -39,7 +39,11 @@ function getDetailedRouteInfo(routeData) {
   let detailedInfo = '';
 
   // Добавляем информацию о первом городе
-  detailedInfo += `<div class="step"><span class="step-city">${routeData.route[0]}</span></div>`;
+  detailedInfo += `
+    <div class="step">
+      <span class="step-city">${routeData.route[0]}</span>
+    </div>
+  `;
 
   // Проходим по всем сегментам маршрута (перелётам)
   routeData.full_path.forEach((segment, index) => {
@@ -48,23 +52,28 @@ function getDetailedRouteInfo(routeData) {
       <div class="step">
         <span class="step-flight">
           <b>Перелёт:</b> ${segment.origin} → ${segment.destination}<br>
-          Рейс: ${segment.flight_number}<br>
-          Отправление: ${new Date(segment.departure_datetime).toLocaleString()}<br>
-          Прибытие: ${new Date(segment.arrival_datetime).toLocaleString()}<br>
-          Цена: ${segment.price} руб.<br>
-          Длительность: ${segment.duration_hours.toFixed(2)} часов
+          <b>Рейс:</b> ${segment.flight_number}<br>
+          <b>Отправление:</b> ${new Date(segment.departure_datetime).toLocaleString()}<br>
+          <b>Прибытие:</b> ${new Date(segment.arrival_datetime).toLocaleString()}<br>
+          <b>Цена:</b> ${segment.price} руб.<br>
+          <b>Длительность:</b> ${segment.duration_hours.toFixed(2)} часов
         </span>
       </div>
     `;
 
-    // Добавляем информацию о следующем городе (кроме последнего шага)
+    // Добавляем следующий город (кроме последнего)
     if (index < routeData.route.length - 1) {
-      detailedInfo += `<div class="step"><span class="step-city">${routeData.route[index + 1]}</span></div>`;
+      detailedInfo += `
+        <div class="step">
+          <span class="step-city">${routeData.route[index + 1]}</span>
+        </div>
+      `;
     }
   });
 
   return detailedInfo;
 }
+
 
 
 async function initMap() {
