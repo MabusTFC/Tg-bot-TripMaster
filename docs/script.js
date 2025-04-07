@@ -351,7 +351,7 @@ async function initMap() {
         yPos += sectionGap;
 
         // Рассчитываем время пребывания в каждом городе
-        if (selectedRoute.full_path.length > 1) {
+       if (selectedRoute.full_path.length > 1) {
           doc.setFont('Roboto', 'normal');
           doc.text('ВРЕМЯ ПРЕБЫВАНИЯ В ГОРОДАХ', 14, yPos);
           yPos += lineHeight;
@@ -362,44 +362,45 @@ async function initMap() {
 
           doc.setFont('Roboto', 'normal');
 
-          for (let i = 0; i < selectedRoute.full_path.length - 1; i++) {
-            const currentSegment = selectedRoute.full_path[i];
-            const nextSegment = selectedRoute.full_path[i + 1];
+          // Проходим по всем городам маршрута (кроме последнего)
+          for (let i = 0; i < selectedRoute.route.length - 1; i++) {
+            const city = selectedRoute.route[i];
+            const nextSegment = selectedRoute.full_path[i];
+            const prevSegment = selectedRoute.full_path[i - 1];
 
-            if (currentSegment.arrival_datetime && nextSegment.departure_datetime) {
-              const arrival = new Date(currentSegment.arrival_datetime);
-              const departure = new Date(nextSegment.departure_datetime);
-              const stayDuration = (departure - arrival) / (1000 * 60 * 60); // в часах
+            // Время прибытия в город (если это не первый город)
+            const arrivalTime = prevSegment ? new Date(prevSegment.arrival_datetime) : new Date(selectedRoute.start_date);
 
-              const cityName = currentSegment.destination || 'N/A';
-              const days = Math.floor(stayDuration / 24);
-              const hours = Math.floor(stayDuration % 24);
+            // Время отправления из города
+            const departureTime = new Date(nextSegment.departure_datetime);
 
-              let stayText = `${cityName}: `;
-              if (days > 0) stayText += `${days} дн. `;
-              stayText += `${hours} ч.`;
+            // Рассчитываем продолжительность пребывания в часах
+            const stayDurationHours = (departureTime - arrivalTime) / (1000 * 60 * 60);
 
-              doc.text(stayText, 14, yPos);
-              yPos += lineHeight;
-            }
+            doc.text(`${city}: ${stayDurationHours.toFixed(2)} часов`, 14, yPos);
+            yPos += lineHeight;
           }
+
           yPos += sectionGap;
         }
 
+
+
         // Таблица
-        const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Цена", "Длительность"]];
+        const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Тип", "Цена", "Длительность"]];
         const rows = selectedRoute.full_path.map(segment => [
           segment.departure_datetime ? new Date(segment.departure_datetime).toLocaleString() : 'N/A',
           segment.arrival_datetime ? new Date(segment.arrival_datetime).toLocaleString() : 'N/A',
           segment.origin || 'N/A',
           segment.destination || 'N/A',
-          segment.flight_number || 'N/A',
+          segment.flight_number || segment.train_number || 'N/A',
+          segment.transport_type === 'avia' ? 'Авиа' : 'ЖД',
           segment.price ? `${segment.price} руб.` : 'N/A',
           segment.duration_hours ? `${segment.duration_hours.toFixed(2)} ч.` : 'N/A'
         ]);
 
         doc.autoTable({
-          startY: yPos + 20, // Добавляем отступ перед таблицей
+          startY: yPos + 20,
           head: headers,
           body: rows,
           theme: 'grid',
@@ -424,13 +425,14 @@ async function initMap() {
             halign: 'center'
           },
           columnStyles: {
-            0: { halign: 'left', cellWidth: 38 },  
-            1: { halign: 'left', cellWidth: 38 },
-            2: { halign: 'left', cellWidth: 25 },
-            3: { halign: 'left', cellWidth: 25 },
-            4: { halign: 'center', cellWidth: 20 },
-            5: { halign: 'center', cellWidth: 20 },
-            6: { halign: 'center', cellWidth: 25 }
+            0: { halign: 'left', cellWidth: 35 },
+            1: { halign: 'left', cellWidth: 35 },
+            2: { halign: 'left', cellWidth: 20 },
+            3: { halign: 'left', cellWidth: 20 },
+            4: { halign: 'center', cellWidth: 15 },
+            5: { halign: 'center', cellWidth: 15 },
+            6: { halign: 'center', cellWidth: 15 },
+            7: { halign: 'center', cellWidth: 20 }
           },
           margin: { top: 12 }
         });
@@ -448,13 +450,43 @@ async function initMap() {
         formData.append('chat_id', userId);
 
         const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
+
+        // Создание inline-клавиатуры
+        const keyboard = [
+          [
+            {
+              text: 'Добавить путешествие в календарь',
+              callback_data: 'add_event'
+            }
+          ]
+        ];
+
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
           method: 'POST',
           body: formData
         });
 
-        if (!response.ok) throw new Error('Ошибка отправки PDF');
-        alert('PDF успешно отправлен!');
+        // Если отправка прошла успешно, отправляем сообщение с кнопкой
+        if (response.ok) {
+          const messageId = (await response.json()).result.message_id;
+
+          // Отправка сообщения с кнопкой
+          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: userId,
+              message_id: messageId,
+              reply_markup: {
+                inline_keyboard: keyboard
+              }
+            })
+          });
+
+          alert('PDF успешно отправлен!');
+        } else {
+          throw new Error('Ошибка отправки PDF');
+        }
 
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();
@@ -464,6 +496,7 @@ async function initMap() {
         alert('Произошла ошибка: ' + error.message);
       }
     });
+
 
 
   } catch (error) {
