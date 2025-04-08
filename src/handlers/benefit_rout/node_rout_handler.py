@@ -19,7 +19,7 @@ from handlers.utils.keyboards import get_zveno_rout_keyboard
 from Algorithm.FindCheapestWay import get_routes
 from config import MAP_URL, SERVER_URL
 
-from handlers.utils.keyboards import get_greetings_keyboard
+from database.database_manager import save_route_db
 
 router = Router()
 
@@ -99,13 +99,15 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
     temp_cities = user_data.get("temp_cities", [])
     days_count = user_data.get("current_days_zveno", 1)
     zveno_list = user_data.get("zveno_list", [])
+    tg_id = callback_query.from_user.id
 
     if temp_cities:
         new_zveno = {city: days_count for city in temp_cities}
         zveno_list.append(new_zveno)
 
-    await state.update_data(zveno_list=zveno_list, temp_cities=[], current_days_zveno=1)
 
+    await state.update_data(zveno_list=zveno_list, temp_cities=[], current_days_zveno=1)
+    print(route, temp_cities, zveno_list,new_zveno)
     CITIES_PATH = Path("Algorithm/city_to_yandex_code.json")
 
     with open(CITIES_PATH, encoding="utf-8") as f:
@@ -114,7 +116,13 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
     # Преобразуем все названия в нижний регистр для быстрой проверки
     VALID_CITIES = set(city.lower() for city in CITY_DATA.keys())
 
-    invalid_cities = [city for city in route if city.lower() not in VALID_CITIES]
+    start_city = route[0], 0  # Начальный город
+    end_city = route[1], 0  # Конечный город
+    start_city_toDB = route[0]  # Начальный город
+    end_city_toDB = route[1]  # Конечный город
+    cities = [city for group in zveno_list for city in group]
+    cities = [start_city_toDB] + cities + [end_city_toDB]
+    invalid_cities = [city for city in cities if city.lower() not in VALID_CITIES]
 
     if invalid_cities:
         await callback_query.message.answer(
@@ -132,14 +140,17 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
 
 
 
+
     formatted_zveno_list = "\n".join(
         [f"{i + 1} звено: {zveno}" for i, zveno in enumerate(zveno_list)]
     )
 
 
-    start_city = route[0],0  # Начальный город
-    end_city = route[1],0 # Конечный город
+
+
     departure_date = datetime.strptime(start_date, "%Y-%m-%d")  # Дата отправления
+
+    await save_route_db(tg_id, cities)
 
     # Сегменты маршрута (пример данных)
     segments = [[(city, days) for city, days in group.items()] for group in zveno_list]
