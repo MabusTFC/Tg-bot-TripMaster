@@ -3,10 +3,9 @@ import { Client } from 'pg-browser';
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
 const SERVER_URL = 'https://6660-45-8-147-174.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
 
-function saveRouteDirectly(userId, routeData) {
-  const client = new Client(DB_CONFIG);
-
+async function saveRouteDirectly(userId, routeData) {
   try {
+    const client = new Client(DB_CONFIG);
     await client.connect();
 
     const result = await client.query(`
@@ -21,7 +20,7 @@ function saveRouteDirectly(userId, routeData) {
     console.error('Ошибка сохранения:', error);
     return false;
   } finally {
-    await client.end();
+    if (client) await client.end();
   }
 }
 
