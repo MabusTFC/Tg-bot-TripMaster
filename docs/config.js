@@ -120,13 +120,3 @@ export const cityCoordinates = {
     "Сан-Паулу": [-23.5505, -46.6333] // Сан-Паулу, Бразилия
 };
 
-export const DB_CONFIG = {
-  user: 'postgres',
-  password: '12345',
-  host: 'https://6660-45-8-147-174.ngrok-free.app/api/save-routes', // Или ваш ngrok-туннель (но это медленно)
-  port: 5432,
-  database: 'tripmaster',
-  ssl: {
-    rejectUnauthorized: false
-  }
-};

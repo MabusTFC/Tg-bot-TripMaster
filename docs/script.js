@@ -1,28 +1,8 @@
-import { cityCoordinates, DB_CONFIG} from './config.js';
-import { Client } from 'pg-browser';
+import { cityCoordinates } from './config.js';
+
+
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
 const SERVER_URL = 'https://6660-45-8-147-174.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
-
-async function saveRouteDirectly(userId, routeData) {
-  try {
-    const client = new Client(DB_CONFIG);
-    await client.connect();
-
-    const result = await client.query(`
-      INSERT INTO Paths (citys, selected_route, user_id)
-      VALUES ($1, $2, $3)
-      RETURNING id
-    `, [routeData.route, routeData, userId]);
-
-    console.log('Маршрут сохранен с ID:', result.rows[0].id);
-    return true;
-  } catch (error) {
-    console.error('Ошибка сохранения:', error);
-    return false;
-  } finally {
-    if (client) await client.end();
-  }
-}
 
 
 function getUserId() {
@@ -329,7 +309,7 @@ async function initMap() {
         const selectedRouteIndex = parseInt(document.getElementById('route-select').value);
         const selectedRoute = routes[selectedRouteIndex];
         const userId = getUserId();
-        await saveRouteDirectly(userId, selectedRoute);
+
         if (!selectedRoute) {
           alert('Выберите маршрут перед экспортом.');
           return;
