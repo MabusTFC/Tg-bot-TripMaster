@@ -13,7 +13,7 @@ async def manual_handler(callback_query: CallbackQuery):
         caption=MANUAL_MESSAGE,
         parse_mode="Markdown",
         reply_markup=await get_support_keyboard(),
-        photo=types.FSInputFile("img/guide.png"),
+        photo=types.FSInputFile("img/manual.jpeg"),
 
     )
     await callback_query.answer()

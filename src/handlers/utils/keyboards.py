@@ -28,9 +28,10 @@ async def get_greetings_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
 async def get_support_keyboard():
-    kb = InlineKeyboardBuilder()
-    kb.button(text="Техническая поддержка", callback_data="support")
-    return kb.adjust(1).as_markup()
+    kb = [[InlineKeyboardButton(text="Техническая поддержка", callback_data="support")],
+          [InlineKeyboardButton(text="Инструкция", callback_data="guide")]
+          ]
+    return InlineKeyboardMarkup(inline_keyboard=kb)
 
 
 async def get_calendar_keyboard(year: int = None, month: int = None) -> InlineKeyboardMarkup:

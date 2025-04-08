@@ -28,7 +28,8 @@ from handlers.hands_input import (
     #change_days_handler,
     #chose_days_handler,
     select_city_handler,
-    work_calendar_handler
+    work_calendar_handler,
+    manual_print_info
 )
 from database.database import init_db
 
@@ -38,7 +39,7 @@ from handlers.greeting_ import (
     support_handler,
     google_calendar_handler,
     balance_handler,
-    saved_routes_handler,
+    saved_routes_handler
 )
 
 from config import (
@@ -76,6 +77,7 @@ async def main():
     dp.include_router(admin_handler.router)
     dp.include_router(manager_handler.router)
     dp.include_router(chose_days_zveno_handler.router)
+    dp.include_router(manual_print_info.router)
     dp.startup.register(on_startup)
 
     app = web.Application()
