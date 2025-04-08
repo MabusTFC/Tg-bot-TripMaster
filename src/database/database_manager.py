@@ -188,3 +188,16 @@ async def update_route_details(route_id: int, new_details: dict):
             SET selected_route = $1
             WHERE id = $2
         """, new_details, route_id)
+
+
+async def get_user_balance(tg_id: int) -> int:
+    pool = await connect_db()
+    async with pool.acquire() as conn:
+        result = await conn.fetchrow(
+            "SELECT balance FROM Users WHERE tg_id = $1",
+            tg_id
+        )
+        if result:
+            return int(result['balance'])
+        else:
+            raise ValueError(f"Пользователь с tg_id {tg_id} не найден.")

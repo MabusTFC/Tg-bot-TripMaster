@@ -15,12 +15,13 @@ def fetch_cached_ticket(origin, destination, departure_date, transport_type):
         departure_date = datetime.combine(departure_date, datetime.min.time())
 
     # Подключение к базе данных
-    conn = get_ticket_cache_db_connection()
-    cursor = conn.cursor()
+
+    #conn = get_ticket_cache_db_connection()
+    #cursor = conn.cursor()
 
     try:
         # Попытка найти билеты в кеше
-        query = sql.SQL("""
+        '''query = sql.SQL("""
             SELECT response_data FROM ticket_cache
             WHERE origin = %s AND destination = %s AND departure_date = %s AND transport_type = %s
             ORDER BY created_at DESC LIMIT 1
@@ -30,7 +31,7 @@ def fetch_cached_ticket(origin, destination, departure_date, transport_type):
 
         if result:
             #print("Данные найдены в кеше.")
-            return result[0]  # Возвращаем JSON из базы данных
+            return result[0]  # Возвращаем JSON из базы данных'''
 
         # Если данных в кеше нет, делаем запрос
         if transport_type == "avia":
@@ -44,12 +45,12 @@ def fetch_cached_ticket(origin, destination, departure_date, transport_type):
             return None
 
         # Сохраняем ответ в кеш
-        insert_query = sql.SQL("""
+        '''insert_query = sql.SQL("""
             INSERT INTO ticket_cache (origin, destination, departure_date, transport_type, response_data)
             VALUES (%s, %s, %s, %s, %s)
         """)
         cursor.execute(insert_query, (origin, destination, departure_date, transport_type, json.dumps(api_response)))
-        conn.commit()
+        conn.commit()'''
 
         print("Данные получены и сохранены в кеш.")
         return api_response
@@ -58,6 +59,6 @@ def fetch_cached_ticket(origin, destination, departure_date, transport_type):
         print(f"Ошибка при работе с базой данных: {e}")
         return None
 
-    finally:
+    '''finally:
         cursor.close()
-        conn.close()
+        conn.close()'''

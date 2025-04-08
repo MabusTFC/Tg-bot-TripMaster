@@ -20,6 +20,8 @@ from handlers.utils.state_machine import (
     ManagerState
 )
 
+from src.database.database_manager import get_user_balance
+
 router = Router()
 
 @router.message(Command("start"))
@@ -28,6 +30,7 @@ async def auth_handler(message: types.Message, state: FSMContext):
     user_name = message.from_user.first_name
     tg_id = message.from_user.id
     name = message.from_user.username
+    balance = await get_user_balance(tg_id)
 
     role = await get_user_role_from_manager(name)
     await state.update_data(tg_id=tg_id)
@@ -35,7 +38,7 @@ async def auth_handler(message: types.Message, state: FSMContext):
     await add_user(tg_id, name)
     await message.answer_photo(
         photo = FSInputFile("img/logoTrip.png"),
-        caption=GREETING_MESSAGE.format(user_name=user_name),
+        caption=GREETING_MESSAGE.format(user_name=user_name, balance=balance),
         parse_mode="Markdown",
         reply_markup=await get_greetings_keyboard(),
     )

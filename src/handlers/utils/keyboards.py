@@ -21,17 +21,16 @@ async def get_greetings_keyboard():
     inline_kb_list = [
         [InlineKeyboardButton(text="Инструкция", callback_data="manual")],
         [InlineKeyboardButton(text="Создать маршрут", callback_data="create_trip")],
-        [InlineKeyboardButton(text="Поолнить баланс", callback_data="balance")],
+        [InlineKeyboardButton(text="Пополнить баланс", callback_data="balance")],
         [InlineKeyboardButton(text="Календарь", callback_data="g_calendar")],
         [InlineKeyboardButton(text="Сохраненные маршруты", callback_data="saved_routes")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
 async def get_support_keyboard():
-    kb = [[InlineKeyboardButton(text="Техническая поддержка", callback_data="support")],
-          [InlineKeyboardButton(text="Инструкция", callback_data="guide")]
-          ]
-    return InlineKeyboardMarkup(inline_keyboard=kb)
+    kb = InlineKeyboardBuilder()
+    kb.button(text="Техническая поддержка", callback_data="support")
+    return kb.adjust(1).as_markup()
 
 
 async def get_calendar_keyboard(year: int = None, month: int = None) -> InlineKeyboardMarkup:
@@ -177,7 +176,6 @@ async def get_number_keyboard_zveno(city: str, current_days: int, max_days: int)
 async def get_google_calendar_keyboard():
     buttons = [
         [InlineKeyboardButton(text="Авторизация гугл", callback_data="authorization")],
-        [InlineKeyboardButton(text="Сохранение ключа", callback_data="save_key")],
         [InlineKeyboardButton(text="Добавить путешествие в календарь", callback_data="add_event")]
     ]
 

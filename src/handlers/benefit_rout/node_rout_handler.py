@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 
 import requests
 import json
@@ -6,13 +7,19 @@ from aiogram import Router, types
 
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from aiogram.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    WebAppInfo
+)
 from urllib.parse import urlencode
 
 from handlers.utils.state_machine import RoutStates
 from handlers.utils.keyboards import get_zveno_rout_keyboard
 from Algorithm.FindCheapestWay import get_routes
 from config import MAP_URL, SERVER_URL
+
+from handlers.utils.keyboards import get_greetings_keyboard
 
 router = Router()
 
@@ -98,6 +105,32 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
         zveno_list.append(new_zveno)
 
     await state.update_data(zveno_list=zveno_list, temp_cities=[], current_days_zveno=1)
+
+    CITIES_PATH = Path("Algorithm/city_to_yandex_code.json")
+
+    with open(CITIES_PATH, encoding="utf-8") as f:
+        CITY_DATA = json.load(f)
+
+    # Преобразуем все названия в нижний регистр для быстрой проверки
+    VALID_CITIES = set(city.lower() for city in CITY_DATA.keys())
+
+    invalid_cities = [city for city in route if city.lower() not in VALID_CITIES]
+
+    if invalid_cities:
+        await callback_query.message.answer(
+            f"Некорректные города: {', '.join(invalid_cities)}\nПожалуйста, попробуйте снова."
+        )
+        await state.clear()
+        await callback_query.bot.send_message(
+            callback_query.from_user.id,
+            text="Возврат в начало...",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+                [InlineKeyboardButton(text="🔄 Начать заново", callback_data="create_trip")]
+            ])
+        )
+        return
+
+
 
     formatted_zveno_list = "\n".join(
         [f"{i + 1} звено: {zveno}" for i, zveno in enumerate(zveno_list)]
