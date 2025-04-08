@@ -3,7 +3,7 @@ from collections import Counter
 
 from asyncpg import Connection
 from database.database import connect_db
-
+import json
 
 async def add_user(tg_id: int, tg_tag: str):
     pool = await connect_db()
@@ -146,6 +146,7 @@ async def has_auth_code(tg_id: int) -> bool:
         return code is not None
 
 
+
 async def save_route_with_details(tg_id: int, cities: list[str], route_details: dict):
     """
     Сохраняет маршрут с деталями в JSON формате
@@ -153,12 +154,27 @@ async def save_route_with_details(tg_id: int, cities: list[str], route_details: 
     :param cities: Список городов (для обратной совместимости)
     :param route_details: Полная информация о маршруте в формате JSON
     """
+    if not route_details:
+        raise ValueError("route_details не может быть пустым")
+
+    # Добавляем дополнительную информацию в route_details
+    route_details.update({
+        "user_id": tg_id,
+        "saved_at": datetime.now().isoformat(),
+        "cities": cities  # Сохраняем список городов для быстрого доступа
+    })
+
+    # Преобразуем словарь в JSON-строку
+    route_details_json = json.dumps(route_details, ensure_ascii=False)
+
+    print(f"Сохранение маршрута для {tg_id}: cities={cities}")  # Логирование
+
     pool = await connect_db()
     async with pool.acquire() as conn:
         await conn.execute("""
             INSERT INTO Paths (citys, selected_route, user_id)
-            VALUES ($1, $2, $3)
-        """, cities, route_details, tg_id)
+            VALUES ($1, $2::jsonb, $3)
+        """, cities, route_details_json, tg_id)
 
 async def get_routes_with_details(tg_id: int) -> list[dict]:
     """
@@ -201,3 +217,4 @@ async def get_user_balance(tg_id: int) -> int:
             return int(result['balance'])
         else:
             raise ValueError(f"Пользователь с tg_id {tg_id} не найден.")
+

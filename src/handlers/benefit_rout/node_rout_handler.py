@@ -19,7 +19,7 @@ from handlers.utils.keyboards import get_zveno_rout_keyboard
 from Algorithm.FindCheapestWay import get_routes
 from config import MAP_URL, SERVER_URL
 
-from database.database_manager import save_route_db
+from database.database_manager import *
 
 router = Router()
 
@@ -105,21 +105,16 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
         new_zveno = {city: days_count for city in temp_cities}
         zveno_list.append(new_zveno)
 
-
     await state.update_data(zveno_list=zveno_list, temp_cities=[], current_days_zveno=1)
-    print(route, temp_cities, zveno_list,new_zveno)
-    CITIES_PATH = Path("Algorithm/city_to_yandex_code.json")
 
+    CITIES_PATH = Path("Algorithm/city_to_yandex_code.json")
     with open(CITIES_PATH, encoding="utf-8") as f:
         CITY_DATA = json.load(f)
 
-    # Преобразуем все названия в нижний регистр для быстрой проверки
     VALID_CITIES = set(city.lower() for city in CITY_DATA.keys())
 
-    start_city = route[0], 0  # Начальный город
-    end_city = route[1], 0  # Конечный город
-    start_city_toDB = route[0]  # Начальный город
-    end_city_toDB = route[1]  # Конечный город
+    start_city_toDB = route[0]
+    end_city_toDB = route[1]
     cities = [city for group in zveno_list for city in group]
     cities = [start_city_toDB] + cities + [end_city_toDB]
     invalid_cities = [city for city in cities if city.lower() not in VALID_CITIES]
@@ -138,39 +133,49 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
         )
         return
 
-
-
-
     formatted_zveno_list = "\n".join(
         [f"{i + 1} звено: {zveno}" for i, zveno in enumerate(zveno_list)]
     )
 
+    departure_date = datetime.strptime(start_date, "%Y-%m-%d")
 
-
-
-    departure_date = datetime.strptime(start_date, "%Y-%m-%d")  # Дата отправления
-
-    await save_route_db(tg_id, cities)
-
-    # Сегменты маршрута (пример данных)
+    # Получаем маршруты от алгоритма
     segments = [[(city, days) for city, days in group.items()] for group in zveno_list]
-    print(segments,start_city,end_city,type(departure_date))
+    routes = get_routes((route[0], 0), (route[1], 0), departure_date, segments)
 
-    # Вызов функции для получения маршрутов
-    routes = get_routes(start_city, end_city, departure_date, segments)
+    if not routes:
+        await callback_query.message.answer("Не удалось найти подходящие маршруты.")
+        return
 
-    # Отправка маршрутов на сервер
-    user_id = callback_query.from_user.id  # ID пользователя из Telegram
+    # Выбираем первый маршрут (или можно позволить пользователю выбрать)
+    selected_route = routes[0]
+
+    # Создаем полные данные маршрута в JSON формате
+    route_details = {
+        "route": selected_route["route"],
+        "total_price": selected_route["total_price"],
+        "total_duration": selected_route["total_duration"],
+        "full_path": selected_route["full_path"],
+        "start_date": selected_route["start_date"],
+        "end_date": selected_route["end_date"],
+        "user_id": tg_id,
+        "saved_at": datetime.now().isoformat(),
+        "original_zveno_list": zveno_list  # Сохраняем исходные данные о звеньях
+    }
+
+    # Сохраняем в базу данных
+    await save_route_with_details(tg_id, cities, route_details)
+
+    # Отправка маршрутов на сервер (если нужно)
+    user_id = callback_query.from_user.id
     server_url = SERVER_URL
-    response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes}, verify = False)
+    response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes}, verify=False)
 
     if response.status_code != 200:
         await callback_query.message.answer("Ошибка при сохранении маршрутов. Попробуйте позже.")
         return
 
     # Создание клавиатуры с кнопкой для открытия карты
-
-
     base_url = MAP_URL
     params = urlencode({"user_id": user_id})
     full_url = f"{base_url}?{params}"
@@ -184,7 +189,14 @@ async def save_node(callback_query: CallbackQuery, state: FSMContext):
 
     reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
 
-    # Отправка сообщения с кнопкой
+    # Формируем сообщение с информацией о маршруте
+    message_text = (
+        f"Маршрут сохранен! Нажмите кнопку, чтобы открыть карту:\n"
+        f"Общая стоимость: {selected_route['total_price']} руб.\n"
+        f"Общая продолжительность: {selected_route['total_duration']} часов\n"
+        f"Маршрут: {' → '.join(selected_route['route'])}\n"
+    )
+
     await callback_query.message.edit_text(
         f"Маршрут сохранен! Нажмите кнопку, чтобы открыть карту:\nВаш маршрут:\n{formatted_zveno_list}",
         reply_markup=reply_markup

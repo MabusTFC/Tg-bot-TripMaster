@@ -63,7 +63,7 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     segments = list(user_days.items())
 
     routes = get_routes(start_city, end_city, departure_date, segments)
-
+    print(f"Полученные маршруты: {routes}")  # Логирование перед сохранением
     # Сохраняем маршруты в базу данных
     try:
         # Сохраняем каждый маршрут отдельно

@@ -131,23 +131,33 @@ async def add_event_to_calendar(callback_query: CallbackQuery, state: FSMContext
             "Используем сохраненный код авторизации. Создаем события в календаре..."
         )
 
-        # Получаем маршруты из состояния или файла
-        data = await state.get_data()
-        routes = data.get('routes', [])
-        current_file = Path(__file__).absolute()
+        # Получаем маршруты из базы данных
+        routes_from_db = await get_routes_with_details(user_id)
 
-        routes_path = (
-                current_file.parent
-                .parent
-                .parent
-                .parent
-                / 'docs'
-                / 'routes.json'
-        )
+        if not routes_from_db:
+            await callback_query.message.answer(
+                "У вас нет сохраненных маршрутов. Пожалуйста, сначала создайте маршрут."
+            )
+            return
+
+        # Преобразуем данные из базы в нужный формат
+        routes = []
+        for route in routes_from_db:
+            if route.get('selected_route'):
+                try:
+                    # Пытаемся распарсить JSON из selected_route
+                    route_data = json.loads(route['selected_route']) if isinstance(route['selected_route'], str) else \
+                    route['selected_route']
+                    routes.append(route_data)
+                except (json.JSONDecodeError, TypeError) as e:
+                    print(f"Ошибка парсинга маршрута: {e}")
+                    continue
 
         if not routes:
-            with open(routes_path, 'r', encoding='utf-8') as f:
-                routes = json.load(f)
+            await callback_query.message.answer(
+                "Не удалось получить данные о маршрутах из базы данных."
+            )
+            return
 
         # Авторизация и создание сервиса
         flow = Flow.from_client_secrets_file(
@@ -184,39 +194,53 @@ async def add_event_to_calendar(callback_query: CallbackQuery, state: FSMContext
 
         # Добавляем события для каждого маршрута
         for route in routes:
-            for path in route['full_path']:
-                start_time = datetime.fromisoformat(path['departure_datetime'])
-                end_time = datetime.fromisoformat(path['arrival_datetime'])
+            if 'full_path' not in route:
+                continue
 
-                if start_time >= end_time:
+            for path in route['full_path']:
+                try:
+                    start_time = datetime.fromisoformat(path['departure_datetime'])
+                    end_time = datetime.fromisoformat(path['arrival_datetime'])
+
+                    if start_time >= end_time:
+                        await callback_query.message.answer(
+                            f"Ошибка: Дата начала события {path['origin']} -> {path['destination']} "
+                            "должна быть раньше даты окончания."
+                        )
+                        continue
+
+                    event = {
+                        'summary': f"Путешествие: {path['origin']} -> {path['destination']}",
+                        'description': f"Транспорт: {'Поезд' if path.get('train_number') else 'Самолет'} "
+                                       f"{path.get('train_number') or path.get('flight_number', '')}\n"
+                                       f"Цена: {path.get('price', 0)} руб.",
+                        'start': {
+                            'dateTime': path['departure_datetime'],
+                            'timeZone': 'UTC',
+                        },
+                        'end': {
+                            'dateTime': path['arrival_datetime'],
+                            'timeZone': 'UTC',
+                        },
+                    }
+
+                    try:
+                        service.events().insert(calendarId=trip_master_calendar_id, body=event).execute()
+                        events_added += 1
+                    except Exception as e:
+                        await callback_query.message.answer(
+                            f"Ошибка при добавлении события {path['origin']} -> {path['destination']}: {str(e)}"
+                        )
+                except KeyError as e:
                     await callback_query.message.answer(
-                        f"Ошибка: Дата начала события {path['origin']} -> {path['destination']} "
-                        "должна быть раньше даты окончания."
+                        f"Ошибка в данных маршрута: отсутствует обязательное поле {str(e)}"
                     )
                     continue
-
-                event = {
-                    'summary': f"Путешествие: {path['origin']} -> {path['destination']}",
-                    'description': f"Транспорт: {'Поезд' if path['train_number'] else 'Самолет'} "
-                                   f"{path['train_number'] or path['flight_number']}\n"
-                                   f"Цена: {path['price']} руб.",
-                    'start': {
-                        'dateTime': path['departure_datetime'],
-                        'timeZone': 'UTC',
-                    },
-                    'end': {
-                        'dateTime': path['arrival_datetime'],
-                        'timeZone': 'UTC',
-                    },
-                }
-
-                try:
-                    service.events().insert(calendarId=trip_master_calendar_id, body=event).execute()
-                    events_added += 1
-                except Exception as e:
+                except ValueError as e:
                     await callback_query.message.answer(
-                        f"Ошибка при добавлении события {path['origin']} -> {path['destination']}: {str(e)}"
+                        f"Ошибка в формате даты для маршрута {path.get('origin', '?')} -> {path.get('destination', '?')}: {str(e)}"
                     )
+                    continue
 
         # Формируем ссылку на календарь
         calendar_link = f"https://calendar.google.com/calendar/u/0/r?cid={trip_master_calendar_id}"
