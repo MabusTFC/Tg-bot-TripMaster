@@ -458,10 +458,7 @@ async function initMap() {
         formData.append('document', pdfBlob, 'travel_route.pdf');
         formData.append('chat_id', userId);
 
-        const routeDataBlob = new Blob([JSON.stringify(selectedRoute)], { type: 'application/json' });
-        formData.append('routes', routeDataBlob, 'routes.json');
-
-        const BOT_TOKEN = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
+        const BOT_TOKEN = '5710120924:AAF1k0cCPNFQZ0x4M1kuojfA8XV4tXAlNxs';
 
         // Создание inline-клавиатуры
         const keyboard = [
