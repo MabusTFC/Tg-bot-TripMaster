@@ -18,7 +18,7 @@ from handlers.utils.keyboards import (
 
 from handlers.utils.state_machine import RoutStates
 
-from database.database_manager import save_route_db
+from database.database_manager import *
 
 router = Router()
 
@@ -46,6 +46,7 @@ async def select_city(callback_query: CallbackQuery, state: FSMContext):
     )
     await callback_query.answer()
 
+
 @router.callback_query(lambda c: c.data == "finish_selection")
 async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     user_data = await state.get_data()
@@ -54,46 +55,51 @@ async def finish_selection(callback_query: CallbackQuery, state: FSMContext):
     user_days = user_data.get("user_days", {})
 
     tg_id = callback_query.from_user.id
-    await save_route_db(tg_id, route)
 
-
-    final_selection = [(city, user_days.get(city, 1)) for city in route]
-
-
-    await state.update_data(final_selection=final_selection)
-    await state.set_state(RoutStates.FINAL_ROUTE)
-
-    #cities = ["Москва", "Владивосток"]  # Города начала и конца маршрута
-
-    start_city = route[0]  # Начальный город
-    end_city = route[1]  # Конечный город
-    departure_date = start_date  # Дата отправления
-    print(list(user_days.items()))
-    # Сегменты маршрута (пример данных)
+    # Получаем маршруты
+    start_city = route[0]
+    end_city = route[-1]  # Берем последний город как конечный
+    departure_date = start_date
     segments = list(user_days.items())
 
-    # Вызов функции для получения маршрутов
     routes = get_routes(start_city, end_city, departure_date, segments)
 
-    # Отправка маршрутов на сервер
-    user_id = callback_query.from_user.id  # ID пользователя из Telegram
-    server_url = "https://5d66-57-129-20-222.ngrok-free.app/api/save-routes"
-    response = requests.post(server_url, json={"user_id": str(user_id), "routes": routes})
-
-    if response.status_code != 200:
+    # Сохраняем маршруты в базу данных
+    try:
+        # Сохраняем каждый маршрут отдельно
+        for route_data in routes:
+            await save_route_with_details(
+                tg_id=tg_id,
+                cities=route_data["route"],
+                route_details=route_data
+            )
+    except Exception as e:
+        print(f"Ошибка при сохранении маршрута: {e}")
         await callback_query.message.answer("Ошибка при сохранении маршрутов. Попробуйте позже.")
         return
 
-    # Создание клавиатуры с кнопкой для открытия карты
-    from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+    # Отправка маршрутов на сервер (если это все еще нужно)
+    try:
+        server_url = "https://5d66-57-129-20-222.ngrok-free.app/api/save-routes"
+        response = requests.post(server_url, json={"user_id": str(tg_id), "routes": routes})
 
+        if response.status_code != 200:
+            print(f"Ошибка при отправке маршрутов на сервер: {response.status_code}")
+    except Exception as e:
+        print(f"Ошибка при отправке на сервер: {e}")
+
+    # Обновляем состояние
+    final_selection = [(city, user_days.get(city, 1)) for city in route]
+    await state.update_data(final_selection=final_selection)
+    await state.set_state(RoutStates.FINAL_ROUTE)
+
+    # Создание клавиатуры с кнопкой для открытия карты
     keyboard = [
         [InlineKeyboardButton(
             text="Открыть карту",
             web_app=WebAppInfo(url="https://mabustfc.github.io/Tg-bot-TripMaster")
         )]
     ]
-
     reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
 
     # Отправка сообщения с кнопкой

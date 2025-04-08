@@ -5,15 +5,18 @@ from aiogram import (
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-
 from handlers.utils.answer import BALANCE_MESSAGE
 from handlers.utils.keyboards import (
     get_balance_keyboard,
     get_greetings_keyboard
 )
-from database.database_manager import update_balance
+from database.database_manager import (
+    update_balance,
+    get_user_balance
+)
 
 router = Router()
+
 
 @router.callback_query(lambda c: c.data == "balance")
 async def balance_handler(callback_query: CallbackQuery):
@@ -26,7 +29,9 @@ async def balance_handler(callback_query: CallbackQuery):
     await callback_query.answer()
 
 
-@router.callback_query(lambda c: c.data.startswith("add_10_tokens") or c.data.startswith("add_20_tokens") or c.data.startswith("add_50_tokens"))
+@router.callback_query(lambda c: c.data.startswith("add_10_tokens") or
+                                 c.data.startswith("add_20_tokens") or
+                                 c.data.startswith("add_50_tokens"))
 async def balance_update_handler(callback_query: CallbackQuery, state: FSMContext):
     tg_id = callback_query.from_user.id
 
@@ -38,20 +43,34 @@ async def balance_update_handler(callback_query: CallbackQuery, state: FSMContex
 
     if callback_query.data.startswith("add_10_tokens"):
         amount = 10
-
     elif callback_query.data.startswith("add_20_tokens"):
         amount = 20
-
     elif callback_query.data.startswith("add_50_tokens"):
         amount = 50
 
     await update_balance(tg_id, amount)
     await callback_query.message.answer(
-        text = f"Ваш баланс пополнен на {amount} единиц.",
+        text=f"Ваш баланс пополнен на {amount} единиц.",
         parse_mode="Markdown",
         reply_markup=await get_greetings_keyboard(),
     )
-
     await callback_query.answer()
 
 
+@router.callback_query(lambda c: c.data == "back_to_menu_from_balance")
+async def back_to_menu_from_balance_handler(callback_query: CallbackQuery, state: FSMContext):
+    # Получаем данные пользователя
+    tg_id = callback_query.from_user.id
+    user_name = callback_query.from_user.first_name
+
+    # Получаем текущий баланс
+    balance = await get_user_balance(tg_id)
+
+    # Отправляем сообщение с главным меню
+    await callback_query.message.answer_photo(
+        photo=types.FSInputFile("img/logoTrip.png"),
+        caption=f"Добро пожаловать, {user_name}! Ваш баланс: {balance} токенов.",
+        parse_mode="Markdown",
+        reply_markup=await get_greetings_keyboard(),
+    )
+    await callback_query.answer()

@@ -64,7 +64,6 @@ async def save_auth_code_handler(callback_query: CallbackQuery, state: FSMContex
         user_id = callback_query.from_user.id
         username = callback_query.from_user.username
 
-
         await callback_query.message.answer(
             "Пожалуйста, введите код авторизации, который вы получили после авторизации через Google:"
         )
@@ -72,30 +71,48 @@ async def save_auth_code_handler(callback_query: CallbackQuery, state: FSMContex
         await state.update_data(user_id=user_id, username=username)
 
     except Exception as e:
-        await callback_query.message.answer(f"Произошла ошибка: {str(e)}")
+        logger.error(f"Error in save_auth_code_handler: {str(e)}")
+        await callback_query.message.answer("Произошла ошибка при обработке запроса. Пожалуйста, попробуйте позже.")
     finally:
         await callback_query.answer()
 
 
 @router.message(AuthStates.waiting_for_auth_code_save)
 async def process_save_auth_code(message: Message, state: FSMContext):
-    try:
-        auth_code = message.text.strip()
-        data = await state.get_data()
-        user_id = data.get('user_id')
-        username = data.get('username')
+    max_retries = 3
+    retry_count = 0
 
-        if not auth_code:
-            await message.answer("Код авторизации не может быть пустым. Пожалуйста, попробуйте еще раз.")
+    while retry_count < max_retries:
+        try:
+            auth_code = message.text.strip()
+            data = await state.get_data()
+            user_id = data.get('user_id')
+            username = data.get('username')
+
+            if not auth_code:
+                await message.answer("Код авторизации не может быть пустым. Пожалуйста, попробуйте еще раз.")
+                return
+
+            await update_auth_code(user_id, auth_code)
+            await message.answer("Код авторизации успешно сохранен!")
+            await state.clear()
             return
 
-        await update_auth_code(user_id, auth_code)
-        await message.answer("Код авторизации успешно сохранен!")
+        except asyncpg.exceptions.ConnectionDoesNotExistError:
+            retry_count += 1
+            if retry_count < max_retries:
+                await asyncio.sleep(1)  # Подождать перед повторной попыткой
+                continue
+            logger.error("Failed to save auth code after retries: connection issue")
+            await message.answer("Не удалось сохранить код из-за проблем с соединением. Пожалуйста, попробуйте позже.")
 
-    except Exception as e:
-        await message.answer(f"Произошла ошибка при сохранении кода: {str(e)}")
-    finally:
-        await state.clear()
+        except Exception as e:
+            logger.error(f"Error in process_save_auth_code: {str(e)}")
+            await message.answer(f"Произошла ошибка при сохранении кода: {str(e)}")
+
+        finally:
+            if 'state' in locals():
+                await state.clear()
 
 
 @router.callback_query(lambda c: c.data == "add_event")

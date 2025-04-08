@@ -28,9 +28,12 @@ async def get_greetings_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=inline_kb_list)
 
 async def get_support_keyboard():
-    kb = InlineKeyboardBuilder()
-    kb.button(text="Техническая поддержка", callback_data="support")
-    return kb.adjust(1).as_markup()
+    kb = [
+        [InlineKeyboardButton(text="Техническая поддержка", callback_data="support")],
+        [InlineKeyboardButton(text="Инструкция", callback_data="guide")],
+        [InlineKeyboardButton(text="⬅ Назад", callback_data="back_to_menu")]
+    ]
+    return InlineKeyboardMarkup(inline_keyboard=kb)
 
 
 async def get_calendar_keyboard(year: int = None, month: int = None) -> InlineKeyboardMarkup:
@@ -176,18 +179,18 @@ async def get_number_keyboard_zveno(city: str, current_days: int, max_days: int)
 async def get_google_calendar_keyboard():
     buttons = [
         [InlineKeyboardButton(text="Авторизация гугл", callback_data="authorization")],
-        [InlineKeyboardButton(text="Сохранить ключ", callback_data="save_key")]
+        [InlineKeyboardButton(text="Сохранить ключ", callback_data="save_key")],
+        [InlineKeyboardButton(text="⬅ Назад", callback_data="back_to_menu_from_calendar")]
     ]
-
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 async def get_balance_keyboard():
     buttons = [
         [InlineKeyboardButton(text="$ 10 ТОКЕНОВ $", callback_data="add_10_tokens")],
         [InlineKeyboardButton(text="$ 20 ТОКЕНОВ $", callback_data="add_20_tokens")],
-        [InlineKeyboardButton(text="$ 50 ТОКЕНОВ $", callback_data="add_50_tokens")]
+        [InlineKeyboardButton(text="$ 50 ТОКЕНОВ $", callback_data="add_50_tokens")],
+        [InlineKeyboardButton(text="⬅ Назад", callback_data="back_to_menu_from_balance")]
     ]
-
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 

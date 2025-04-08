@@ -30,12 +30,12 @@ async def auth_handler(message: types.Message, state: FSMContext):
     user_name = message.from_user.first_name
     tg_id = message.from_user.id
     name = message.from_user.username
-    balance = await get_user_balance(tg_id)
 
     role = await get_user_role_from_manager(name)
     await state.update_data(tg_id=tg_id)
 
     await add_user(tg_id, name)
+    balance = await get_user_balance(tg_id)
     await message.answer_photo(
         photo = FSInputFile("img/logoTrip.png"),
         caption=GREETING_MESSAGE.format(user_name=user_name, balance=balance),
