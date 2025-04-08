@@ -176,7 +176,7 @@ async def get_number_keyboard_zveno(city: str, current_days: int, max_days: int)
 async def get_google_calendar_keyboard():
     buttons = [
         [InlineKeyboardButton(text="Авторизация гугл", callback_data="authorization")],
-        [InlineKeyboardButton(text="Добавить путешествие в календарь", callback_data="add_event")]
+        [InlineKeyboardButton(text="Сохранить ключ", callback_data="save_key")]
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)
