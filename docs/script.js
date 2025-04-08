@@ -459,7 +459,7 @@ async function initMap() {
         formData.append('chat_id', userId);
 
         const BOT_TOKEN = '5710120924:AAF1k0cCPNFQZ0x4M1kuojfA8XV4tXAlNxs';
-
+        //
         // Создание inline-клавиатуры
         const keyboard = [
           [
