@@ -123,7 +123,7 @@ export const cityCoordinates = {
 export const DB_CONFIG = {
   user: 'postgres',
   password: '12345',
-  host: 'localhost', // Или ваш ngrok-туннель (но это медленно)
+  host: 'https://6660-45-8-147-174.ngrok-free.app/api/save-routes', // Или ваш ngrok-туннель (но это медленно)
   port: 5432,
   database: 'tripmaster',
   ssl: {
