@@ -351,16 +351,36 @@ async function initMap() {
         doc.line(14, yPos, 60, yPos);
         yPos += sectionGap;
 
+        // Рассчитываем общую длительность с учетом времени пребывания в городах
+        let totalDurationWithStay = selectedRoute.total_duration;
+        if (selectedRoute.full_path.length > 1) {
+          for (let i = 1; i < selectedRoute.route.length - 1; i++) {
+            const nextSegment = selectedRoute.full_path[i];
+            const prevSegment = selectedRoute.full_path[i - 1];
+
+            // Время прибытия в город (если это не первый город)
+            const arrivalTime = prevSegment ? new Date(prevSegment.arrival_datetime) : new Date(selectedRoute.start_date);
+
+            // Время отправления из города
+            const departureTime = new Date(nextSegment.departure_datetime);
+
+            // Рассчитываем продолжительность пребывания в часах
+            const stayDurationHours = (departureTime - arrivalTime) / (1000 * 60 * 60);
+
+            totalDurationWithStay += stayDurationHours;
+          }
+        }
+
         doc.setFont('Roboto', 'normal');
         doc.text(`Маршрут: ${selectedRoute.route.join(' → ')}`, 14, yPos);
         yPos += lineHeight;
         doc.text(`Общая стоимость: ${selectedRoute.total_price} руб.`, 14, yPos);
         yPos += lineHeight;
-        doc.text(`Общая длительность: ${selectedRoute.total_duration.toFixed(2)} часов`, 14, yPos);
+        doc.text(`Общая длительность (включая время пребывания): ${totalDurationWithStay.toFixed(2)} часов`, 14, yPos);
         yPos += sectionGap;
 
         // Рассчитываем время пребывания в каждом городе
-       if (selectedRoute.full_path.length > 1) {
+        if (selectedRoute.full_path.length > 1) {
           doc.setFont('Roboto', 'normal');
           doc.text('ВРЕМЯ ПРЕБЫВАНИЯ В ГОРОДАХ', 14, yPos);
           yPos += lineHeight;
@@ -372,7 +392,7 @@ async function initMap() {
           doc.setFont('Roboto', 'normal');
 
           // Проходим по всем городам маршрута (кроме последнего)
-          for (let i = 0; i < selectedRoute.route.length - 1; i++) {
+          for (let i = 1; i < selectedRoute.route.length - 1; i++) {
             const city = selectedRoute.route[i];
             const nextSegment = selectedRoute.full_path[i];
             const prevSegment = selectedRoute.full_path[i - 1];
@@ -392,8 +412,6 @@ async function initMap() {
 
           yPos += sectionGap;
         }
-
-
 
         // Таблица
         const headers = [["Отправление", "Прибытие", "Откуда", "Куда", "Рейс", "Тип", "Цена", "Длительность"]];
@@ -459,7 +477,7 @@ async function initMap() {
         formData.append('chat_id', userId);
 
         const BOT_TOKEN = '5710120924:AAF1k0cCPNFQZ0x4M1kuojfA8XV4tXAlNxs';
-        //
+
         // Создание inline-клавиатуры
         const keyboard = [
           [
@@ -504,7 +522,8 @@ async function initMap() {
         console.error('Ошибка:', error);
         alert('Произошла ошибка: ' + error.message);
       }
-    });
+   });
+
 
 
 
