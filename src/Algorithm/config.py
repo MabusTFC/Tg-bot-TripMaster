@@ -322,4 +322,30 @@ city_to_iata = {
     'Джукта': 'ykt',
     'Ягодное': 'yago',
     'Ямбург': 'yamb',
+'Нью-Йорк': 'nyc',  # John F. Kennedy International Airport (JFK), Newark Liberty International Airport (EWR), LaGuardia Airport (LGA)
+    'Лос-Анджелес': 'lax',  # Los Angeles International Airport
+    'Чикаго': 'ord',  # O'Hare International Airport
+    'Торонто': 'yyz',  # Toronto Pearson International Airport
+    'Мехико': 'mex',  # Mexico City International Airport
+    'Лондон': 'lon',  # Heathrow Airport (LHR), Gatwick Airport (LGW), Stansted Airport (STN)
+    'Париж': 'par',  # Charles de Gaulle Airport (CDG), Orly Airport (ORY)
+    'Берлин': 'ber',  # Berlin Brandenburg Airport
+    'Рим': 'rom',  # Leonardo da Vinci–Fiumicino Airport (FCO), Ciampino Airport (CIA)
+    'Мадрид': 'mad',  # Adolfo Suárez Madrid–Barajas Airport
+    'Амстердам': 'ams',  # Amsterdam Schiphol Airport
+    'Стамбул': 'ist',  # Istanbul Airport
+    'Пекин': 'bjs',  # Beijing Capital International Airport (PEK), Beijing Daxing International Airport (PKX)
+    'Шанхай': 'sha',  # Shanghai Pudong International Airport (PVG), Shanghai Hongqiao International Airport (SHA)
+    'Токио': 'tyo',  # Narita International Airport (NRT), Haneda Airport (HND)
+    'Сеул': 'sel',  # Incheon International Airport (ICN), Gimpo International Airport (GMP)
+    'Сингапур': 'sin',  # Singapore Changi Airport
+    'Бангкок': 'bkk',  # Suvarnabhumi Airport
+    'Дубай': 'dxb',  # Dubai International Airport
+    'Нью-Дели': 'del',  # Indira Gandhi International Airport
+    'Мумбаи': 'bom',  # Chhatrapati Shivaji Maharaj International Airport
+    'Кейптаун': 'cpt',  # Cape Town International Airport
+    'Сидней': 'syd',  # Sydney Kingsford Smith Airport
+    'Мельбурн': 'mel',  # Melbourne Airport (MEL), Avalon Airport (AVV)
+    'Буэнос-Айрес': 'bue',  # Ministro Pistarini International Airport (EZE), Aeroparque Jorge Newbery (AEP)
+    'Сан-Паулу': 'sao'  # São Paulo-Guarulhos International Airport (GRU), Congonhas Airport (CGH)
 }

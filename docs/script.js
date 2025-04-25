@@ -2,7 +2,7 @@ import { cityCoordinates } from './config.js';
 
 
 const SWIPE_THRESHOLD = 50; // Порог в пикселях, чтобы жест считался "свайпом"
-const SERVER_URL = 'https://6660-45-8-147-174.ngrok-free.app'; // Замените на актуальный ngrok-URL// URL вашего сервера
+const SERVER_URL = 'https://telegramassistantserver.onrender.com'; // URL вашего сервера
 
 
 function getUserId() {
@@ -474,46 +474,21 @@ async function initMap() {
         const pdfBlob = doc.output('blob');
         const formData = new FormData();
         formData.append('document', pdfBlob, 'travel_route.pdf');
-        formData.append('chat_id', userId);
+        formData.append('chat_id', userId); // Можно оставить, если ты его знаешь на клиенте
 
-        const BOT_TOKEN = '5710120924:AAF1k0cCPNFQZ0x4M1kuojfA8XV4tXAlNxs';
-
-        // Создание inline-клавиатуры
-        const keyboard = [
-          [
-            {
-              text: 'Добавить путешествие в календарь',
-              callback_data: 'add_event'
-            }
-          ]
-        ];
-
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`, {
-          method: 'POST',
-          body: formData
+        const response = await fetch(`${SERVER_URL}/api/send-pdf`, {
+            method: 'POST',
+            body: formData,
         });
 
-        // Если отправка прошла успешно, отправляем сообщение с кнопкой
-        if (response.ok) {
-          const messageId = (await response.json()).result.message_id;
+    const result = await response.json();
 
-          // Отправка сообщения с кнопкой
-          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageReplyMarkup`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: userId,
-              message_id: messageId,
-              reply_markup: {
-                inline_keyboard: keyboard
-              }
-            })
-          });
+    if (response.ok && result.success) {
+        alert('PDF успешно отправлен!');
+    } else {
+        alert('Ошибка отправки PDF: ' + result.error);
+    }
 
-          alert('PDF успешно отправлен!');
-        } else {
-          throw new Error('Ошибка отправки PDF');
-        }
 
         if (window.Telegram?.WebApp?.close) {
           window.Telegram.WebApp.close();

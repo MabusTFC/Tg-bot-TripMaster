@@ -104,7 +104,7 @@ def fetch_train_prices(origin, destination, current_date):
                 "arrival_at": segment["arrival"],
                 "train_number": segment["thread"]["number"],
                 "price": int(price),
-                "duration": round(segment["duration"] / 3600, 1),  # Часы с округлением
+                "duration": round(segment["duration"] / 60, 1),  # Часы с округлением
                 "distance_km": int(distance_km),
                 "carrier": segment["thread"]["carrier"]["title"],
                 "carriage_type": segment.get("thread", {}).get("carrier", {}).get("title", "N/A"),
